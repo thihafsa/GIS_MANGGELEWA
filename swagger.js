@@ -8,7 +8,7 @@ const swaggerDefinition = {
         description: 'Dokumentasi API untuk mengelola Sistem Informasi Geografis Layanan dan Fasilitas Kecamatan Manggelewa',
     },
     servers: [{
-        url: 'https://backend.muhdenisetiawan.my.id', // Sesuaikan dengan URL server Anda
+        url: 'https://sigmanggelewa.site', // Sesuaikan dengan URL server Anda
         description: 'Production server',
     }, {
         url: 'http://localhost:3400', // Sesuaikan dengan URL server Anda
