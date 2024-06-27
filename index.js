@@ -4,12 +4,15 @@ const swaggerSpec = require('./swagger');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
 const db = require('./config/database');
 const fasilitasPendidikan = require('./routes/fasilitasPendidikan');
 const fasilitasKesehatan = require('./routes/fasilitasKesehatan');
 const usersRoutes = require('./routes/users');
 const reviewsRoutes = require('./routes/reviews');
 const adminRoutes = require('./routes/admin');
+const authRoutes = require('./routes/auth');
+const authMiddleware = require('./middleware/authMiddleware');
 const app = express();
 
 // Middleware (misalnya, body-parser, cors, dll.)
@@ -18,7 +21,11 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
-
+app.use(session({
+    secret: 'gismgl', // Ganti dengan rahasia yang lebih aman
+    resave: false,
+    saveUninitialized: false,
+}));
 app.use(fileUpload({
     limits: {
         fileSize: 50 * 1024 * 1024
@@ -40,14 +47,21 @@ app.set('views', path.join(__dirname, 'views'));
         console.error('Error syncing database:', error);
     }
 })();
-app.get('/', (req, res) => {
+app.get('/', authMiddleware,(req, res) => {
+    const user = req.session.user;
   res.sendFile(path.join(__dirname, 'index.html')); // Sesuaikan path jika diperlukan
 });
 
 app.get('/login', (req, res) => {
     res.render('login'); 
 });
+app.get('/logout', (req, res) => {
+    req.session.destroy(); // Hapus sesi
+    res.redirect('/login'); // Redirect ke halaman login
+});
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/fasilitaspendidikan', fasilitasPendidikan);
 app.use('/fasilitaskesehatan', fasilitasKesehatan);
