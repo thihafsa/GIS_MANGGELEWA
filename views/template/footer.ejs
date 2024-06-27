@@ -1,0 +1,65 @@
+	<!--**********************************
+            Footer start
+        ***********************************-->
+	<div class="footer">
+
+	    <div class="copyright">
+	        <p>Copyright © Designed &amp; Developed by <a href="https://github.com/KINGXDENI" target="_blank">Muh.
+	                Deni Setiawan</a> 2024</p>
+	    </div>
+	</div>
+	<!--**********************************
+            Footer end
+        ***********************************-->
+
+
+
+
+	</div>
+	<!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+	<!--**********************************
+        Scripts
+    ***********************************-->
+	<!-- Required vendors -->
+	<script src="vendor/global/global.min.js"></script>
+
+	<script src="vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+
+	<script src="js/custom.min.js"></script>
+	<script src="js/dlabnav-init.js"></script>
+	<script src="js/demo.js"></script>
+	<script src="js/styleSwitcher.js"></script>
+	<!-- Datatable -->
+	<script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
+	<script src="js/plugins-init/datatables.init.js"></script>
+	<!-- clockpicker -->
+	<script src="vendor/clockpicker/js/bootstrap-clockpicker.min.js"></script>
+	<!-- Clockpicker init -->
+	<script src="js/plugins-init/clock-picker-init.js"></script>
+    
+    <script src="vendor/select2/js/select2.full.min.js"></script>
+    <script src="js/plugins-init/select2-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Ambil pesan sukses dari session storage
+        const submitSuccessMessage = sessionStorage.getItem('submitSuccess');
+        if (submitSuccessMessage) {
+            // Tampilkan alert menggunakan SweetAlert2
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: submitSuccessMessage,
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                // Hapus pesan dari session storage setelah ditampilkan
+                sessionStorage.removeItem('submitSuccess');
+            });
+        }
+    </script>
+	</body>
+
+	</html>
