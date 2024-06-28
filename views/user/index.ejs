@@ -1,17 +1,20 @@
-<!DOCTYPE html>
 <html>
 
 <head>
     <title>GIS Map</title>
 
     <style>
-        /* Always set the map height explicitly to define the size of the div element
-           that contains the map. */
+        /* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
         #map {
             height: 100%;
         }
 
-        /* Optional: Makes the sample page fill the window. */
+        /* 
+ * Optional: Makes the sample page fill the window. 
+ */
         html,
         body {
             height: 100%;
@@ -23,12 +26,42 @@
 
 <body>
     <div id="map"></div>
-    <script type="module" src="./index.js"></script>
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk&callback=initMap&v=weekly"
         defer></script>
 
-    
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 15,
+                center: {
+                lat: -8.532829,
+                lng: 118.305939
+                },
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    position: google.maps.ControlPosition.BOTTOM_CENTER,
+                },
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_CENTER,
+                },
+                scaleControl: true,
+                streetViewControl: true,
+                streetViewControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_TOP,
+                },
+                fullscreenControl: true,
+            });
+        }
+
+        window.initMap = initMap;
+    </script>
+
+
+
+
 </body>
 
 </html>
