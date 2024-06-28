@@ -1,20 +1,17 @@
+<!DOCTYPE html>
 <html>
 
 <head>
     <title>GIS Map</title>
 
     <style>
-        /* 
- * Always set the map height explicitly to define the size of the div element
- * that contains the map. 
- */
+        /* Always set the map height explicitly to define the size of the div element
+           that contains the map. */
         #map {
             height: 100%;
         }
 
-        /* 
- * Optional: Makes the sample page fill the window. 
- */
+        /* Optional: Makes the sample page fill the window. */
         html,
         body {
             height: 100%;
@@ -22,18 +19,16 @@
             padding: 0;
         }
     </style>
-    <script type="module" src="map.js"></script>
 </head>
 
 <body>
     <div id="map"></div>
+    <script type="module" src="./index.js"></script>
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk&callback=initMap&v=weekly"
         defer></script>
 
-
-
-
+    
 </body>
 
 </html>

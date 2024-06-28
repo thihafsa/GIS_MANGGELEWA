@@ -49,7 +49,7 @@ app.set('views', path.join(__dirname, 'views'));
 })();
 app.get('/', authMiddleware,(req, res) => {
     const user = req.session.user;
-  res.sendFile(path.join(__dirname, 'index.html')); // Sesuaikan path jika diperlukan
+ res.render('user/index'); // Sesuaikan path jika diperlukan
 });
 
 app.get('/login', (req, res) => {
