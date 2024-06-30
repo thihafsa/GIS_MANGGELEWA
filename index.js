@@ -41,19 +41,21 @@ app.set('views', path.join(__dirname, 'views'));
         await db.authenticate();
         console.log('Koneksi ke database berhasil terhubung');
 
-        await db.sync({ force: false });
+        await db.sync({
+            force: false
+        });
         console.log('Struktur tabel berhasil disinkronisasi');
     } catch (error) {
         console.error('Error syncing database:', error);
     }
 })();
-app.get('/', authMiddleware,(req, res) => {
+app.get('/', authMiddleware, (req, res) => {
     const user = req.session.user;
- res.render('user/index'); // Sesuaikan path jika diperlukan
+    res.render('user/index'); // Sesuaikan path jika diperlukan
 });
 
 app.get('/login', (req, res) => {
-    res.render('login'); 
+    res.render('login');
 });
 app.get('/logout', (req, res) => {
     req.session.destroy(); // Hapus sesi

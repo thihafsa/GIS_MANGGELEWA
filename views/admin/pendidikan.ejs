@@ -519,7 +519,7 @@
                                         <tbody>
                                             <% fasilitasPendidikan.forEach(fasilitas => { %>
                                             <tr>
-                                                <td><img class="rounded-circle" width="35" src="<%= fasilitas.foto %>"
+                                                <td><img class="" width="35" src="<%= fasilitas.foto %>"
                                                         alt=""></td>
                                                 <td><%= fasilitas.nama %></td>
                                                 <td><%= fasilitas.kepala_sekolah %></td>
@@ -579,8 +579,6 @@
                                     'Terhapus!',
                                     'Data fasilitas pendidikan telah dihapus.',
                                     'success',
-                                     showConfirmButton: false,
-                                     timer: 1500
                                 ).then(() => {
                                     location.reload(); // Refresh halaman setelah menghapus
                                 });
