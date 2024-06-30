@@ -55,6 +55,33 @@
             cursor: pointer;
         }
 
+        #dropdown-menu {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            display: none;
+            z-index: 10;
+        }
+
+        #dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+
         #search-input {
             flex-grow: 1;
             border: none;
@@ -113,6 +140,10 @@
 <body>
     <div id="search-container">
         <i id="hamburger-menu" class="fas fa-bars"></i>
+        <div id="dropdown-menu">
+            <div class="dropdown-item" id="map-type">Map Type</div>
+            <div class="dropdown-item" id="logout">Logout</div>
+        </div>
         <input id="search-input" type="text" placeholder="Search Box">
         <i id="search-button" class="fas fa-search"></i>
         <div id="search-results"></div>
@@ -126,27 +157,54 @@
         let map;
         let activeInfoWindow;
         let markers = [];
+        const defaultLatLng = {
+            lat: -8.532829,
+            lng: 118.305939
+        };
 
         function initMap() {
-            const myLatLng = {
-                lat: -8.532829,
-                lng: 118.305939
-            };
             map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 10,
-                center: myLatLng,
+                center: defaultLatLng,
+                mapTypeControl: false,
             });
 
             fetchDataAndAddMarkers();
 
             document.getElementById('search-input').addEventListener('input', handleSearch);
+            document.getElementById('search-button').addEventListener('click', clearSearch);
+
+            const hamburgerMenu = document.getElementById('hamburger-menu');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+
+            hamburgerMenu.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('show');
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('#dropdown-menu') && !event.target.closest('#hamburger-menu')) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+
+            document.getElementById('map-type').addEventListener('click', () => {
+                // Implement map type change functionality here
+                alert('Change Map Type');
+                dropdownMenu.classList.remove('show');
+            });
+
+            document.getElementById('logout').addEventListener('click', () => {
+                // Implement logout functionality here
+                alert('Logout');
+                dropdownMenu.classList.remove('show');
+            });
         }
 
         function fetchDataAndAddMarkers() {
             fetch('/fasilitaspendidikan')
                 .then(response => response.json())
                 .then(fasilitasPendidikan => {
-                    console.log('Data Fasilitas Pendidikan:', fasilitasPendidikan); // Log data untuk memeriksa
+                    console.log('Data Fasilitas Pendidikan:', fasilitasPendidikan);
                     fasilitasPendidikan.forEach(fasilitas => {
                         if (fasilitas.latitude && fasilitas.longitude) {
                             const lat = parseFloat(fasilitas.latitude);
@@ -184,8 +242,7 @@
 
                                 markers.push({
                                     marker,
-                                    fasilitas,
-                                    infoWindow
+                                    fasilitas
                                 });
                             } else {
                                 console.error('Invalid latitude or longitude for:', fasilitas);
@@ -202,6 +259,7 @@
             resultsContainer.innerHTML = '';
 
             if (query) {
+                document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
                 const results = markers.filter(({
                     fasilitas
                 }) => {
@@ -211,8 +269,7 @@
 
                 results.forEach(({
                     fasilitas,
-                    marker,
-                    infoWindow
+                    marker
                 }) => {
                     const item = document.createElement('div');
                     item.classList.add('search-result-item');
@@ -226,23 +283,37 @@
                             activeInfoWindow.close();
                         }
 
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `
+                                <h3>${fasilitas.nama}</h3>
+                                <p>Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
+                                <p>Fasilitas: ${fasilitas.fasilitas || 'Tidak ada informasi fasilitas'}</p>
+                                <p>Jam Buka: ${fasilitas.jamBuka || 'Tidak ada informasi'}</p>
+                                <p>Jam Tutup: ${fasilitas.jamTutup || 'Tidak ada informasi'}</p>
+                            `
+                        });
+
                         infoWindow.open(map, marker);
                         activeInfoWindow = infoWindow;
-
-                        resultsContainer.style.display = 'none';
                     });
                     resultsContainer.appendChild(item);
                 });
 
                 resultsContainer.style.display = 'block';
             } else {
+                document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
                 resultsContainer.style.display = 'none';
-                markers.forEach(({
-                    marker
-                }) => {
-                    marker.setMap(map);
-                });
+                clearSearch();
             }
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
+            resultsContainer.style.display = 'none';
+            markers.forEach(({
+                marker
+            }) => marker.setMap(map));
         }
 
         window.initMap = initMap;
