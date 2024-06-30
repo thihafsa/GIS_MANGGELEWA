@@ -22,17 +22,22 @@
     <!-- Link to Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
+        html,
+        body {
+            font-family: 'Cairo', sans-serif;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            /* Background color for the page */
+        }
+
+        /* Map container */
         #map {
             height: 100%;
         }
 
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* Search container */
         #search-container {
             position: absolute;
             top: 10px;
@@ -49,12 +54,16 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
+        /* Hamburger menu icon */
         #hamburger-menu {
             font-size: 20px;
             margin-right: 10px;
             cursor: pointer;
+            color: #555;
+            /* Color of the hamburger icon */
         }
 
+        /* Dropdown menu */
         #dropdown-menu {
             position: absolute;
             top: 50px;
@@ -64,41 +73,99 @@
             border-radius: 4px;
             display: none;
             z-index: 10;
+            min-width: 120px;
+            /* Minimum width of the dropdown */
         }
 
+        /* Show dropdown menu */
         #dropdown-menu.show {
             display: block;
         }
 
+        /* Dropdown items */
         .dropdown-item {
             cursor: pointer;
             padding: 10px;
             border-bottom: 1px solid #ddd;
-            min-width: 120px;
             text-align: center;
+            transition: background-color 0.3s ease;
+            /* Smooth background color transition */
         }
 
+        /* Hover effect for dropdown items */
         .dropdown-item:hover {
             background-color: #f0f0f0;
+            /* Background color on hover */
         }
 
+        /* Map type dropdown */
+        .map-type-dropdown {
+            position: absolute;
+            top: 50px;
+            left: 125px;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            display: none;
+            z-index: 20;
+            min-width: 120px;
+            /* Minimum width of the map type dropdown */
+        }
+
+        /* Show map type dropdown */
+        .map-type-dropdown.show {
+            display: block;
+        }
+
+        /* Map type options */
+        .map-type-option {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            /* Smooth background color transition */
+        }
+
+        /* Last map type option without bottom border */
+        .map-type-option:last-child {
+            border-bottom: none;
+        }
+
+        /* Hover effect for map type options */
+        .map-type-option:hover {
+            background-color: #f0f0f0;
+            /* Background color on hover */
+        }
+
+        /* Search input */
         #search-input {
             flex-grow: 1;
             border: none;
             padding: 10px;
             font-size: 16px;
-        }
-
-        #search-input:focus {
             outline: none;
+            /* Remove outline on focus */
         }
 
+        /* Search button */
         #search-button {
             font-size: 20px;
             margin-left: 10px;
             cursor: pointer;
+            color: #555;
+            /* Color of the search icon */
+            transition: color 0.3s ease;
+            /* Smooth color transition */
         }
 
+        /* Hover effect for search button */
+        #search-button:hover {
+            color: #333;
+            /* Darker color on hover */
+        }
+
+        /* Search results container */
         #search-results {
             position: absolute;
             top: 50px;
@@ -112,18 +179,56 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
             border-radius: 4px;
             display: none;
+            z-index: 15;
         }
 
+        /* Search result items */
         .search-result-item {
             cursor: pointer;
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+            /* Smooth background color transition */
         }
 
+        /* Hover effect for search result items */
         .search-result-item:hover {
             background-color: #f0f0f0;
+            /* Background color on hover */
+        }
+      /* Styling untuk ikon pada dropdown menu */
+      #dropdown-menu a {
+      display: flex;
+      align-items: center;
+      text-decoration: none; /* Menghapus garis bawah */
+      color: #333; /* Warna teks yang diinginkan */
+      }
+
+      #dropdown-menu a i {
+      margin-right: 10px; /* Jarak antara ikon dan teks */
+      }
+
+      /* Styling untuk ikon pada dropdown map type */
+      .map-type-dropdown .map-type-option {
+      display: flex;
+      align-items: center;
+      text-decoration: none; /* Menghapus garis bawah */
+      color: #333; /* Warna teks yang diinginkan */
+      padding: 10px;
+      }
+
+      .map-type-dropdown .map-type-option i {
+      margin-right: 10px; /* Jarak antara ikon dan teks */
+      }
+
+
+        /* Styling untuk tautan pada dropdown map type */
+        .map-type-dropdown a {
+        text-decoration: none; /* Menghapus garis bawah */
+        color: #333; /* Warna teks yang diinginkan */
         }
 
+        /* Responsive adjustments */
         @media (max-width: 600px) {
             #search-input {
                 font-size: 14px;
@@ -141,10 +246,30 @@
     <div id="search-container">
         <i id="hamburger-menu" class="fas fa-bars"></i>
         <div id="dropdown-menu">
-            <div class="dropdown-item" id="map-type">Map Type</div>
-            <div class="dropdown-item" id="logout">Logout</div>
+            <div class="dropdown-item" id="map-type">
+                <i class="fas fa-map"></i> Map Type
+            </div>
+            <div class="dropdown-item" id="logout">
+                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
         </div>
-        <input id="search-input" type="text" placeholder="Search Box">
+
+        <div id="map-type-dropdown" class="map-type-dropdown">
+            <div class="map-type-option" id="roadmap">
+                <i class="fas fa-road"></i> Roadmap
+            </div>
+            <div class="map-type-option" id="satellite">
+                <i class="fas fa-satellite"></i> Satellite
+            </div>
+            <div class="map-type-option" id="hybrid">
+                <i class="fas fa-globe"></i> Hybrid
+            </div>
+            <div class="map-type-option" id="terrain">
+                <i class="fas fa-mountain"></i> Terrain
+            </div>
+        </div>
+
+        <input id="search-input" type="text" placeholder="Telusuri Peta....">
         <i id="search-button" class="fas fa-search"></i>
         <div id="search-results"></div>
     </div>
@@ -167,6 +292,7 @@
                 zoom: 10,
                 center: defaultLatLng,
                 mapTypeControl: false,
+                fullscreenControl: false,
             });
 
             fetchDataAndAddMarkers();
@@ -176,26 +302,48 @@
 
             const hamburgerMenu = document.getElementById('hamburger-menu');
             const dropdownMenu = document.getElementById('dropdown-menu');
+            const mapTypeDropdown = document.getElementById('map-type-dropdown');
 
             hamburgerMenu.addEventListener('click', () => {
                 dropdownMenu.classList.toggle('show');
+                mapTypeDropdown.classList.remove('show'); // Hide map type dropdown when main dropdown is shown
             });
 
             document.addEventListener('click', (event) => {
                 if (!event.target.closest('#dropdown-menu') && !event.target.closest('#hamburger-menu')) {
                     dropdownMenu.classList.remove('show');
                 }
+                if (!event.target.closest('.map-type-dropdown') && !event.target.closest('#map-type')) {
+                    mapTypeDropdown.classList.remove('show');
+                }
             });
 
             document.getElementById('map-type').addEventListener('click', () => {
-                // Implement map type change functionality here
-                alert('Change Map Type');
-                dropdownMenu.classList.remove('show');
+                mapTypeDropdown.classList.toggle('show');
+            });
+
+            document.getElementById('roadmap').addEventListener('click', () => {
+                map.setMapTypeId('roadmap');
+                mapTypeDropdown.classList.remove('show');
+            });
+
+            document.getElementById('satellite').addEventListener('click', () => {
+                map.setMapTypeId('satellite');
+                mapTypeDropdown.classList.remove('show');
+            });
+
+            document.getElementById('hybrid').addEventListener('click', () => {
+                map.setMapTypeId('hybrid');
+                mapTypeDropdown.classList.remove('show');
+            });
+
+            document.getElementById('terrain').addEventListener('click', () => {
+                map.setMapTypeId('terrain');
+                mapTypeDropdown.classList.remove('show');
             });
 
             document.getElementById('logout').addEventListener('click', () => {
-                // Implement logout functionality here
-                alert('Logout');
+
                 dropdownMenu.classList.remove('show');
             });
         }
@@ -259,7 +407,6 @@
             resultsContainer.innerHTML = '';
 
             if (query) {
-                document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
                 const results = markers.filter(({
                     fasilitas
                 }) => {
@@ -275,7 +422,6 @@
                     item.classList.add('search-result-item');
                     item.textContent = fasilitas.nama;
                     item.addEventListener('click', () => {
-                        document.getElementById('search-input').value = fasilitas.nama;
                         map.setCenter(marker.getPosition());
                         map.setZoom(15);
 
@@ -300,8 +446,8 @@
                 });
 
                 resultsContainer.style.display = 'block';
+                document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
             } else {
-                document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
                 resultsContainer.style.display = 'none';
                 clearSearch();
             }
@@ -310,10 +456,17 @@
         function clearSearch() {
             document.getElementById('search-input').value = '';
             document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
+            const resultsContainer = document.getElementById('search-results');
             resultsContainer.style.display = 'none';
-            markers.forEach(({
-                marker
-            }) => marker.setMap(map));
+
+            // Close all info windows
+            if (activeInfoWindow) {
+                activeInfoWindow.close();
+            }
+
+            // Reset map to default center and zoom
+            map.setCenter(defaultLatLng);
+            map.setZoom(10);
         }
 
         window.initMap = initMap;
