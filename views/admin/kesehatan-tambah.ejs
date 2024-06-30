@@ -369,7 +369,7 @@
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
                             <div class="dashboard_bar">
-                                Tambah Fasilitas Pendidikan
+                                Tambah Fasilitas Kesehatan
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
@@ -380,25 +380,17 @@
                                                 class="flaticon-381-search-2"></i></a></span>
                                 </div>
                             </li>
-
-                           
                             <li class="nav-item dropdown notification_dropdown">
                                 <a class='nav-link' id='settings' href='javascript:void(0);'>
                                     <svg fill='#4f7086' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg'
                                         xmlnsXlink='http://www.w3.org/1999/xlink' width='28' height='28'
                                         viewBox='0 0 45.973 45.973' xmlSpace='preserve'>
-                                        <g>
-                                            <g>
-                                                <path
-                                                    d='M43.454,18.443h-2.437c-0.453-1.766-1.16-3.42-2.082-4.933l1.752-1.756c0.473-0.473,0.733-1.104,0.733-1.774 c0-0.669-0.262-1.301-0.733-1.773l-2.92-2.917c-0.947-0.948-2.602-0.947-3.545-0.001l-1.826,1.815 C30.9,6.232,29.296,5.56,27.529,5.128V2.52c0-1.383-1.105-2.52-2.488-2.52h-4.128c-1.383,0-2.471,1.137-2.471,2.52v2.607 c-1.766,0.431-3.38,1.104-4.878,1.977l-1.825-1.815c-0.946-0.948-2.602-0.947-3.551-0.001L5.27,8.205 C4.802,8.672,4.535,9.318,4.535,9.978c0,0.669,0.259,1.299,0.733,1.772l1.752,1.76c-0.921,1.513-1.629,3.167-2.081,4.933H2.501 C1.117,18.443,0,19.555,0,20.935v4.125c0,1.384,1.117,2.471,2.501,2.471h2.438c0.452,1.766,1.159,3.43,2.079,4.943l-1.752,1.763 c-0.474,0.473-0.734,1.106-0.734,1.776s0.261,1.303,0.734,1.776l2.92,2.919c0.474,0.473,1.103,0.733,1.772,0.733 s1.299-0.261,1.773-0.733l1.833-1.816c1.498,0.873,3.112,1.545,4.878,1.978v2.604c0,1.383,1.088,2.498,2.471,2.498h4.128 c1.383,0,2.488-1.115,2.488-2.498v-2.605c1.767-0.432,3.371-1.104,4.869-1.977l1.817,1.812c0.474,0.475,1.104,0.735,1.775,0.735 c0.67,0,1.301-0.261,1.774-0.733l2.92-2.917c0.473-0.472,0.732-1.103,0.734-1.772c0-0.67-0.262-1.299-0.734-1.773l-1.75-1.77 c0.92-1.514,1.627-3.179,2.08-4.943h2.438c1.383,0,2.52-1.087,2.52-2.471v-4.125C45.973,19.555,44.837,18.443,43.454,18.443z M22.976,30.85c-4.378,0-7.928-3.517-7.928-7.852c0-4.338,3.55-7.85,7.928-7.85c4.379,0,7.931,3.512,7.931,7.85 C30.906,27.334,27.355,30.85,22.976,30.85z'>
-                                                </path>
-                                            </g>
-                                        </g>
+                                        <!-- SVG content -->
                                     </svg>
                                 </a>
                             </li>
                             <li class='nav-item'>
-                                <a href='/admin/pendidikan' class='btn btn-primary'>
+                                <a href='/admin/kesehatan' class='btn btn-primary'>
                                     <i class='las la-arrow-left scale5'></i> Kembali
                                 </a>
                             </li>
@@ -407,6 +399,7 @@
                 </nav>
             </div>
         </div>
+
         <%- include('../template/sidebar.ejs') %>
 
         <div class="content-body">
@@ -418,32 +411,51 @@
                                 <div class="form-validation">
                                     <div class="row">
                                         <div class="col-xl-6">
-                                            <div class="mb-3"> <label class="form-label" for="nama">Nama Sekolah
+                                            <div class="mb-3">
+                                                <label class="form-label" for="nama">Nama Instansi
                                                     <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="nama" name="nama"
-                                                    placeholder="Masukkan nama sekolah.." required="">
+                                                <input type="text" class="form-control" id="nama"
+                                                    name="nama" placeholder="Masukkan nama instansi.."
+                                                    required="">
                                                 <div class="invalid-feedback">
-                                                    Harap masukkan nama sekolah.
+                                                    Harap masukkan nama instansi.
                                                 </div>
                                             </div>
-                                            <div class="mb-3"> <label class="form-label" for="kepala_sekolah">Nama
-                                                    Kepala Sekolah</label>
-                                                <input type="text" class="form-control" id="kepala_sekolah"
-                                                    name="kepala_sekolah" placeholder="Masukkan nama kepala sekolah..">
-                                            </div>
-                                            <div class="mb-3"> <label class="form-label" for="jumlah_murid">Jumlah
-                                                    Murid</label>
-                                                <input type="number" class="form-control" id="jumlah_murid"
-                                                    name="jumlah_murid" placeholder="Masukkan jumlah murid..">
-                                            </div>
-                                            <div class="mb-3"> <label class="form-label" for="jumlah_guru">Jumlah
-                                                    Guru</label>
-                                                <input type="number" class="form-control" id="jumlah_guru"
-                                                    name="jumlah_guru" placeholder="Masukkan jumlah guru..">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="kepala_instansi">Nama Kepala
+                                                    Instansi</label>
+                                                <input type="text" class="form-control" id="kepala_instansi"
+                                                    name="kepala_instansi"
+                                                    placeholder="Masukkan nama kepala instansi..">
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label" for="tags">Tags <span
+                                                <label class="form-label" for="fasilitas">Fasilitas <span
                                                         class="text-danger">*</span></label>
+                                                <select class="multi-select" id="fasilitas" name="fasilitas[]"
+                                                    multiple="multiple">
+                                                    <option value="Poli Umum">Poli Umum</option>
+                                                    <option value="Poli Gigi">Poli Gigi</option>
+                                                    <option value="Poli Mata">Poli Mata</option>
+                                                    <option value="Poli Anak">Poli Anak</option>
+                                                    <option value="Poli Kandungan">Poli Kandungan</option>
+                                                    <option value="Poli Bedah">Poli Bedah</option>
+                                                    <option value="Poli Jantung">Poli Jantung</option>
+                                                    <option value="Laboratorium">Laboratorium</option>
+                                                    <option value="Radiologi">Radiologi</option>
+                                                    <option value="Farmasi">Farmasi</option>
+                                                    <option value="Unit Gawat Darurat">Unit Gawat Darurat</option>
+                                                    <option value="Rawat Inap">Rawat Inap</option>
+                                                    <option value="Rehabilitasi Medis">Rehabilitasi Medis</option>
+                                                    <option value="Pelayanan Kesehatan Jiwa">Pelayanan Kesehatan Jiwa
+                                                    </option>
+                                                    <option value="Klinik Gigi">Klinik Gigi</option>
+                                                    <option value="Klinik Mata">Klinik Mata</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label" for="tags">Tags
+                                                    <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="tags" name="tags"
                                                     placeholder="Masukkan tags (dipisah koma).." required="">
                                                 <div class="invalid-feedback">
@@ -453,7 +465,8 @@
                                         </div>
 
                                         <div class="col-xl-6">
-                                            <div class="mb-3"> <label class="form-label" for="latitude">Latitude</label>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="latitude">Latitude</label>
                                                 <input type="number" class="form-control" id="latitude" name="latitude"
                                                     step="0.000001" placeholder="Masukkan latitude..">
                                             </div>
@@ -481,31 +494,24 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label" for="fasilitas">Fasilitas <span
+                                                <label class="form-label" for="layanan">Layanan <span
                                                         class="text-danger">*</span></label>
-                                                <select class="multi-select" id="fasilitas" name="fasilitas[]"
+                                                <select class="multi-select" id="layanan" name="layanan[]"
                                                     multiple="multiple">
-                                                    <option value="Ruang kelas ber-AC">Ruang kelas ber-AC</option>
-                                                    <option value="Laboratorium komputer">Laboratorium komputer
+                                                    <option value="Pelayanan medis umum">Pelayanan medis umum</option>
+                                                    <option value="Pelayanan gigi">Pelayanan gigi</option>
+                                                    <option value="Pelayanan kesehatan ibu dan anak">Pelayanan kesehatan
+                                                        ibu
+                                                        dan anak</option>
+                                                    <option value="Pelayanan gizi">Pelayanan gizi</option>
+                                                    <option value="Konseling kesehatan">Konseling kesehatan</option>
+                                                    <option value="Farmasi">Farmasi</option>
+                                                    <option value="Laboratorium kesehatan">Laboratorium kesehatan
                                                     </option>
-                                                    <option value="Perpustakaan">Perpustakaan</option>
-                                                    <option value="Lapangan olahraga">Lapangan olahraga</option>
-                                                    <option value="Kantin">Kantin</option>
-                                                    <option value="Ruang UKS">Ruang UKS</option>
-                                                    <option value="Ruang guru">Ruang guru</option>
-                                                    <option value="Auditorium">Auditorium</option>
-                                                    <option value="Mushola">Mushola</option>
-                                                    <option value="Lapangan parkir">Lapangan parkir</option>
-                                                    <option value="Taman sekolah">Taman sekolah</option>
-                                                    <option value="Toilet bersih">Toilet bersih</option>
-                                                    <option value="Koneksi internet">Koneksi internet</option>
-                                                    <option value="Ruang seni">Ruang seni</option>
-                                                    <option value="Ruang musik">Ruang musik</option>
-                                                    <option value="Lapangan upacara">Lapangan upacara</option>
-                                                    <option value="Ruang OSIS">Ruang OSIS</option>
-                                                    <option value="Ruang bimbingan konseling">Ruang bimbingan
-                                                        konseling</option>
-                                                    <option value="Koperasi siswa">Koperasi siswa</option>
+                                                    <option value="Rehabilitasi medis">Rehabilitasi medis</option>
+                                                    <option value="Pelayanan rawat inap">Pelayanan rawat inap</option>
+                                                    <option value="Pelayanan rawat jalan">Pelayanan rawat jalan</option>
+                                                    <option value="Ambulans">Ambulans</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -523,7 +529,8 @@
                                                     <span class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="deskripsi_singkat"
                                                     name="deskripsi_singkat" rows="5"
-                                                    placeholder="Deskripsikan singkat sekolah.." required=""></textarea>
+                                                    placeholder="Deskripsikan singkat instansi kesehatan.."
+                                                    required=""></textarea>
                                                 <div class="invalid-feedback">
                                                     Harap masukkan deskripsi singkat.
                                                 </div>
@@ -539,35 +546,35 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
 
         <%- include('../template/footer.ejs') %>
+
         <script>
             function submitForm() {
                 const formData = new FormData();
                 formData.append('nama', document.getElementById('nama').value);
-                formData.append('kepala_sekolah', document.getElementById('kepala_sekolah').value);
-                formData.append('jumlah_murid', document.getElementById('jumlah_murid').value);
-                formData.append('jumlah_guru', document.getElementById('jumlah_guru').value);
+                formData.append('kepala_instansi', document.getElementById('kepala_instansi').value);
+                formData.append('fasilitas', Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
+                opt.value).join(','));
                 formData.append('tags', document.getElementById('tags').value);
                 formData.append('latitude', document.getElementById('latitude').value);
                 formData.append('longitude', document.getElementById('longitude').value);
                 formData.append('jamBuka', document.getElementById('jamBuka').value);
                 formData.append('jamTutup', document.getElementById('jamTutup').value);
-                const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
+                const layanan = Array.from(document.getElementById('layanan').selectedOptions).map(opt =>
                     opt.value).join(',');
-                formData.append('fasilitas', fasilitas);
+                formData.append('layanan', layanan);
                 const foto = document.getElementById('foto').files[0];
                 if (foto) {
                     formData.append('foto', foto);
                 }
                 formData.append('deskripsi_singkat', document.getElementById('deskripsi_singkat').value);
 
-                fetch('/fasilitaspendidikan', {
+                fetch('/fasilitaskesehatan', {
                         method: 'POST',
                         body: formData
                     })
@@ -579,9 +586,9 @@
                     })
                     .then(data => {
                         // Handle success response
-                        sessionStorage.setItem('submitSuccess', 'Data berhasil di tambah!');
-                        // Redirect to admin/pendidikan
-                        window.location.href = '/admin/pendidikan';
+                        sessionStorage.setItem('submitSuccess', 'Data berhasil ditambahkan!');
+                        // Redirect to admin/kesehatan
+                        window.location.href = '/admin/kesehatan';
                     })
                     .catch(error => {
                         // Handle error
@@ -589,7 +596,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Failed to submit form. Please try again later.'
+                            text: 'Gagal mengirimkan formulir. Silakan coba lagi nanti.'
                         });
                     });
             }

@@ -9,7 +9,7 @@ const fasilitasKesehatanController = require('../controllers/fasilitasKesehatanC
  *     FasilitasKesehatanInput:
  *       type: object
  *       properties:
- *         nama_instansi:
+ *         nama:
  *           type: string
  *           description: Nama instansi kesehatan
  *         kepala_instansi:

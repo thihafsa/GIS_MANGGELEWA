@@ -186,7 +186,7 @@ exports.deleteFasilitasPendidikan = async (req, res) => {
 
         // Hapus file foto jika ada
         if (existingFasilitas.foto) {
-            const filePath = path.join(__path, existingFasilitas.foto);
+           const filePath = path.join(__dirname, 'uploads', 'pendidikan', path.basename(existingFasilitas.foto));
             if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
             }

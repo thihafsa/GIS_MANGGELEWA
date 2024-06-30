@@ -24,11 +24,11 @@ const FasilitasPendidikan = db.define('fasilitasPendidikan', {
         allowNull: true,
     },
     latitude: {
-        type: DataTypes.DECIMAL(10, 8),
+        type: DataTypes.STRING,
         allowNull: true,
     },
     longitude: {
-        type: DataTypes.DECIMAL(11, 8),
+        type: DataTypes.STRING,
         allowNull: true,
     },
     jamBuka: {

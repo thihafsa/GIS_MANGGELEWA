@@ -37,7 +37,7 @@ exports.getFasilitasKesehatanById = async (req, res) => {
 exports.createFasilitasKesehatan = async (req, res) => {
     try {
         const {
-            nama_instansi,
+            nama,
             kepala_instansi,
             fasilitas,
             layanan,
@@ -76,7 +76,7 @@ exports.createFasilitasKesehatan = async (req, res) => {
         }
 
         const fasilitasKesehatan = await FasilitasKesehatan.create({
-            nama_instansi,
+            nama,
             kepala_instansi,
             fasilitas,
             layanan,
@@ -109,7 +109,7 @@ exports.updateFasilitasKesehatan = async (req, res) => {
         }
 
         const {
-            nama_instansi,
+            nama,
             kepala_instansi,
             fasilitas,
             layanan,
@@ -148,7 +148,7 @@ exports.updateFasilitasKesehatan = async (req, res) => {
         }
 
         await existingFasilitas.update({
-            nama_instansi: nama_instansi || existingFasilitas.nama_instansi,
+            nama: nama || existingFasilitas.nama,
             kepala_instansi: kepala_instansi || existingFasilitas.kepala_instansi,
             fasilitas: fasilitas || existingFasilitas.fasilitas,
             layanan: layanan || existingFasilitas.layanan,
