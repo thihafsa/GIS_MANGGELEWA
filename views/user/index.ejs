@@ -288,230 +288,231 @@
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk&callback=initMap&libraries=places&v=weekly"
         defer></script>
-   <script>
-       let map;
-       let activeInfoWindow;
-       let markers = [];
-       const defaultLatLng = {
-           lat: -8.532829,
-           lng: 118.305939
-       };
+    <script>
+        let map;
+        let activeInfoWindow;
+        let markers = [];
+        const defaultLatLng = {
+            lat: -8.532829,
+            lng: 118.305939
+        };
 
-       function initMap() {
-           map = new google.maps.Map(document.getElementById("map"), {
-               zoom: 10,
-               center: defaultLatLng,
-               mapTypeControl: false,
-               fullscreenControl: false,
-           });
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: defaultLatLng,
+                mapTypeControl: false,
+                fullscreenControl: false,
+            });
 
-           fetchDataAndAddMarkers();
+            fetchDataAndAddMarkers();
 
-           document.getElementById('search-input').addEventListener('input', handleSearch);
-           document.getElementById('search-button').addEventListener('click', clearSearch);
+            document.getElementById('search-input').addEventListener('input', handleSearch);
+            document.getElementById('search-button').addEventListener('click', clearSearch);
 
-           const hamburgerMenu = document.getElementById('hamburger-menu');
-           const dropdownMenu = document.getElementById('dropdown-menu');
-           const mapTypeDropdown = document.getElementById('map-type-dropdown');
+            const hamburgerMenu = document.getElementById('hamburger-menu');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+            const mapTypeDropdown = document.getElementById('map-type-dropdown');
 
-           hamburgerMenu.addEventListener('click', () => {
-               dropdownMenu.classList.toggle('show');
-               mapTypeDropdown.classList.remove('show'); // Hide map type dropdown when main dropdown is shown
-           });
+            hamburgerMenu.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('show');
+                mapTypeDropdown.classList.remove('show'); // Hide map type dropdown when main dropdown is shown
+            });
 
-           document.addEventListener('click', (event) => {
-               if (!event.target.closest('#dropdown-menu') && !event.target.closest('#hamburger-menu')) {
-                   dropdownMenu.classList.remove('show');
-               }
-               if (!event.target.closest('.map-type-dropdown') && !event.target.closest('#map-type')) {
-                   mapTypeDropdown.classList.remove('show');
-               }
-           });
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('#dropdown-menu') && !event.target.closest('#hamburger-menu')) {
+                    dropdownMenu.classList.remove('show');
+                }
+                if (!event.target.closest('.map-type-dropdown') && !event.target.closest('#map-type')) {
+                    mapTypeDropdown.classList.remove('show');
+                }
+            });
 
-           document.getElementById('map-type').addEventListener('click', () => {
-               mapTypeDropdown.classList.toggle('show');
-           });
+            document.getElementById('map-type').addEventListener('click', () => {
+                mapTypeDropdown.classList.toggle('show');
+            });
 
-           document.getElementById('roadmap').addEventListener('click', () => {
-               map.setMapTypeId('roadmap');
-               mapTypeDropdown.classList.remove('show');
-           });
+            document.getElementById('roadmap').addEventListener('click', () => {
+                map.setMapTypeId('roadmap');
+                mapTypeDropdown.classList.remove('show');
+            });
 
-           document.getElementById('satellite').addEventListener('click', () => {
-               map.setMapTypeId('satellite');
-               mapTypeDropdown.classList.remove('show');
-           });
+            document.getElementById('satellite').addEventListener('click', () => {
+                map.setMapTypeId('satellite');
+                mapTypeDropdown.classList.remove('show');
+            });
 
-           document.getElementById('hybrid').addEventListener('click', () => {
-               map.setMapTypeId('hybrid');
-               mapTypeDropdown.classList.remove('show');
-           });
+            document.getElementById('hybrid').addEventListener('click', () => {
+                map.setMapTypeId('hybrid');
+                mapTypeDropdown.classList.remove('show');
+            });
 
-           document.getElementById('terrain').addEventListener('click', () => {
-               map.setMapTypeId('terrain');
-               mapTypeDropdown.classList.remove('show');
-           });
+            document.getElementById('terrain').addEventListener('click', () => {
+                map.setMapTypeId('terrain');
+                mapTypeDropdown.classList.remove('show');
+            });
 
-           document.getElementById('logout').addEventListener('click', () => {
-               dropdownMenu.classList.remove('show');
-           });
-       }
+            document.getElementById('logout').addEventListener('click', () => {
+                dropdownMenu.classList.remove('show');
+            });
+        }
 
-       function fetchDataAndAddMarkers() {
-           // Fetch data for pendidikan
-           fetch('/fasilitaspendidikan')
-               .then(response => response.json())
-               .then(fasilitasPendidikan => {
-                   console.log('Data Fasilitas Pendidikan:', fasilitasPendidikan);
-                   addMarkers(fasilitasPendidikan, 'pendidikan',
-                       'https://telegra.ph/file/1abb1eb8ef958f37dbca0.png');
-               })
-               .catch(error => console.error('Error fetching data:', error));
+        function fetchDataAndAddMarkers() {
+            // Fetch data for pendidikan
+            fetch('/fasilitaspendidikan')
+                .then(response => response.json())
+                .then(fasilitasPendidikan => {
+                    console.log('Data Fasilitas Pendidikan:', fasilitasPendidikan);
+                    addMarkers(fasilitasPendidikan, 'pendidikan',
+                        'https://telegra.ph/file/1abb1eb8ef958f37dbca0.png');
+                })
+                .catch(error => console.error('Error fetching data:', error));
 
-           // Fetch data for kesehatan
-           fetch('/fasilitaskesehatan')
-               .then(response => response.json())
-               .then(fasilitasKesehatan => {
-                   console.log('Data Fasilitas Kesehatan:', fasilitasKesehatan);
-                   addMarkers(fasilitasKesehatan, 'kesehatan', 'https://telegra.ph/file/1e5bdd413ceba6174725a.png');
-               })
-               .catch(error => console.error('Error fetching data:', error));
-       }
+            // Fetch data for kesehatan
+            fetch('/fasilitaskesehatan')
+                .then(response => response.json())
+                .then(fasilitasKesehatan => {
+                    console.log('Data Fasilitas Kesehatan:', fasilitasKesehatan);
+                    addMarkers(fasilitasKesehatan, 'kesehatan',
+                    'https://telegra.ph/file/1e5bdd413ceba6174725a.png');
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
 
-       function addMarkers(fasilitasData, type, iconUrl) {
-           fasilitasData.forEach(fasilitas => {
-               if (fasilitas.latitude && fasilitas.longitude) {
-                   const lat = parseFloat(fasilitas.latitude);
-                   const lng = parseFloat(fasilitas.longitude);
+        function addMarkers(fasilitasData, type, iconUrl) {
+            fasilitasData.forEach(fasilitas => {
+                if (fasilitas.latitude && fasilitas.longitude) {
+                    const lat = parseFloat(fasilitas.latitude);
+                    const lng = parseFloat(fasilitas.longitude);
 
-                   if (!isNaN(lat) && !isNaN(lng)) {
-                       const icon = {
-                           url: iconUrl,
-                           scaledSize: new google.maps.Size(40, 40),
-                           origin: new google.maps.Point(0, 0),
-                           anchor: new google.maps.Point(20, 40),
-                       };
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        const icon = {
+                            url: iconUrl,
+                            scaledSize: new google.maps.Size(40, 40),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(20, 40),
+                        };
 
-                       const marker = new google.maps.Marker({
-                           position: {
-                               lat,
-                               lng
-                           },
-                           map,
-                           icon,
-                           title: fasilitas.nama,
-                           animation: google.maps.Animation.DROP,
-                       });
+                        const marker = new google.maps.Marker({
+                            position: {
+                                lat,
+                                lng
+                            },
+                            map,
+                            icon,
+                            title: fasilitas.nama,
+                            animation: google.maps.Animation.DROP,
+                        });
 
-                       const infoWindow = new google.maps.InfoWindow({
-                           content: `
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `
                             <h3>${fasilitas.nama}</h3>
                             <p>Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
                             <p>Fasilitas: ${fasilitas.fasilitas || 'Tidak ada informasi fasilitas'}</p>
                             <p>Jam Buka: ${fasilitas.jamBuka || 'Tidak ada informasi'}</p>
                             <p>Jam Tutup: ${fasilitas.jamTutup || 'Tidak ada informasi'}</p>
                         `
-                       });
+                        });
 
-                       marker.addListener('click', () => {
-                           if (activeInfoWindow) {
-                               activeInfoWindow.close();
-                           }
+                        marker.addListener('click', () => {
+                            if (activeInfoWindow) {
+                                activeInfoWindow.close();
+                            }
 
-                           infoWindow.open(map, marker);
-                           activeInfoWindow = infoWindow;
-                       });
+                            infoWindow.open(map, marker);
+                            activeInfoWindow = infoWindow;
+                        });
 
-                       markers.push({
-                           marker,
-                           fasilitas,
-                           type
-                       });
-                   } else {
-                       console.error('Invalid latitude or longitude for:', fasilitas);
-                   }
-               }
-           });
-       }
+                        markers.push({
+                            marker,
+                            fasilitas,
+                            type
+                        });
+                    } else {
+                        console.error('Invalid latitude or longitude for:', fasilitas);
+                    }
+                }
+            });
+        }
 
-       function handleSearch(event) {
-           const query = event.target.value.toLowerCase();
-           const resultsContainer = document.getElementById('search-results');
-           resultsContainer.innerHTML = '';
+        function handleSearch(event) {
+            const query = event.target.value.toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = '';
 
-           if (query) {
-               const results = markers.filter(({
-                   fasilitas
-               }) => {
-                   return fasilitas.nama.toLowerCase().includes(query) || (fasilitas.alamat && fasilitas.alamat
-                       .toLowerCase().includes(query));
-               });
+            if (query) {
+                const results = markers.filter(({
+                    fasilitas
+                }) => {
+                    return fasilitas.nama.toLowerCase().includes(query) || (fasilitas.alamat && fasilitas.alamat
+                        .toLowerCase().includes(query));
+                });
 
-               results.forEach(({
-                   fasilitas,
-                   marker
-               }) => {
-                   const item = document.createElement('div');
-                   item.classList.add('search-result-item');
-                   item.textContent = fasilitas.nama;
-                   item.addEventListener('click', () => {
-                       // Update search input value with selected result
-                       document.getElementById('search-input').value = fasilitas.nama;
+                results.forEach(({
+                    fasilitas,
+                    marker
+                }) => {
+                    const item = document.createElement('div');
+                    item.classList.add('search-result-item');
+                    item.textContent = fasilitas.nama;
+                    item.addEventListener('click', () => {
+                        // Update search input value with selected result
+                        document.getElementById('search-input').value = fasilitas.nama;
 
-                       // Clear search results and hide container
-                       resultsContainer.style.display = 'none';
+                        // Clear search results and hide container
+                        resultsContainer.style.display = 'none';
 
-                       // Center map to selected marker
-                       map.setCenter(marker.getPosition());
-                       map.setZoom(15);
+                        // Center map to selected marker
+                        map.setCenter(marker.getPosition());
+                        map.setZoom(15);
 
-                       if (activeInfoWindow) {
-                           activeInfoWindow.close();
-                       }
+                        if (activeInfoWindow) {
+                            activeInfoWindow.close();
+                        }
 
-                       const infoWindow = new google.maps.InfoWindow({
-                           content: `
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `
                             <h3>${fasilitas.nama}</h3>
                             <p>Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
                             <p>Fasilitas: ${fasilitas.fasilitas || 'Tidak ada informasi fasilitas'}</p>
                             <p>Jam Buka: ${fasilitas.jamBuka || 'Tidak ada informasi'}</p>
                             <p>Jam Tutup: ${fasilitas.jamTutup || 'Tidak ada informasi'}</p>
                         `
-                       });
+                        });
 
-                       infoWindow.open(map, marker);
-                       activeInfoWindow = infoWindow;
-                   });
-                   resultsContainer.appendChild(item);
-               });
+                        infoWindow.open(map, marker);
+                        activeInfoWindow = infoWindow;
+                    });
+                    resultsContainer.appendChild(item);
+                });
 
-               resultsContainer.style.display = 'block';
-               document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
-           } else {
-               fetchDataAndAddMarkers();
-               resultsContainer.style.display = 'none';
-               clearSearch();
-           }
-       }
+                resultsContainer.style.display = 'block';
+                document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
+            } else {
+                fetchDataAndAddMarkers();
+                resultsContainer.style.display = 'none';
+                clearSearch();
+            }
+        }
 
-       function clearSearch() {
-           document.getElementById('search-input').value = '';
-           document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
-           const resultsContainer = document.getElementById('search-results');
-           resultsContainer.style.display = 'none';
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.style.display = 'none';
 
-           // Close all info windows
-           if (activeInfoWindow) {
-               activeInfoWindow.close();
-           }
+            // Close all info windows
+            if (activeInfoWindow) {
+                activeInfoWindow.close();
+            }
 
-           // Reset map to default center and zoom
-           map.setCenter(defaultLatLng);
-           map.setZoom(10);
-       }
+            // Reset map to default center and zoom
+            map.setCenter(defaultLatLng);
+            map.setZoom(10);
+        }
 
-       window.initMap = initMap;
-   </script>
+        window.initMap = initMap;
+    </script>
 
 </body>
 
