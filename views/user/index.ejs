@@ -198,36 +198,45 @@
             background-color: #f0f0f0;
             /* Background color on hover */
         }
-      /* Styling untuk ikon pada dropdown menu */
-      #dropdown-menu a {
-      display: flex;
-      align-items: center;
-      text-decoration: none; /* Menghapus garis bawah */
-      color: #333; /* Warna teks yang diinginkan */
-      }
 
-      #dropdown-menu a i {
-      margin-right: 10px; /* Jarak antara ikon dan teks */
-      }
+        /* Styling untuk ikon pada dropdown menu */
+        #dropdown-menu a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            /* Menghapus garis bawah */
+            color: #333;
+            /* Warna teks yang diinginkan */
+        }
 
-      /* Styling untuk ikon pada dropdown map type */
-      .map-type-dropdown .map-type-option {
-      display: flex;
-      align-items: center;
-      text-decoration: none; /* Menghapus garis bawah */
-      color: #333; /* Warna teks yang diinginkan */
-      padding: 10px;
-      }
+        #dropdown-menu a i {
+            margin-right: 10px;
+            /* Jarak antara ikon dan teks */
+        }
 
-      .map-type-dropdown .map-type-option i {
-      margin-right: 10px; /* Jarak antara ikon dan teks */
-      }
+        /* Styling untuk ikon pada dropdown map type */
+        .map-type-dropdown .map-type-option {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            /* Menghapus garis bawah */
+            color: #333;
+            /* Warna teks yang diinginkan */
+            padding: 10px;
+        }
+
+        .map-type-dropdown .map-type-option i {
+            margin-right: 10px;
+            /* Jarak antara ikon dan teks */
+        }
 
 
         /* Styling untuk tautan pada dropdown map type */
         .map-type-dropdown a {
-        text-decoration: none; /* Menghapus garis bawah */
-        color: #333; /* Warna teks yang diinginkan */
+            text-decoration: none;
+            /* Menghapus garis bawah */
+            color: #333;
+            /* Warna teks yang diinginkan */
         }
 
         /* Responsive adjustments */
@@ -358,7 +367,12 @@
                         if (fasilitas.latitude && fasilitas.longitude) {
                             const lat = parseFloat(fasilitas.latitude);
                             const lng = parseFloat(fasilitas.longitude);
-
+                              const icon = {
+                              url: 'https://telegra.ph/file/1abb1eb8ef958f37dbca0.png', // Ganti dengan URL ikon sekolah
+                              scaledSize: new google.maps.Size(40, 40), // Ukuran ikon (opsional)
+                              origin: new google.maps.Point(0, 0), // Posisi awal ikon (opsional)
+                              anchor: new google.maps.Point(20, 40), // Posisi jangkar ikon (tergantung dari ukuran dan desain ikon)
+                              };
                             if (!isNaN(lat) && !isNaN(lng)) {
                                 const marker = new google.maps.Marker({
                                     position: {
@@ -366,6 +380,7 @@
                                         lng
                                     },
                                     map,
+                                    icon: icon,
                                     title: fasilitas.nama,
                                     animation: google.maps.Animation.DROP,
                                 });
@@ -423,6 +438,13 @@
                     item.classList.add('search-result-item');
                     item.textContent = fasilitas.nama;
                     item.addEventListener('click', () => {
+                        // Update search input value with selected result
+                        document.getElementById('search-input').value = fasilitas.nama;
+
+                        // Clear search results and hide container
+                        resultsContainer.style.display = 'none';
+
+                        // Center map to selected marker
                         map.setCenter(marker.getPosition());
                         map.setZoom(15);
 
@@ -432,12 +454,12 @@
 
                         const infoWindow = new google.maps.InfoWindow({
                             content: `
-                                <h3>${fasilitas.nama}</h3>
-                                <p>Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
-                                <p>Fasilitas: ${fasilitas.fasilitas || 'Tidak ada informasi fasilitas'}</p>
-                                <p>Jam Buka: ${fasilitas.jamBuka || 'Tidak ada informasi'}</p>
-                                <p>Jam Tutup: ${fasilitas.jamTutup || 'Tidak ada informasi'}</p>
-                            `
+               <h3>${fasilitas.nama}</h3>
+               <p>Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
+               <p>Fasilitas: ${fasilitas.fasilitas || 'Tidak ada informasi fasilitas'}</p>
+               <p>Jam Buka: ${fasilitas.jamBuka || 'Tidak ada informasi'}</p>
+               <p>Jam Tutup: ${fasilitas.jamTutup || 'Tidak ada informasi'}</p>
+               `
                         });
 
                         infoWindow.open(map, marker);
@@ -446,9 +468,11 @@
                     resultsContainer.appendChild(item);
                 });
 
+
                 resultsContainer.style.display = 'block';
                 document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
             } else {
+                fetchDataAndAddMarkers();
                 resultsContainer.style.display = 'none';
                 clearSearch();
             }
