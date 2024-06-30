@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -18,65 +19,234 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <meta name="format-detection" content="telephone=no">
     <base href="/">
+    <!-- Link to Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* 
- * Always set the map height explicitly to define the size of the div element
- * that contains the map. 
- */
         #map {
             height: 100%;
         }
 
-        /* 
- * Optional: Makes the sample page fill the window. 
- */
         html,
         body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
+
+        #search-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        #hamburger-menu {
+            font-size: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        #search-input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #search-input:focus {
+            outline: none;
+        }
+
+        #search-button {
+            font-size: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        #search-results {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            display: none;
+        }
+
+        .search-result-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .search-result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        @media (max-width: 600px) {
+            #search-input {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            .search-result-item {
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div id="search-container">
+        <i id="hamburger-menu" class="fas fa-bars"></i>
+        <input id="search-input" type="text" placeholder="Search Box">
+        <i id="search-button" class="fas fa-search"></i>
+        <div id="search-results"></div>
+    </div>
     <div id="map"></div>
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk&callback=initMap&v=weekly"
-        defer></script>
 
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk&callback=initMap&libraries=places&v=weekly"
+        defer></script>
     <script>
+        let map;
+        let activeInfoWindow;
+        let markers = [];
+
         function initMap() {
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 15,
-                center: {
-                    lat: -8.532829,
-                    lng: 118.305939
-                },
-                mapTypeControl: true,
-                mapTypeControlOptions: {
-                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                    position: google.maps.ControlPosition.BOTTOM_CENTER,
-                },
-                zoomControl: true,
-                zoomControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_CENTER,
-                },
-                scaleControl: true,
-                streetViewControl: true,
-                streetViewControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_TOP,
-                },
-                fullscreenControl: true,
+            const myLatLng = {
+                lat: -8.532829,
+                lng: 118.305939
+            };
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: myLatLng,
             });
+
+            fetchDataAndAddMarkers();
+
+            document.getElementById('search-input').addEventListener('input', handleSearch);
+        }
+
+        function fetchDataAndAddMarkers() {
+            fetch('/fasilitaspendidikan')
+                .then(response => response.json())
+                .then(fasilitasPendidikan => {
+                    console.log('Data Fasilitas Pendidikan:', fasilitasPendidikan); // Log data untuk memeriksa
+                    fasilitasPendidikan.forEach(fasilitas => {
+                        if (fasilitas.latitude && fasilitas.longitude) {
+                            const lat = parseFloat(fasilitas.latitude);
+                            const lng = parseFloat(fasilitas.longitude);
+
+                            if (!isNaN(lat) && !isNaN(lng)) {
+                                const marker = new google.maps.Marker({
+                                    position: {
+                                        lat,
+                                        lng
+                                    },
+                                    map,
+                                    title: fasilitas.nama,
+                                    animation: google.maps.Animation.DROP,
+                                });
+
+                                const infoWindow = new google.maps.InfoWindow({
+                                    content: `
+                                        <h3>${fasilitas.nama}</h3>
+                                        <p>Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
+                                        <p>Fasilitas: ${fasilitas.fasilitas || 'Tidak ada informasi fasilitas'}</p>
+                                        <p>Jam Buka: ${fasilitas.jamBuka || 'Tidak ada informasi'}</p>
+                                        <p>Jam Tutup: ${fasilitas.jamTutup || 'Tidak ada informasi'}</p>
+                                    `
+                                });
+
+                                marker.addListener('click', () => {
+                                    if (activeInfoWindow) {
+                                        activeInfoWindow.close();
+                                    }
+
+                                    infoWindow.open(map, marker);
+                                    activeInfoWindow = infoWindow;
+                                });
+
+                                markers.push({
+                                    marker,
+                                    fasilitas,
+                                    infoWindow
+                                });
+                            } else {
+                                console.error('Invalid latitude or longitude for:', fasilitas);
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function handleSearch(event) {
+            const query = event.target.value.toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = '';
+
+            if (query) {
+                const results = markers.filter(({
+                    fasilitas
+                }) => {
+                    return fasilitas.nama.toLowerCase().includes(query) || (fasilitas.alamat && fasilitas.alamat
+                        .toLowerCase().includes(query));
+                });
+
+                results.forEach(({
+                    fasilitas,
+                    marker,
+                    infoWindow
+                }) => {
+                    const item = document.createElement('div');
+                    item.classList.add('search-result-item');
+                    item.textContent = fasilitas.nama;
+                    item.addEventListener('click', () => {
+                        document.getElementById('search-input').value = fasilitas.nama;
+                        map.setCenter(marker.getPosition());
+                        map.setZoom(15);
+
+                        if (activeInfoWindow) {
+                            activeInfoWindow.close();
+                        }
+
+                        infoWindow.open(map, marker);
+                        activeInfoWindow = infoWindow;
+
+                        resultsContainer.style.display = 'none';
+                    });
+                    resultsContainer.appendChild(item);
+                });
+
+                resultsContainer.style.display = 'block';
+            } else {
+                resultsContainer.style.display = 'none';
+                markers.forEach(({
+                    marker
+                }) => {
+                    marker.setMap(map);
+                });
+            }
         }
 
         window.initMap = initMap;
     </script>
-
-
-
-
 </body>
 
 </html>
