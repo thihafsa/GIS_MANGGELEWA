@@ -113,8 +113,8 @@
             max-height: 300px;
             overflow-y: auto;
             background: white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-            border-radius: 20px;
+           
+            border-radius: 15px;
             /* Updated border-radius for rounded corners */
             display: none;
             z-index: 15;
@@ -127,7 +127,7 @@
             border-bottom: 1px solid #ddd;
             transition: background-color 0.3s ease;
             /* Smooth background color transition */
-            border-radius: 20px;
+            border-radius: 15px;
             /* Updated border-radius for rounded corners */
             margin: 5px;
             /* Add some margin */
@@ -205,7 +205,7 @@
         .dropdown-item:hover {
             background-color: #f9f9f9;
             /* Warna latar belakang lebih lembut saat hover */
-            color: #007bff;
+            color: #f8a961;
             /* Warna teks berubah saat hover */
             border-radius: 8px;
             /* Membuat sudut lebih bulat */
@@ -251,10 +251,10 @@
 
         /* Hover effect for map type options */
         .map-type-option:hover {
-
+  border-radius: 8px;
             background-color: #f9f9f9;
             /* Warna latar belakang lebih lembut saat hover */
-            color: #007bff;
+            color: #f8a961;
             /* Warna teks berubah saat hover */
         }
 
@@ -369,6 +369,21 @@
             #search-results {
                 width: 95%;
                 /* Increase width to 95% on smaller screens */
+            }
+            .facility-container {
+            width: 90%;
+            max-width: none;
+            padding: 5px;
+            }
+
+            .facility-button {
+            font-size: 0.8em;
+            padding: 4px 8px;
+            }
+
+            .route-link a {
+            font-size: 0.9em;
+            padding: 6px 12px;
             }
         }
     </style>
