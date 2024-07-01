@@ -5,17 +5,22 @@ const authMiddleware = require('../middleware/authMiddleware');
 const FasilitasKesehatan = require('../models/fasilitasKesehatan');
 
 // Rute utama admin (dashboard)
-router.get('/',authMiddleware, (req, res) => {
-    const user = req.session.user; 
+router.get('/', authMiddleware, async(req, res) => {
+    const user = req.session.user;
+    const kesehatanCount = await FasilitasKesehatan.count();
+    const pendidikanCount = await FasilitasPendidikan.count();
+
     res.render('admin/index', {
         title: 'Dashboard Admin',
-        user
+        user,
+        kesehatanCount,
+        pendidikanCount
     });
 });
 
 // Rute untuk halaman fasilitas pendidikan
-router.get('/pendidikan', authMiddleware,async (req, res) => {
-    const user = req.session.user; 
+router.get('/pendidikan', authMiddleware, async (req, res) => {
+    const user = req.session.user;
     try {
         const fasilitasPendidikan = await FasilitasPendidikan.findAll();
         res.render('admin/pendidikan', {
@@ -29,16 +34,16 @@ router.get('/pendidikan', authMiddleware,async (req, res) => {
     }
 });
 
-router.get('/pendidikan/tambah', authMiddleware,(req, res) => {
-    const user = req.session.user; 
-    res.render('admin/pendidikan-tambah',{
-         title: 'Fasilitas Pendidikan | Tambah',
-         user
+router.get('/pendidikan/tambah', authMiddleware, (req, res) => {
+    const user = req.session.user;
+    res.render('admin/pendidikan-tambah', {
+        title: 'Fasilitas Pendidikan | Tambah',
+        user
     });
 });
 
-router.get('/pendidikan/:id/edit', authMiddleware,async (req, res) => {
-    const user = req.session.user; 
+router.get('/pendidikan/:id/edit', authMiddleware, async (req, res) => {
+    const user = req.session.user;
     try {
         const fasilitas = await FasilitasPendidikan.findByPk(req.params.id);
         if (!fasilitas) {
@@ -46,7 +51,8 @@ router.get('/pendidikan/:id/edit', authMiddleware,async (req, res) => {
         }
         fasilitas.fasilitas = fasilitas.fasilitas ? fasilitas.fasilitas.split(',') : [];
         res.render('admin/pendidikan-edit', {
-            fasilitas, title: 'Fasilitas Pendidikan | Edit',
+            fasilitas,
+            title: 'Fasilitas Pendidikan | Edit',
             user
         });
     } catch (error) {
@@ -85,11 +91,11 @@ router.get('/kesehatan/:id/edit', authMiddleware, async (req, res) => {
         if (!fasilitas) {
             return res.status(404).send('Fasilitas Kesehatan tidak ditemukan');
         }
-         // Mengubah fasilitas menjadi array jika ada data, atau array kosong jika tidak ada
-         fasilitas.fasilitas = fasilitas.fasilitas ? fasilitas.fasilitas.split(',') : [];
+        // Mengubah fasilitas menjadi array jika ada data, atau array kosong jika tidak ada
+        fasilitas.fasilitas = fasilitas.fasilitas ? fasilitas.fasilitas.split(',') : [];
 
-         // Mengubah layanan menjadi array jika ada data, atau array kosong jika tidak ada
-         fasilitas.layanan = fasilitas.layanan ? fasilitas.layanan.split(',') : [];
+        // Mengubah layanan menjadi array jika ada data, atau array kosong jika tidak ada
+        fasilitas.layanan = fasilitas.layanan ? fasilitas.layanan.split(',') : [];
         res.render('admin/kesehatan-edit', {
             fasilitas,
             title: 'Fasilitas Kesehatan | Edit',
