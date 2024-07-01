@@ -38,267 +38,334 @@
             height: 100%;
             width: 100%;
         }
-/* Search container */
-#search-container {
-position: absolute;
-top: 10px;
-left: 50%;
-transform: translateX(-50%);
-z-index: 5;
-display: flex;
-align-items: center;
-width: 90%;
-max-width: 600px;
-background: white;
-padding: 5px 10px;
-border-radius: 20px; /* Updated border-radius for rounded corners */
-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
 
-/* Search input */
-#search-input {
-flex-grow: 1;
-border: none;
-padding: 10px;
-font-size: 16px;
-border-radius: 20px; /* Updated border-radius for rounded corners */
-outline: none; /* Remove outline on focus */
-margin-right: 10px; /* Add some margin to the right */
-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Add subtle inner shadow */
-}
+        /* Search container */
+        #search-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            /* Updated border-radius for rounded corners */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
 
-/* Search button */
-#search-button {
-font-size: 20px;
-cursor: pointer;
-color: #555; /* Color of the search icon */
-transition: color 0.3s ease; /* Smooth color transition */
-background: #f1f1f1; /* Light background color for button */
-border-radius: 50%; /* Make the button circular */
-padding: 10px; /* Add padding for better click area */
-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
-}
+        /* Search input */
+        #search-input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 20px;
+            /* Updated border-radius for rounded corners */
+            outline: none;
+            /* Remove outline on focus */
+            margin-right: 10px;
+            /* Add some margin to the right */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            /* Add subtle inner shadow */
+        }
 
-/* Hover effect for search button */
-#search-button:hover {
-color: #333; /* Darker color on hover */
-background: #e0e0e0; /* Slightly darker background on hover */
-}
+        /* Search button */
+        #search-button {
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+            /* Color of the search icon */
+            transition: color 0.3s ease;
+            /* Smooth color transition */
+            background: #f1f1f1;
+            /* Light background color for button */
+            border-radius: 50%;
+            /* Make the button circular */
+            padding: 10px;
+            /* Add padding for better click area */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            /* Add subtle shadow */
+        }
 
-/* Search results container */
-#search-results {
-position: absolute;
-top: 50px;
-left: 50%;
-transform: translateX(-50%);
-width: 90%;
-max-width: 600px;
-max-height: 300px;
-overflow-y: auto;
-background: white;
-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-border-radius: 20px; /* Updated border-radius for rounded corners */
-display: none;
-z-index: 15;
-}
+        /* Hover effect for search button */
+        #search-button:hover {
+            color: #333;
+            /* Darker color on hover */
+            background: #e0e0e0;
+            /* Slightly darker background on hover */
+        }
 
-/* Search result items */
-.search-result-item {
-cursor: pointer;
-padding: 10px;
-border-bottom: 1px solid #ddd;
-transition: background-color 0.3s ease; /* Smooth background color transition */
-border-radius: 20px; /* Updated border-radius for rounded corners */
-margin: 5px; /* Add some margin */
-}
+        /* Search results container */
+        #search-results {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            /* Updated border-radius for rounded corners */
+            display: none;
+            z-index: 15;
+        }
 
-/* Hover effect for search result items */
-.search-result-item:hover {
-background-color: #f0f0f0; /* Background color on hover */
-}
-/* Hamburger menu icon */
-#hamburger-menu {
-font-size: 24px; /* Sedikit lebih besar */
-margin-right: 15px; /* Tambahkan sedikit margin */
-cursor: pointer;
-color: #555; /* Warna ikon hamburger */
-transition: color 0.3s ease, transform 0.3s ease; /* Transisi warna dan transformasi */
+        /* Search result items */
+        .search-result-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+            /* Smooth background color transition */
+            border-radius: 20px;
+            /* Updated border-radius for rounded corners */
+            margin: 5px;
+            /* Add some margin */
+        }
 
-border-radius: 50%; /* Membuat ikon menjadi bulat */
-padding: 10px; /* Tambahkan padding untuk area klik yang lebih besar */
+        /* Hover effect for search result items */
+        .search-result-item:hover {
+            background-color: #f0f0f0;
+            /* Background color on hover */
+        }
 
-}
+        /* Hamburger menu icon */
+        #hamburger-menu {
+            font-size: 24px;
+            /* Sedikit lebih besar */
+            margin-right: 15px;
+            /* Tambahkan sedikit margin */
+            cursor: pointer;
+            color: #555;
+            /* Warna ikon hamburger */
+            transition: color 0.3s ease, transform 0.3s ease;
+            /* Transisi warna dan transformasi */
 
-/* Hover effect for hamburger menu icon */
-#hamburger-menu:hover {
-color: #333; /* Warna lebih gelap saat hover */
+            border-radius: 50%;
+            /* Membuat ikon menjadi bulat */
+            padding: 10px;
+            /* Tambahkan padding untuk area klik yang lebih besar */
 
-transform: scale(1.1); /* Sedikit perbesar ikon saat hover */
-}
+        }
+
+        /* Hover effect for hamburger menu icon */
+        #hamburger-menu:hover {
+            color: #333;
+            /* Warna lebih gelap saat hover */
+
+            transform: scale(1.1);
+            /* Sedikit perbesar ikon saat hover */
+        }
 
 
-       /* Dropdown menu */
-       #dropdown-menu {
-       position: absolute;
-       top: 60px;
-       left: 0;
-       background: white;
-       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Mengubah bayangan menjadi lebih halus */
-       border-radius: 8px; /* Membuat sudut lebih bulat */
-       display: none;
-       z-index: 10;
-       min-width: 150px; /* Menambah lebar minimum */
-       }
+        /* Dropdown menu */
+        #dropdown-menu {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Mengubah bayangan menjadi lebih halus */
+            border-radius: 8px;
+            /* Membuat sudut lebih bulat */
+            display: none;
+            z-index: 10;
+            min-width: 150px;
+            /* Menambah lebar minimum */
+        }
 
-       /* Show dropdown menu */
-       #dropdown-menu.show {
-       display: block;
-       }
+        /* Show dropdown menu */
+        #dropdown-menu.show {
+            display: block;
+        }
 
-       /* Dropdown items */
-       .dropdown-item {
-       cursor: pointer;
-       padding: 12px 15px; /* Menambah padding untuk lebih banyak ruang */
-       border-bottom: 1px solid #e0e0e0; /* Warna border lebih lembut */
-       text-align: center;
-       transition: background-color 0.3s ease, color 0.3s ease; /* Menambah transisi warna */
-       }
+        /* Dropdown items */
+        .dropdown-item {
+            cursor: pointer;
+            padding: 12px 15px;
+            /* Menambah padding untuk lebih banyak ruang */
+            border-bottom: 1px solid #e0e0e0;
+            /* Warna border lebih lembut */
+            text-align: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Menambah transisi warna */
+        }
 
-       /* Hover effect for dropdown items */
-       .dropdown-item:hover {
-       background-color: #f9f9f9; /* Warna latar belakang lebih lembut saat hover */
-       color: #007bff; /* Warna teks berubah saat hover */
-        border-radius: 8px; /* Membuat sudut lebih bulat */
-       }
+        /* Hover effect for dropdown items */
+        .dropdown-item:hover {
+            background-color: #f9f9f9;
+            /* Warna latar belakang lebih lembut saat hover */
+            color: #007bff;
+            /* Warna teks berubah saat hover */
+            border-radius: 8px;
+            /* Membuat sudut lebih bulat */
+        }
 
-       /* Map type dropdown */
-       .map-type-dropdown {
-       position: absolute;
-       top: 60px;
-       left: 155px;
-       background: white;
-       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Mengubah bayangan menjadi lebih halus */
-       border-radius: 8px; /* Membuat sudut lebih bulat */
-       display: none;
-       z-index: 20;
-       min-width: 150px; /* Menambah lebar minimum */
-       }
+        /* Map type dropdown */
+        .map-type-dropdown {
+            position: absolute;
+            top: 60px;
+            left: 155px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Mengubah bayangan menjadi lebih halus */
+            border-radius: 8px;
+            /* Membuat sudut lebih bulat */
+            display: none;
+            z-index: 20;
+            min-width: 150px;
+            /* Menambah lebar minimum */
+        }
 
-       /* Show map type dropdown */
-       .map-type-dropdown.show {
-       display: block;
-       }
+        /* Show map type dropdown */
+        .map-type-dropdown.show {
+            display: block;
+        }
 
-       /* Map type options */
-       .map-type-option {
-       cursor: pointer;
-       padding: 12px 15px; /* Menambah padding untuk lebih banyak ruang */
-       border-bottom: 1px solid #e0e0e0; /* Warna border lebih lembut */
-       text-align: center;
-       transition: background-color 0.3s ease, color 0.3s ease; /* Menambah transisi warna */
-       }
+        /* Map type options */
+        .map-type-option {
+            cursor: pointer;
+            padding: 12px 15px;
+            /* Menambah padding untuk lebih banyak ruang */
+            border-bottom: 1px solid #e0e0e0;
+            /* Warna border lebih lembut */
+            text-align: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Menambah transisi warna */
+        }
 
-       /* Last map type option without bottom border */
-       .map-type-option:last-child {
-       border-bottom: none;
-       }
+        /* Last map type option without bottom border */
+        .map-type-option:last-child {
+            border-bottom: none;
+        }
 
-       /* Hover effect for map type options */
-       .map-type-option:hover {
-        
-       background-color: #f9f9f9; /* Warna latar belakang lebih lembut saat hover */
-       color: #007bff; /* Warna teks berubah saat hover */
-       }
+        /* Hover effect for map type options */
+        .map-type-option:hover {
 
-       /* Styling untuk ikon pada dropdown menu */
-       #dropdown-menu a {
-       display: flex;
-       align-items: center;
-       text-decoration: none; /* Menghapus garis bawah */
-       color: #333; /* Warna teks yang diinginkan */
-       padding: 10px 15px; /* Tambahkan padding untuk lebih banyak ruang */
-       }
+            background-color: #f9f9f9;
+            /* Warna latar belakang lebih lembut saat hover */
+            color: #007bff;
+            /* Warna teks berubah saat hover */
+        }
 
-       #dropdown-menu a i {
-       margin-right: 10px; /* Jarak antara ikon dan teks */
-       }
+        /* Styling untuk ikon pada dropdown menu */
+        #dropdown-menu a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            /* Menghapus garis bawah */
+            color: #333;
+            /* Warna teks yang diinginkan */
+            padding: 10px 15px;
+            /* Tambahkan padding untuk lebih banyak ruang */
+        }
 
-       /* Styling untuk ikon pada dropdown map type */
-       .map-type-dropdown .map-type-option {
-       display: flex;
-       align-items: center;
-       text-decoration: none; /* Menghapus garis bawah */
-       color: #333; /* Warna teks yang diinginkan */
-       padding: 10px 15px; /* Tambahkan padding untuk lebih banyak ruang */
-       }
+        #dropdown-menu a i {
+            margin-right: 10px;
+            /* Jarak antara ikon dan teks */
+        }
 
-       .map-type-dropdown .map-type-option i {
-       margin-right: 10px; /* Jarak antara ikon dan teks */
-       }
+        /* Styling untuk ikon pada dropdown map type */
+        .map-type-dropdown .map-type-option {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            /* Menghapus garis bawah */
+            color: #333;
+            /* Warna teks yang diinginkan */
+            padding: 10px 15px;
+            /* Tambahkan padding untuk lebih banyak ruang */
+        }
 
-       /* Styling untuk tautan pada dropdown map type */
-       .map-type-dropdown a {
-       text-decoration: none; /* Menghapus garis bawah */
-       color: #333; /* Warna teks yang diinginkan */
-       padding: 10px 15px; /* Tambahkan padding untuk lebih banyak ruang */
-       }
+        .map-type-dropdown .map-type-option i {
+            margin-right: 10px;
+            /* Jarak antara ikon dan teks */
+        }
 
-       .facility-button {
-       background-color: #f8a961;
-       border: none;
-       color: white;
-       padding: 5px 10px;
-       text-align: center;
-       text-decoration: none;
-       display: inline-block;
-       font-size: 14px;
-       margin: 2px 2px;
-       cursor: pointer;
-       border-radius: 4px;
-       transition: background-color 0.3s;
-       }
+        /* Styling untuk tautan pada dropdown map type */
+        .map-type-dropdown a {
+            text-decoration: none;
+            /* Menghapus garis bawah */
+            color: #333;
+            /* Warna teks yang diinginkan */
+            padding: 10px 15px;
+            /* Tambahkan padding untuk lebih banyak ruang */
+        }
 
-       .facility-button:hover {
-       background-color: #e38d66;
-       }
+        .facility-button {
+            background-color: #f8a961;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
 
-     .route-link {
-     margin: 10px 0;
-     text-align: right;
-     }
+        .facility-button:hover {
+            background-color: #e38d66;
+        }
 
-     .route-link a {
-     text-decoration: none;
-     color: #e72428;
-     font-size: 14px;
-     display: inline-flex;
-     align-items: center;
-     }
+        .route-link {
+            margin: 10px 0;
+            text-align: right;
+        }
 
-     .route-link a:hover {
-     color: #cc2b2e;
-     }
+        .route-link a {
+            text-decoration: none;
+            color: #e72428;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+        }
 
-     .route-link a i {
-     margin-right: 5px;
-     font-size: 16px;
-     }
+        .route-link a:hover {
+            color: #cc2b2e;
+        }
 
-     .route-link a strong {
-     font-weight: bold;
-     margin-left: 5px;
-     }
+        .route-link a i {
+            margin-right: 5px;
+            font-size: 16px;
+        }
 
-        
+        .route-link a strong {
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+
 
         /* Responsive adjustments */
         @media (max-width: 600px) {
-            #search-input {
-                font-size: 14px;
+            #search-container {
+                width: 95%;
+                /* Increase width to 95% on smaller screens */
+                padding: 5px 5px;
+                /* Reduce padding */
             }
 
-            .search-result-item {
-                padding: 8px;
+            #search-button {
+                font-size: 18px;
+                /* Reduce icon size */
+                margin-left: 5px;
+                /* Reduce margin */
+            }
+
+            #search-results {
+                width: 95%;
+                /* Increase width to 95% on smaller screens */
             }
         }
     </style>
@@ -426,7 +493,7 @@ transform: scale(1.1); /* Sedikit perbesar ikon saat hover */
                 .then(fasilitasKesehatan => {
                     console.log('Data Fasilitas Kesehatan:', fasilitasKesehatan);
                     addMarkers(fasilitasKesehatan, 'kesehatan',
-                    'https://telegra.ph/file/1e5bdd413ceba6174725a.png');
+                        'https://telegra.ph/file/1e5bdd413ceba6174725a.png');
                 })
                 .catch(error => console.error('Error fetching data:', error));
         }
@@ -489,7 +556,7 @@ transform: scale(1.1); /* Sedikit perbesar ikon saat hover */
                             if (activeInfoWindow) {
                                 activeInfoWindow.close();
                             }
-                            
+
                             infoWindow.open(map, marker);
                             activeInfoWindow = infoWindow;
                         });
