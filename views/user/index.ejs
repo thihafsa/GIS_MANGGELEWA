@@ -301,6 +301,31 @@
             padding: 10px 15px;
             /* Tambahkan padding untuk lebih banyak ruang */
         }
+        .facility-container {
+        font-family: 'Cairo', sans-serif;
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 8px;
+        text-align: left;
+        }
+
+        .facility-container h3 {
+        margin-top: 0;
+        font-size: 1.5em;
+        }
+
+        .facility-container p {
+        margin: 5px 0;
+        font-size: 1em;
+        }
+
+        .facility-details {
+        margin: 5px 0;
+        font-size: 1em;
+        }
 
         .facility-button {
             background-color: #f8a961;
@@ -546,32 +571,24 @@
                         });
 
                         const infoWindow = new google.maps.InfoWindow({
-                            content: `
-                             <div style="font-family: 'Cairo', sans-serif; width: 250px;">
-                                 <h3 style="margin-top: 0;">${fasilitas.nama}</h3>
-                                 <p style="margin: 5px 0;"><i class="fas fa-map-marker-alt"></i> Alamat:
-                                     ${fasilitas.alamat || 'Tidak ada alamat'}</p>
-                                 <div style="margin: 5px 0;">
-                                     <i class="fas fa-building"></i>
-                                     Fasilitas:
-                                     ${fasilitas.fasilitas ? fasilitas.fasilitas.split(',').map(fasilitasItem =>
-                                     `<button class="facility-button">${fasilitasItem.trim()}</button>`).join(' ') :
-                                     'Tidak ada informasi fasilitas'}
-                                 </div>
-                                 <p style="margin: 5px 0;"><i class="fas fa-clock"></i> Jam Buka: ${fasilitas.jamBuka ||
-                                     'Tidak ada informasi'}</p>
-                                 <p style="margin: 5px 0;"><i class="fas fa-clock"></i> Jam Tutup: ${fasilitas.jamTutup
-                                     || 'Tidak ada informasi'}</p>
-
-                                 <div class="route-link">
-                                     <a href="https://www.google.com/maps/dir/?api=1&destination=${fasilitas.latitude},${fasilitas.longitude}"
-                                         target="_blank">
-                                         <i class="fas fa-route"></i> <strong>Rute</strong>
-                                     </a>
-                                 </div>
-
-                             </div>
-                            `
+                            content:`<div class="facility-container">
+    <h3>${fasilitas.nama}</h3>
+    <p><i class="fas fa-map-marker-alt"></i> Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
+    <div class="facility-details">
+        <i class="fas fa-building"></i>
+        Fasilitas:
+        ${fasilitas.fasilitas ? fasilitas.fasilitas.split(',').map(fasilitasItem => 
+        `<button class="facility-button">${fasilitasItem.trim()}</button>`).join(' ') : 'Tidak ada informasi fasilitas'}
+    </div>
+    <p><i class="fas fa-clock"></i> Jam Buka: ${fasilitas.jamBuka || 'Tidak ada informasi'}</p>
+    <p><i class="fas fa-clock"></i> Jam Tutup: ${fasilitas.jamTutup || 'Tidak ada informasi'}</p>
+    <div class="route-link">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=${fasilitas.latitude},${fasilitas.longitude}" target="_blank">
+            <i class="fas fa-route"></i> <strong>Rute</strong>
+        </a>
+    </div>
+</div>
+`
                         });
 
                         marker.addListener('click', () => {
