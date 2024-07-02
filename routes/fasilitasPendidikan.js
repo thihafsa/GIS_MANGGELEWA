@@ -46,6 +46,9 @@ const fasilitasPendidikanController = require('../controllers/fasilitasPendidika
  *         jumlah_guru:
  *           type: integer
  *           description: Jumlah guru
+ *         alamat:
+ *           type: string
+ *           description: Alamat lengkap fasilitas pendidikan
  *     FasilitasPendidikan:
  *       allOf:
  *         - $ref: '#/components/schemas/FasilitasPendidikanInput'
@@ -83,37 +86,7 @@ const fasilitasPendidikanController = require('../controllers/fasilitasPendidika
  *       content:
  *         multipart/form-data:
  *           schema:
- *             type: object
- *             properties:
- *               nama:
- *                 type: string
- *               fasilitas:
- *                 type: string
- *               deskripsi_singkat:
- *                 type: string
- *               tags:
- *                 type: string
- *               latitude:
- *                 type: number
- *                 format: double
- *               longitude:
- *                 type: number
- *                 format: double
- *               jamBuka:
- *                 type: string
- *                 format: time
- *               jamTutup:
- *                 type: string
- *                 format: time
- *               kepala_sekolah:
- *                 type: string
- *               jumlah_murid:
- *                 type: integer
- *               jumlah_guru:
- *                 type: integer
- *               foto:
- *                 type: string
- *                 format: binary
+ *             $ref: '#/components/schemas/FasilitasPendidikanInput'
  *     responses:
  *       201:
  *         description: Fasilitas pendidikan berhasil dibuat
@@ -125,7 +98,6 @@ const fasilitasPendidikanController = require('../controllers/fasilitasPendidika
 router.route('/')
     .get(fasilitasPendidikanController.getAllFasilitasPendidikan)
     .post(fasilitasPendidikanController.createFasilitasPendidikan);
-
 /**
  * @swagger
  * /fasilitaspendidikan/{id}:

@@ -12,6 +12,7 @@ const usersRoutes = require('./routes/users');
 const reviewsRoutes = require('./routes/reviews');
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
+const aiRoutes = require('./routes/Ai');
 const authMiddleware = require('./middleware/authMiddleware');
 const app = express();
 
@@ -51,7 +52,9 @@ app.set('views', path.join(__dirname, 'views'));
 })();
 app.get('/', authMiddleware, (req, res) => {
     const user = req.session.user;
-    res.render('user/index'); // Sesuaikan path jika diperlukan
+    res.render('user/index',{
+        user,
+    }); // Sesuaikan path jika diperlukan
 });
 
 app.get('/login', (req, res) => {
@@ -62,13 +65,14 @@ app.get('/logout', (req, res) => {
     res.redirect('/login'); // Redirect ke halaman login
 });
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+app.use('/ai', aiRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/fasilitaspendidikan', fasilitasPendidikan);
 app.use('/fasilitaskesehatan', fasilitasKesehatan);
 app.use('/users', usersRoutes);
 app.use('/reviews', reviewsRoutes);
+
 
 const PORT = process.env.PORT || 3400;
 app.listen(PORT, () => console.log(`Server berjalan di port ${PORT}`));

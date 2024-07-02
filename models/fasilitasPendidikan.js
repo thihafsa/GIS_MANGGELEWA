@@ -9,7 +9,7 @@ const FasilitasPendidikan = db.define('fasilitasPendidikan', {
         autoIncrement: true,
         primaryKey: true,
     },
-    nama: { // nama sekolah
+    nama: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -31,6 +31,9 @@ const FasilitasPendidikan = db.define('fasilitasPendidikan', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    alamat: {
+        type: DataTypes.TEXT, // Adjust the data type according to your needs
+    },
     jamBuka: {
         type: DataTypes.TIME,
         allowNull: true,
@@ -43,15 +46,15 @@ const FasilitasPendidikan = db.define('fasilitasPendidikan', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    kepala_sekolah: { // Nama kepala sekolah
+    kepala_sekolah: {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    jumlah_murid: { // Jumlah murid
+    jumlah_murid: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    jumlah_guru: { // Jumlah guru
+    jumlah_guru: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },

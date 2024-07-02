@@ -32,7 +32,6 @@ exports.getFasilitasPendidikanById = async (req, res) => {
         });
     }
 };
-
 // Fungsi untuk membuat fasilitas pendidikan baru (dengan atau tanpa foto)
 exports.createFasilitasPendidikan = async (req, res) => {
     try {
@@ -48,10 +47,12 @@ exports.createFasilitasPendidikan = async (req, res) => {
             kepala_sekolah,
             jumlah_murid,
             jumlah_guru,
+            alamat // New field for address
         } = req.body;
 
         let foto = null;
 
+        // Handle photo upload
         if (req.files && req.files.foto) {
             const file = req.files.foto;
             const fileSize = file.size;
@@ -76,6 +77,7 @@ exports.createFasilitasPendidikan = async (req, res) => {
             foto = `${req.protocol}://${req.get('host')}/pendidikan/${fileName}`;
         }
 
+        // Create the record in the database
         const fasilitasPendidikan = await FasilitasPendidikan.create({
             nama,
             fasilitas,
@@ -89,6 +91,7 @@ exports.createFasilitasPendidikan = async (req, res) => {
             kepala_sekolah,
             jumlah_murid,
             jumlah_guru,
+            alamat // Include the address field
         });
 
         res.status(201).json(fasilitasPendidikan);
@@ -99,10 +102,10 @@ exports.createFasilitasPendidikan = async (req, res) => {
         });
     }
 };
-
 // Fungsi untuk update fasilitas pendidikan berdasarkan ID (dengan atau tanpa foto)
 exports.updateFasilitasPendidikan = async (req, res) => {
     try {
+        // Find the existing record by ID
         const existingFasilitas = await FasilitasPendidikan.findByPk(req.params.id);
         if (!existingFasilitas) {
             return res.status(404).json({
@@ -122,10 +125,12 @@ exports.updateFasilitasPendidikan = async (req, res) => {
             kepala_sekolah,
             jumlah_murid,
             jumlah_guru,
+            alamat // New field for address
         } = req.body;
 
         let foto = existingFasilitas.foto;
 
+        // Handle photo upload
         if (req.files && req.files.foto) {
             const file = req.files.foto;
             const fileSize = file.size;
@@ -150,6 +155,7 @@ exports.updateFasilitasPendidikan = async (req, res) => {
             foto = `${req.protocol}://${req.get('host')}/pendidikan/${fileName}`;
         }
 
+        // Update the record in the database
         await existingFasilitas.update({
             nama: nama || existingFasilitas.nama,
             fasilitas: fasilitas || existingFasilitas.fasilitas,
@@ -163,6 +169,7 @@ exports.updateFasilitasPendidikan = async (req, res) => {
             kepala_sekolah: kepala_sekolah || existingFasilitas.kepala_sekolah,
             jumlah_murid: jumlah_murid || existingFasilitas.jumlah_murid,
             jumlah_guru: jumlah_guru || existingFasilitas.jumlah_guru,
+            alamat: alamat || existingFasilitas.alamat // Include the address field
         });
 
         res.json(existingFasilitas);
@@ -173,6 +180,7 @@ exports.updateFasilitasPendidikan = async (req, res) => {
         });
     }
 };
+
 
 // Fungsi untuk menghapus fasilitas pendidikan berdasarkan ID
 exports.deleteFasilitasPendidikan = async (req, res) => {

@@ -3,9 +3,10 @@ const router = express.Router();
 const FasilitasPendidikan = require('../models/fasilitasPendidikan'); // Import model FasilitasPendidikan
 const authMiddleware = require('../middleware/authMiddleware');
 const FasilitasKesehatan = require('../models/fasilitasKesehatan');
+const isAdmin = require('../middleware/roleMiddleware');
 
 // Rute utama admin (dashboard)
-router.get('/', authMiddleware, async(req, res) => {
+router.get('/', authMiddleware, isAdmin, async(req, res) => {
     const user = req.session.user;
     const kesehatanCount = await FasilitasKesehatan.count();
     const pendidikanCount = await FasilitasPendidikan.count();
@@ -19,7 +20,7 @@ router.get('/', authMiddleware, async(req, res) => {
 });
 
 // Rute untuk halaman fasilitas pendidikan
-router.get('/pendidikan', authMiddleware, async (req, res) => {
+router.get('/pendidikan', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;
     try {
         const fasilitasPendidikan = await FasilitasPendidikan.findAll();
@@ -34,7 +35,7 @@ router.get('/pendidikan', authMiddleware, async (req, res) => {
     }
 });
 
-router.get('/pendidikan/tambah', authMiddleware, (req, res) => {
+router.get('/pendidikan/tambah', authMiddleware, isAdmin, (req, res) => {
     const user = req.session.user;
     res.render('admin/pendidikan-tambah', {
         title: 'Fasilitas Pendidikan | Tambah',
@@ -42,7 +43,7 @@ router.get('/pendidikan/tambah', authMiddleware, (req, res) => {
     });
 });
 
-router.get('/pendidikan/:id/edit', authMiddleware, async (req, res) => {
+router.get('/pendidikan/:id/edit', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;
     try {
         const fasilitas = await FasilitasPendidikan.findByPk(req.params.id);
@@ -61,7 +62,7 @@ router.get('/pendidikan/:id/edit', authMiddleware, async (req, res) => {
     }
 });
 
-router.get('/kesehatan', authMiddleware, async (req, res) => {
+router.get('/kesehatan', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;
     try {
         const fasilitasKesehatan = await FasilitasKesehatan.findAll();
@@ -76,7 +77,7 @@ router.get('/kesehatan', authMiddleware, async (req, res) => {
     }
 });
 
-router.get('/kesehatan/tambah', authMiddleware, (req, res) => {
+router.get('/kesehatan/tambah', authMiddleware, isAdmin, (req, res) => {
     const user = req.session.user;
     res.render('admin/kesehatan-tambah', {
         title: 'Fasilitas Kesehatan | Tambah',
@@ -84,7 +85,7 @@ router.get('/kesehatan/tambah', authMiddleware, (req, res) => {
     });
 });
 
-router.get('/kesehatan/:id/edit', authMiddleware, async (req, res) => {
+router.get('/kesehatan/:id/edit', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;
     try {
         const fasilitas = await FasilitasKesehatan.findByPk(req.params.id);
