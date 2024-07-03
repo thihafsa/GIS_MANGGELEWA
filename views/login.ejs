@@ -42,7 +42,7 @@
                                         <a href="/login"><img src="logo.svg" alt=""></a>
                                     </div>
                                     <h4 class="text-center mb-4">Sign in your account</h4>
-                                    <form action="/auth/login" method="POST" id="loginForm">
+                                    <form id="loginForm">
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Email</strong></label>
                                             <input type="email" class="form-control" id="email" name="email"
@@ -71,7 +71,7 @@
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
-                                        <p>Don't have an account? <a class="text-primary" href="page-register.html">Sign
+                                        <p>Don't have an account? <a class="text-primary" href="/register">Sign
                                                 up</a></p>
                                     </div>
                                 </div>
@@ -93,7 +93,62 @@
     <script src="js/dlabnav-init.js"></script>
     <script src="js/styleSwitcher.js"></script>
     <script src="vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Mencegah form dari pengiriman standar
 
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Login berhasil
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Berhasil',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        // Redirect berdasarkan role pengguna
+                        if (data.user.role === 'Admin') {
+                            window.location.href = '/admin';
+                        } else if (data.user.role === 'User') {
+                            window.location.href = '/'; // Ganti dengan rute halaman user Anda
+                        }
+                    });
+                } else {
+                    // Login gagal
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message,
+                    });
+                }
+            } catch (error) {
+                console.error('Terjadi kesalahan:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Terjadi kesalahan server. Silakan coba lagi nanti.',
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

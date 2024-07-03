@@ -422,7 +422,8 @@
                                                 <label class="form-label" for="nama">Nama Tempat Ibadah <span
                                                         class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="nama" name="nama"
-                                                    placeholder="Masukkan nama tempat ibadah.." required="" value="<%=fasilitas.nama %>">
+                                                    placeholder="Masukkan nama tempat ibadah.." required=""
+                                                    value="<%=fasilitas.nama %>">
                                                 <div class="invalid-feedback">
                                                     Harap masukkan nama tempat ibadah.
                                                 </div>
@@ -538,110 +539,110 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <%- include('../template/footer.ejs') %>
+        <script>
+            function generateAddress() {
+                const lat = document.getElementById('latitude').value;
+                const lng = document.getElementById('longitude').value;
 
-            <%- include('../template/footer.ejs') %>
-            <script>
-                function generateAddress() {
-                    const lat = document.getElementById('latitude').value;
-                    const lng = document.getElementById('longitude').value;
+                // Validasi apakah latitude atau longitude kosong
+                if (!lat || !lng) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Latitude dan Longitude harus diisi untuk menghasilkan alamat.'
+                    });
+                    return;
+                }
 
-                    // Validasi apakah latitude atau longitude kosong
-                    if (!lat || !lng) {
+                const apiKey = 'AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk'; // Ganti dengan API Key Anda
+
+                fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch address');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.results.length > 0) {
+                            const addressComponents = data.results[0].address_components;
+                            // Cari dan gabungkan komponen alamat kecuali kode lokasi (G74X+F8V)
+                            const filteredAddress = addressComponents
+                                .filter(component => !component.types.includes('plus_code'))
+                                .map(component => component.long_name)
+                                .join(', ');
+
+                            document.getElementById('alamat').value = filteredAddress;
+                        } else {
+                            document.getElementById('alamat').value = 'Alamat tidak ditemukan';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching address:', error);
+                        document.getElementById('alamat').value = 'Error: Gagal mengambil alamat';
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Latitude dan Longitude harus diisi untuk menghasilkan alamat.'
+                            text: 'Gagal mengambil alamat dari Google Maps. Silakan coba lagi.'
                         });
-                        return;
-                    }
+                    });
+            }
 
-                    const apiKey = 'AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk'; // Ganti dengan API Key Anda
 
-                    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch address');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.results.length > 0) {
-                                const addressComponents = data.results[0].address_components;
-                                // Cari dan gabungkan komponen alamat kecuali kode lokasi (G74X+F8V)
-                                const filteredAddress = addressComponents
-                                    .filter(component => !component.types.includes('plus_code'))
-                                    .map(component => component.long_name)
-                                    .join(', ');
-
-                                document.getElementById('alamat').value = filteredAddress;
-                            } else {
-                                document.getElementById('alamat').value = 'Alamat tidak ditemukan';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching address:', error);
-                            document.getElementById('alamat').value = 'Error: Gagal mengambil alamat';
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Gagal mengambil alamat dari Google Maps. Silakan coba lagi.'
-                            });
+            function submitForm() {
+                const formData = new FormData();
+                formData.append('nama', document.getElementById('nama').value);
+                formData.append('latitude', document.getElementById('latitude').value);
+                formData.append('longitude', document.getElementById('longitude').value);
+                formData.append('alamat', document.getElementById('alamat').value);
+                formData.append('jamBuka', document.getElementById('jamBuka').value);
+                formData.append('jamTutup', document.getElementById('jamTutup').value);
+                const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
+                    opt.value).join(',');
+                formData.append('fasilitas', fasilitas);
+                const foto = document.getElementById('foto').files[0];
+                if (foto) {
+                    formData.append('foto', foto);
+                }
+                fetch('/fasilitaskeibadatan', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Handle success response
+                        sessionStorage.setItem('submitSuccess', 'Data berhasil di tambah!');
+                        // Redirect to admin/keibadatan
+                        window.location.href = '/admin/keibadatan';
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to submit form. Please try again later.'
                         });
-                }
+                    });
+            }
 
+            function previewImage(input) {
+                const file = input.files[0];
+                const reader = new FileReader();
 
-                function submitForm() {
-                    const formData = new FormData();
-                    formData.append('nama', document.getElementById('nama').value);
-                    formData.append('latitude', document.getElementById('latitude').value);
-                    formData.append('longitude', document.getElementById('longitude').value);
-                    formData.append('alamat', document.getElementById('alamat').value);
-                    formData.append('jamBuka', document.getElementById('jamBuka').value);
-                    formData.append('jamTutup', document.getElementById('jamTutup').value);
-                    const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
-                        opt.value).join(',');
-                    formData.append('fasilitas', fasilitas);
-                    const foto = document.getElementById('foto').files[0];
-                    if (foto) {
-                        formData.append('foto', foto);
-                    }
-                    fetch('/fasilitaskeibadatan', {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            // Handle success response
-                            sessionStorage.setItem('submitSuccess', 'Data berhasil di tambah!');
-                            // Redirect to admin/keibadatan
-                            window.location.href = '/admin/keibadatan';
-                        })
-                        .catch(error => {
-                            // Handle error
-                            console.error('Error:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Failed to submit form. Please try again later.'
-                            });
-                        });
-                }
+                reader.onload = function (e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
 
-                function previewImage(input) {
-                    const file = input.files[0];
-                    const reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        const preview = document.getElementById('imagePreview');
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    };
-
-                    reader.readAsDataURL(file);
-                }
-            </script>
+                reader.readAsDataURL(file);
+            }
+        </script>

@@ -6,6 +6,7 @@ const FasilitasPemerintah = require('../models/fasilitasPemerintah');
 const FasilitasKeibadatan = require('../models/fasilitasKeibadatan');
 const isAdmin = require('../middleware/roleMiddleware');
 const authMiddleware = require('../middleware/authMiddleware');
+const Users = require('../models/users');
 
 
 // Rute utama admin (dashboard)
@@ -197,6 +198,46 @@ router.get('/keibadatan/:id/edit', authMiddleware, isAdmin, async (req, res) => 
     } catch (error) {
         console.error(error);
         res.status(500).send('Terjadi kesalahan saat mengambil data fasilitas pendidikan');
+    }
+});
+router.get('/users', authMiddleware, isAdmin, async (req, res) => {
+    const user = req.session.user;
+    try {
+        const UserData = await Users.findAll();
+        res.render('admin/users', {
+            UserData,
+            title: 'Users',
+            user
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Terjadi kesalahan saat mengambil data fasilitas pendidikan');
+    }
+});
+
+router.get('/users/tambah', authMiddleware, isAdmin, (req, res) => {
+    const user = req.session.user;
+    res.render('admin/users-tambah', {
+        title: 'Users| Tambah',
+        user
+    });
+});
+
+router.get('/users/:id/edit', authMiddleware, isAdmin, async (req, res) => {
+    const user = req.session.user;
+    try {
+        const UserData = await Users.findByPk(req.params.id);
+        if (!UserData) {
+            return res.status(404).send('Users tidak ditemukan');
+        }
+        res.render('admin/users-edit', {
+            UserData,
+            title: 'Users | Edit',
+            user
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Terjadi kesalahan saat mengambil data Users');
     }
 });
 

@@ -369,7 +369,7 @@
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
                             <div class="dashboard_bar">
-                                Tambah Fasilitas Keibadatan
+                                Edit Users
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
@@ -398,7 +398,7 @@
                                 </a>
                             </li>
                             <li class='nav-item'>
-                                <a href='/admin/keibadatan' class='btn btn-primary'>
+                                <a href='/admin/users' class='btn btn-primary'>
                                     <i class='las la-arrow-left scale5'></i> Kembali
                                 </a>
                             </li>
@@ -419,169 +419,108 @@
                                     <div class="row">
                                         <div class="col-xl-6">
                                             <div class="mb-3">
-                                                <label class="form-label" for="nama">Nama Tempat Ibadah <span
+                                                <label class="form-label" for="username">Username <span
                                                         class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="nama" name="nama"
-                                                    placeholder="Masukkan nama tempat ibadah.." required="">
+                                                <input type="text" class="form-control" id="username" name="username"
+                                                    placeholder="Enter username" value="<%=UserData.username %>" required>
                                                 <div class="invalid-feedback">
-                                                    Harap masukkan nama tempat ibadah.
+                                                    Please enter a username.
                                                 </div>
                                             </div>
-                                            <div class="mb-3"> <label class="form-label" for="latitude">Latitude</label>
-                                                <input type="number" class="form-control" id="latitude" name="latitude"
-                                                    step="0.000001" placeholder="Masukkan latitude..">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="email">Email <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="email" class="form-control" id="email" name="email"
+                                                    placeholder="Enter email" value="<%=UserData.email %>" required>
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid email.
+                                                </div>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label" for="longitude">Longitude</label>
-                                                <input type="number" class="form-control" id="longitude"
-                                                    name="longitude" step="0.000001" placeholder="Masukkan longitude..">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Generate Alamat</label>
+                                                <label class="form-label" for="password">Password <span
+                                                        class="text-danger">*</span></label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="alamat" name="alamat"
-                                                        placeholder="Tekan Generate untuk isi alamat secara otomatis">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="generateAddress()">Generate</button>
+                                                    <input type="password" class="form-control" id="password"
+                                                        name="password" placeholder="Enter password"
+                                                        value="<%=UserData.password %>" required>
+                                                    <button type="button" class="btn btn-outline-secondary"
+                                                        onclick="togglePassword()">
+                                                        <i class="fa fa-eye" id="togglePasswordIcon"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Please enter a password.
                                                 </div>
                                             </div>
-
                                         </div>
 
                                         <div class="col-xl-6">
+                                           <div class="mb-3">
+                                               <label class="form-label" for="role">Role <span
+                                                       class="text-danger">*</span></label>
+                                               <select class="form-control" id="role" name="role" required>
+                                                   <option value="">Select role</option>
+                                                   <option value="Admin"
+                                                       <%= UserData.role === 'Admin' ? 'selected' : '' %>>Admin</option>
+                                                   <option value="User"
+                                                       <%= UserData.role === 'User' ? 'selected' : '' %>>User</option>
+                                               </select>
+                                               <div class="invalid-feedback">
+                                                   Please select a role.
+                                               </div>
+                                           </div>
                                             <div class="mb-3">
-                                                <label class="form-label" for="jamBuka">Jam Buka</label>
-                                                <div class="input-group clockpicker" data-placement="bottom"
-                                                    data-align="top" data-autoclose="true">
-                                                    <input type="text" class="form-control" id="jamBuka" name="jamBuka"
-                                                        value="09:30">
-                                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label" for="jamTutup">Jam Tutup</label>
-                                                <div class="input-group clockpicker" data-placement="bottom"
-                                                    data-align="top" data-autoclose="true">
-                                                    <input type="text" class="form-control" id="jamTutup"
-                                                        name="jamTutup" value="17:30">
-                                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label" for="fasilitas">Fasilitas <span
-                                                        class="text-danger">*</span></label>
-                                                <select class="multi-select" id="fasilitas" name="fasilitas[]"
-                                                    multiple="multiple">
-                                                    <option value="Masjid">Masjid</option>
-                                                    <option value="Gereja">Gereja</option>
-                                                    <option value="Vihara">Vihara</option>
-                                                    <option value="Pura">Pura</option>
-                                                    <option value="Altar">Altar</option>
-                                                    <option value="Tempat Wudu">Tempat Wudu</option>
-                                                    <option value="Toilet">Toilet</option>
-                                                    <option value="Tempat Parkir">Tempat Parkir</option>
-                                                    <option value="Ruang Pertemuan">Ruang Pertemuan</option>
-                                                    <option value="Pengeras Suara">Pengeras Suara</option>
-                                                    <option value="Tempat Penitipan Sepatu">Tempat Penitipan Sepatu
-                                                    </option>
-                                                    <option value="Area Berdoa">Area Berdoa</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="foto">Foto</label>
-                                                    <input type="file" class="form-control" id="foto" name="foto"
-                                                        onchange="previewImage(this);">
-                                                    <img id="imagePreview" src="#" alt="Image Preview"
-                                                        style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
-                                                </div>
-
-
-
+                                                <label class="form-label" for="foto">Foto</label>
+                                                <input type="file" class="form-control" id="foto" name="foto"
+                                                    onchange="previewImage(this);">
+                                                <img id="imagePreview" src="<%= UserData.foto %>" alt="Image Preview"
+                                                    style="display: block; max-width: 200px; max-height: 200px; margin-top: 10px;" />
                                             </div>
                                         </div>
-                                        <div class="mb-3 row">
-                                            <div class="col-lg-8 ms-auto">
-                                                <button type="submit" class="btn btn-primary"
-                                                    onclick="submitForm()">Submit</button>
+
+                                        <div class="col-12">
+                                            <div class="mb-3 row">
+                                                <div class="col-lg-8 ms-auto">
+                                                    <button type="submit" class="btn btn-primary"
+                                                        onclick="submitForm()">Submit</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <%- include('../template/footer.ejs') %>
         <script>
-            function generateAddress() {
-                const lat = document.getElementById('latitude').value;
-                const lng = document.getElementById('longitude').value;
-
-                // Validasi apakah latitude atau longitude kosong
-                if (!lat || !lng) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Latitude dan Longitude harus diisi untuk menghasilkan alamat.'
-                    });
-                    return;
-                }
-
-                const apiKey = 'AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk'; // Ganti dengan API Key Anda
-
-                fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch address');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.results.length > 0) {
-                            const addressComponents = data.results[0].address_components;
-                            // Cari dan gabungkan komponen alamat kecuali kode lokasi (G74X+F8V)
-                            const filteredAddress = addressComponents
-                                .filter(component => !component.types.includes('plus_code'))
-                                .map(component => component.long_name)
-                                .join(', ');
-
-                            document.getElementById('alamat').value = filteredAddress;
-                        } else {
-                            document.getElementById('alamat').value = 'Alamat tidak ditemukan';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching address:', error);
-                        document.getElementById('alamat').value = 'Error: Gagal mengambil alamat';
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Gagal mengambil alamat dari Google Maps. Silakan coba lagi.'
-                        });
-                    });
+            function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+            if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            togglePasswordIcon.classList.remove('fa-eye');
+            togglePasswordIcon.classList.add('fa-eye-slash');
+            } else {
+            passwordInput.type = 'password';
+            togglePasswordIcon.classList.remove('fa-eye-slash');
+            togglePasswordIcon.classList.add('fa-eye');
             }
-
-
+            }
             function submitForm() {
                 const formData = new FormData();
-                formData.append('nama', document.getElementById('nama').value);
-                formData.append('latitude', document.getElementById('latitude').value);
-                formData.append('longitude', document.getElementById('longitude').value);
-                formData.append('alamat', document.getElementById('alamat').value);
-                formData.append('jamBuka', document.getElementById('jamBuka').value);
-                formData.append('jamTutup', document.getElementById('jamTutup').value);
-                const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
-                    opt.value).join(',');
-                formData.append('fasilitas', fasilitas);
+                formData.append('username', document.getElementById('username').value);
+                formData.append('email', document.getElementById('email').value);
+                formData.append('password', document.getElementById('password').value);
+                formData.append('role', document.getElementById('role').value);
                 const foto = document.getElementById('foto').files[0];
                 if (foto) {
                     formData.append('foto', foto);
                 }
-                fetch('/fasilitaskeibadatan', {
+                fetch('/users', {
                         method: 'POST',
                         body: formData
                     })
@@ -594,8 +533,8 @@
                     .then(data => {
                         // Handle success response
                         sessionStorage.setItem('submitSuccess', 'Data berhasil di tambah!');
-                        // Redirect to admin/keibadatan
-                        window.location.href = '/admin/keibadatan';
+                        // Redirect to admin/users
+                        window.location.href = '/admin/users';
                     })
                     .catch(error => {
                         // Handle error

@@ -34,6 +34,19 @@ const bcrypt = require('bcrypt');
  *                 message:
  *                   type: string
  *                   description: Pesan sukses
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     foto:
+ *                       type: string
  *       401:
  *         description: Email atau password salah
  *       500:
@@ -45,11 +58,11 @@ router.post('/login', async (req, res) => {
             email,
             password
         } = req.body;
-
+        console.log(req.body);
         // Validasi input
         if (!email || !password) {
             return res.status(400).json({
-                error: 'Email dan password harus diisi'
+                message: 'Email dan password harus diisi'
             });
         }
 
@@ -61,7 +74,7 @@ router.post('/login', async (req, res) => {
         });
         if (!user) {
             return res.status(401).json({
-                error: 'Email atau password salah'
+                message: 'Email atau password salah'
             });
         }
 
@@ -69,7 +82,7 @@ router.post('/login', async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(401).json({
-                error: 'Email atau password salah'
+                message: 'Email atau password salah'
             });
         }
 
@@ -82,24 +95,116 @@ router.post('/login', async (req, res) => {
             foto: user.foto,
         };
 
-        // Redirect berdasarkan role
-        if (user.role === 'Admin') {
-            res.redirect('/admin');
-        } else if (user.role === 'User') {
-            res.redirect('/'); // Ganti dengan rute halaman user Anda
-        } else {
-            res.status(403).json({
-                error: 'Peran tidak valid'
-            }); // Atau redirect ke halaman error
-        }
+        // Kirim respon JSON dengan detail pengguna
+        return res.status(200).json({
+            message: 'Login berhasil',
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                foto: user.foto,
+            }
+        });
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            error: 'Terjadi kesalahan server'
+        return res.status(500).json({
+            message: 'Terjadi kesalahan server'
         });
     }
 });
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Register user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: User's username
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address
+ *               password:
+ *                 type: string
+ *                 description: User's password
+ *               role:
+ *                 type: string
+ *                 description: User's role (optional)
+ *     responses:
+ *       200:
+ *         description: Registration successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *       400:
+ *         description: Missing username, email, or password
+ *       500:
+ *         description: Server error
+ */
+router.post('/register', async (req, res) => {
+    try {
+        const {
+            username,
+            email,
+            password,
+        } = req.body;
 
+        // Validate input
+        if (!username || !email || !password) {
+            return res.status(400).json({
+                message: 'Username, email, and password are required'
+            });
+        }
+
+        // Check if user with same email already exists
+        const existingUser = await Users.findOne({
+            where: {
+                email
+            }
+        });
+        if (existingUser) {
+            return res.status(400).json({
+                message: 'User with this email already exists'
+            });
+        }
+
+        // Hash the password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Create new user
+        const newUser = await Users.create({
+            username,
+            email,
+            password: hashedPassword,
+        });
+
+        // Return success message
+        return res.status(200).json({
+            message: 'User registered successfully'
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: 'Terjadi kesalahan server'
+        });
+    }
+});
 
 module.exports = router;

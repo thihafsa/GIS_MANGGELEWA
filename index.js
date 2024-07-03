@@ -62,6 +62,9 @@ app.get('/', authMiddleware, (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login');
 });
+app.get('/register', (req, res) => {
+    res.render('register');
+});
 app.get('/logout', (req, res) => {
     req.session.destroy(); // Hapus sesi
     res.redirect('/login'); // Redirect ke halaman login
