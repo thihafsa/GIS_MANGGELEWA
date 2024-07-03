@@ -48,7 +48,7 @@ const fasilitasPendidikanController = require('../controllers/fasilitasPendidika
  *           description: Jumlah guru
  *         alamat:
  *           type: string
- *           description: Alamat lengkap fasilitas pendidikan
+ *           description: Alamat fasilitas pendidikan
  *     FasilitasPendidikan:
  *       allOf:
  *         - $ref: '#/components/schemas/FasilitasPendidikanInput'
@@ -86,7 +86,39 @@ const fasilitasPendidikanController = require('../controllers/fasilitasPendidika
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/FasilitasPendidikanInput'
+ *             type: object
+ *             properties:
+ *               nama:
+ *                 type: string
+ *               fasilitas:
+ *                 type: string
+ *               deskripsi_singkat:
+ *                 type: string
+ *               tags:
+ *                 type: string
+ *               latitude:
+ *                 type: number
+ *                 format: double
+ *               longitude:
+ *                 type: number
+ *                 format: double
+ *               jamBuka:
+ *                 type: string
+ *                 format: time
+ *               jamTutup:
+ *                 type: string
+ *                 format: time
+ *               kepala_sekolah:
+ *                 type: string
+ *               jumlah_murid:
+ *                 type: integer
+ *               jumlah_guru:
+ *                 type: integer
+ *               alamat:
+ *                 type: string
+ *               foto:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: Fasilitas pendidikan berhasil dibuat
@@ -135,7 +167,39 @@ router.route('/')
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/FasilitasPendidikanInput'
+ *             type: object
+ *             properties:
+ *               nama:
+ *                 type: string
+ *               fasilitas:
+ *                 type: string
+ *               deskripsi_singkat:
+ *                 type: string
+ *               tags:
+ *                 type: string
+ *               latitude:
+ *                 type: number
+ *                 format: double
+ *               longitude:
+ *                 type: number
+ *                 format: double
+ *               jamBuka:
+ *                 type: string
+ *                 format: time
+ *               jamTutup:
+ *                 type: string
+ *                 format: time
+ *               kepala_sekolah:
+ *                 type: string
+ *               jumlah_murid:
+ *                 type: integer
+ *               jumlah_guru:
+ *                 type: integer
+ *               alamat:
+ *                 type: string
+ *               foto:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Fasilitas pendidikan berhasil diperbarui

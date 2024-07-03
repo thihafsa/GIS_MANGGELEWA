@@ -1,21 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const FasilitasPendidikan = require('../models/fasilitasPendidikan'); // Import model FasilitasPendidikan
-const authMiddleware = require('../middleware/authMiddleware');
 const FasilitasKesehatan = require('../models/fasilitasKesehatan');
+const FasilitasPemerintah = require('../models/fasilitasPemerintah');
+const FasilitasKeibadatan = require('../models/fasilitasKeibadatan');
 const isAdmin = require('../middleware/roleMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
+
 
 // Rute utama admin (dashboard)
-router.get('/', authMiddleware, isAdmin, async(req, res) => {
+router.get('/', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;
     const kesehatanCount = await FasilitasKesehatan.count();
     const pendidikanCount = await FasilitasPendidikan.count();
+    const pemerintahCount = await FasilitasPemerintah.count();
+    const keibadatanCount = await FasilitasKeibadatan.count();
 
     res.render('admin/index', {
         title: 'Dashboard Admin',
         user,
         kesehatanCount,
-        pendidikanCount
+        pendidikanCount,
+        pemerintahCount,
+        keibadatanCount
     });
 });
 
@@ -107,7 +114,90 @@ router.get('/kesehatan/:id/edit', authMiddleware, isAdmin, async (req, res) => {
         res.status(500).send('Terjadi kesalahan saat mengambil data fasilitas Kesehatan');
     }
 });
+router.get('/pemerintah', authMiddleware, isAdmin, async (req, res) => {
+    const user = req.session.user;
+    try {
+        const fasilitasPemerintah = await FasilitasPemerintah.findAll();
+        res.render('admin/pemerintah', {
+            fasilitasPemerintah,
+            title: 'Fasilitas Pemerintah',
+            user
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Terjadi kesalahan saat mengambil data fasilitas pendidikan');
+    }
+});
+router.get('/pemerintah/tambah', authMiddleware, isAdmin, (req, res) => {
+    const user = req.session.user;
+    res.render('admin/pemerintah-tambah', {
+        title: 'Fasilitas Pemerintah | Tambah',
+        user
+    });
+});
+router.get('/pemerintah/:id/edit', authMiddleware, isAdmin, async (req, res) => {
+    const user = req.session.user;
+    try {
+        const fasilitas = await FasilitasPemerintah.findByPk(req.params.id);
+        if (!fasilitas) {
+            return res.status(404).send('Fasilitas Pemerintah tidak ditemukan');
+        }
+        // Mengubah fasilitas menjadi array jika ada data, atau array kosong jika tidak ada
+        fasilitas.fasilitas = fasilitas.fasilitas ? fasilitas.fasilitas.split(',') : [];
+
+        // Mengubah layanan menjadi array jika ada data, atau array kosong jika tidak ada
+        fasilitas.layanan = fasilitas.layanan ? fasilitas.layanan.split(',') : [];
+        res.render('admin/pemerintah-edit', {
+            fasilitas,
+            title: 'Fasilitas Pemerintah | Edit',
+            user
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Terjadi kesalahan saat mengambil data fasilitas Pemerintah');
+    }
+});
 
 
+router.get('/keibadatan', authMiddleware, isAdmin, async (req, res) => {
+    const user = req.session.user;
+    try {
+        const fasilitasKeibadatan = await FasilitasKeibadatan.findAll();
+        res.render('admin/keibadatan', {
+            fasilitasKeibadatan,
+            title: 'Fasilitas Keibadatan',
+            user
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Terjadi kesalahan saat mengambil data fasilitas pendidikan');
+    }
+});
+router.get('/keibadatan/tambah', authMiddleware, isAdmin, (req, res) => {
+    const user = req.session.user;
+    res.render('admin/keibadatan-tambah', {
+        title: 'Fasilitas Keibadatan | Tambah',
+        user
+    });
+});
+
+router.get('/keibadatan/:id/edit', authMiddleware, isAdmin, async (req, res) => {
+    const user = req.session.user;
+    try {
+        const fasilitas = await FasilitasKeibadatan.findByPk(req.params.id);
+        if (!fasilitas) {
+            return res.status(404).send('Fasilitas keibadatan tidak ditemukan');
+        }
+        fasilitas.fasilitas = fasilitas.fasilitas ? fasilitas.fasilitas.split(',') : [];
+        res.render('admin/keibadatan-edit', {
+            fasilitas,
+            title: 'Fasilitas Keibadatan | Edit',
+            user
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Terjadi kesalahan saat mengambil data fasilitas pendidikan');
+    }
+});
 
 module.exports = router;

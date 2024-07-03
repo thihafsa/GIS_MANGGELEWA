@@ -43,6 +43,13 @@ const fasilitasKesehatanController = require('../controllers/fasilitasKesehatanC
  *           type: number
  *           format: double
  *           description: Longitude lokasi
+ *         alamat:
+ *           type: string
+ *           description: Alamat fasilitas kesehatan
+ *         foto:
+ *           type: string
+ *           format: binary
+ *           description: Foto fasilitas kesehatan
  *     FasilitasKesehatan:
  *       allOf:
  *         - $ref: '#/components/schemas/FasilitasKesehatanInput'
@@ -52,9 +59,6 @@ const fasilitasKesehatanController = require('../controllers/fasilitasKesehatanC
  *               type: integer
  *               description: ID fasilitas kesehatan
  *               readOnly: true
- *             foto:
- *               type: string
- *               description: URL foto fasilitas kesehatan
  */
 
 /**
@@ -80,7 +84,37 @@ const fasilitasKesehatanController = require('../controllers/fasilitasKesehatanC
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/FasilitasKesehatanInput'
+ *             type: object
+ *             properties:
+ *               nama:
+ *                 type: string
+ *               kepala_instansi:
+ *                 type: string
+ *               fasilitas:
+ *                 type: string
+ *               layanan:
+ *                 type: string
+ *               jamBuka:
+ *                 type: string
+ *                 format: time
+ *               jamTutup:
+ *                 type: string
+ *                 format: time
+ *               deskripsi_singkat:
+ *                 type: string
+ *               tags:
+ *                 type: string
+ *               latitude:
+ *                 type: number
+ *                 format: double
+ *               longitude:
+ *                 type: number
+ *                 format: double
+ *               alamat:
+ *                 type: string
+ *               foto:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: Fasilitas kesehatan berhasil dibuat
@@ -130,7 +164,37 @@ router.route('/')
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/FasilitasKesehatanInput'
+ *             type: object
+ *             properties:
+ *               nama:
+ *                 type: string
+ *               kepala_instansi:
+ *                 type: string
+ *               fasilitas:
+ *                 type: string
+ *               layanan:
+ *                 type: string
+ *               jamBuka:
+ *                 type: string
+ *                 format: time
+ *               jamTutup:
+ *                 type: string
+ *                 format: time
+ *               deskripsi_singkat:
+ *                 type: string
+ *               tags:
+ *                 type: string
+ *               latitude:
+ *                 type: number
+ *                 format: double
+ *               longitude:
+ *                 type: number
+ *                 format: double
+ *               alamat:
+ *                 type: string
+ *               foto:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Fasilitas kesehatan berhasil diperbarui

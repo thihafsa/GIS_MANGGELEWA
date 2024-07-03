@@ -3,7 +3,7 @@ const {
 } = require('sequelize');
 const db = require('../config/database');
 
-const FasilitasKesehatan = db.define('fasilitasKesehatan', {
+const FasilitasKeibadatan = db.define('fasilitasKeibadatan', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -13,15 +13,9 @@ const FasilitasKesehatan = db.define('fasilitasKesehatan', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    kepala_instansi: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
     fasilitas: {
-        type: DataTypes.TEXT, // Deskripsi fasilitas (bisa berupa daftar atau teks bebas)
-    },
-    layanan: {
-        type: DataTypes.TEXT, // Deskripsi layanan (bisa berupa daftar atau teks bebas)
+        type: DataTypes.TEXT,
+        allowNull: true,
     },
     jamBuka: {
         type: DataTypes.TIME,
@@ -31,19 +25,7 @@ const FasilitasKesehatan = db.define('fasilitasKesehatan', {
         type: DataTypes.TIME,
         allowNull: true,
     },
-    foto: {
-        type: DataTypes.STRING,
-        allowNull: true, // Foto bisa opsional
-    },
-    deskripsi_singkat: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-    },
-    tags: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    latitude: {
+    alamat: {
         type: DataTypes.STRING,
         allowNull: true,
     },
@@ -51,10 +33,14 @@ const FasilitasKesehatan = db.define('fasilitasKesehatan', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    alamat: {
-        type: DataTypes.TEXT,
-        allowNull: true, // Alamat bisa opsional
+    latitude: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    foto: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
 });
 
-module.exports = FasilitasKesehatan;
+module.exports = FasilitasKeibadatan;

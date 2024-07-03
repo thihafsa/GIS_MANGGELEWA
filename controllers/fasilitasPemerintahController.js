@@ -1,53 +1,22 @@
-const FasilitasKesehatan = require('../models/fasilitasKesehatan');
+const FasilitasPemerintah = require('../models/fasilitasPemerintah');
 const path = require('path');
 const fs = require('fs');
 const __path = process.cwd();
-
-// Fungsi untuk mendapatkan semua fasilitas kesehatan
-exports.getAllFasilitasKesehatan = async (req, res) => {
-    try {
-        const fasilitas = await FasilitasKesehatan.findAll();
-        res.json(fasilitas);
-    } catch (error) {
-        res.status(500).json({
-            error: 'Gagal mengambil data'
-        });
-    }
-};
-
-// Fungsi untuk mendapatkan fasilitas kesehatan berdasarkan ID
-exports.getFasilitasKesehatanById = async (req, res) => {
-    try {
-        const fasilitas = await FasilitasKesehatan.findByPk(req.params.id);
-        if (fasilitas) {
-            res.json(fasilitas);
-        } else {
-            res.status(404).json({
-                error: 'Data tidak ditemukan'
-            });
-        }
-    } catch (error) {
-        res.status(500).json({
-            error: 'Gagal mengambil data'
-        });
-    }
-};
-
-// Fungsi untuk membuat fasilitas kesehatan baru (dengan atau tanpa foto)
-exports.createFasilitasKesehatan = async (req, res) => {
+// Fungsi untuk membuat fasilitas pemerintah baru (dengan atau tanpa foto)
+exports.createFasilitasPemerintah = async (req, res) => {
     try {
         const {
             nama,
             kepala_instansi,
-            fasilitas,
-            layanan,
             jamBuka,
             jamTutup,
+            fasilitas,
+            layanan,
             deskripsi_singkat,
             tags,
             latitude,
             longitude,
-            alamat
+            alamat,
         } = req.body;
 
         let foto = null;
@@ -71,27 +40,27 @@ exports.createFasilitasKesehatan = async (req, res) => {
                 });
             }
 
-            const uploadPath = path.join(__path, 'uploads', 'kesehatan', fileName);
-            await file.mv(uploadPath);
-            foto = `${req.protocol}://${req.get('host')}/kesehatan/${fileName}`;
+              const uploadPath = path.join(__path, 'uploads', 'pemerintah', fileName);
+              await file.mv(uploadPath);
+            foto = `${req.protocol}://${req.get('host')}/pemerintah/${fileName}`;
         }
 
-        const fasilitasKesehatan = await FasilitasKesehatan.create({
+        const fasilitasPemerintah = await FasilitasPemerintah.create({
             nama,
             kepala_instansi,
-            fasilitas,
-            layanan,
             jamBuka,
             jamTutup,
-            foto,
+            fasilitas,
+            layanan,
             deskripsi_singkat,
             tags,
             latitude,
             longitude,
-            alamat
+            alamat,
+            foto,
         });
 
-        res.status(201).json(fasilitasKesehatan);
+        res.status(201).json(fasilitasPemerintah);
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -100,10 +69,41 @@ exports.createFasilitasKesehatan = async (req, res) => {
     }
 };
 
-// Fungsi untuk update fasilitas kesehatan berdasarkan ID (dengan atau tanpa foto)
-exports.updateFasilitasKesehatan = async (req, res) => {
+// Fungsi untuk mendapatkan semua fasilitas pemerintah
+exports.getAllFasilitasPemerintah = async (req, res) => {
     try {
-        const existingFasilitas = await FasilitasKesehatan.findByPk(req.params.id);
+        const fasilitasPemerintah = await FasilitasPemerintah.findAll();
+        res.json(fasilitasPemerintah);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Gagal mengambil data'
+        });
+    }
+};
+
+// Fungsi untuk mendapatkan fasilitas pemerintah berdasarkan ID
+exports.getFasilitasPemerintahById = async (req, res) => {
+    try {
+        const fasilitasPemerintah = await FasilitasPemerintah.findByPk(req.params.id);
+        if (!fasilitasPemerintah) {
+            return res.status(404).json({
+                error: 'Data tidak ditemukan'
+            });
+        }
+        res.json(fasilitasPemerintah);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Gagal mengambil data'
+        });
+    }
+};
+
+// Fungsi untuk memperbarui fasilitas pemerintah berdasarkan ID (dengan atau tanpa foto)
+exports.updateFasilitasPemerintah = async (req, res) => {
+    try {
+        const existingFasilitas = await FasilitasPemerintah.findByPk(req.params.id);
         if (!existingFasilitas) {
             return res.status(404).json({
                 error: 'Data tidak ditemukan'
@@ -113,15 +113,15 @@ exports.updateFasilitasKesehatan = async (req, res) => {
         const {
             nama,
             kepala_instansi,
-            fasilitas,
-            layanan,
             jamBuka,
             jamTutup,
+            fasilitas,
+            layanan,
             deskripsi_singkat,
             tags,
             latitude,
             longitude,
-            alamat
+            alamat,
         } = req.body;
 
         let foto = existingFasilitas.foto;
@@ -145,24 +145,24 @@ exports.updateFasilitasKesehatan = async (req, res) => {
                 });
             }
 
-             const uploadPath = path.join(__path, 'uploads', 'kesehatan', fileName);
+             const uploadPath = path.join(__path, 'uploads', 'pemerintah', fileName);
              await file.mv(uploadPath);
-            foto = `${req.protocol}://${req.get('host')}/kesehatan/${fileName}`;
+            foto = `${req.protocol}://${req.get('host')}/pemerintah/${fileName}`;
         }
 
         await existingFasilitas.update({
             nama: nama || existingFasilitas.nama,
             kepala_instansi: kepala_instansi || existingFasilitas.kepala_instansi,
-            fasilitas: fasilitas || existingFasilitas.fasilitas,
-            layanan: layanan || existingFasilitas.layanan,
             jamBuka: jamBuka || existingFasilitas.jamBuka,
             jamTutup: jamTutup || existingFasilitas.jamTutup,
-            foto: foto,
+            fasilitas: fasilitas || existingFasilitas.fasilitas,
+            layanan: layanan || existingFasilitas.layanan,
             deskripsi_singkat: deskripsi_singkat || existingFasilitas.deskripsi_singkat,
             tags: tags || existingFasilitas.tags,
             latitude: latitude || existingFasilitas.latitude,
             longitude: longitude || existingFasilitas.longitude,
-            alamat: alamat || existingFasilitas.alamat
+            alamat: alamat || existingFasilitas.alamat,
+            foto: foto,
         });
 
         res.json(existingFasilitas);
@@ -173,10 +173,11 @@ exports.updateFasilitasKesehatan = async (req, res) => {
         });
     }
 };
-// Fungsi untuk menghapus fasilitas kesehatan berdasarkan ID
-exports.deleteFasilitasKesehatan = async (req, res) => {
+
+// Fungsi untuk menghapus fasilitas pemerintah berdasarkan ID
+exports.deleteFasilitasPemerintah = async (req, res) => {
     try {
-        const existingFasilitas = await FasilitasKesehatan.findByPk(req.params.id);
+        const existingFasilitas = await FasilitasPemerintah.findByPk(req.params.id);
         if (!existingFasilitas) {
             return res.status(404).json({
                 error: 'Data tidak ditemukan'
@@ -185,7 +186,7 @@ exports.deleteFasilitasKesehatan = async (req, res) => {
 
         // Hapus file foto jika ada
         if (existingFasilitas.foto) {
-            const filePath = path.join(__path, existingFasilitas.foto);
+            const filePath = path.join(__dirname, 'uploads', 'pemerintah', path.basename(existingFasilitas.foto));
             if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
             }
@@ -203,6 +204,7 @@ exports.deleteFasilitasKesehatan = async (req, res) => {
             });
         }
     } catch (error) {
+        console.error(error);
         res.status(500).json({
             error: 'Gagal menghapus data'
         });

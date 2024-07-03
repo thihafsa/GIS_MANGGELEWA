@@ -8,6 +8,8 @@ const session = require('express-session');
 const db = require('./config/database');
 const fasilitasPendidikan = require('./routes/fasilitasPendidikan');
 const fasilitasKesehatan = require('./routes/fasilitasKesehatan');
+const fasilitasKeibadatan = require('./routes/fasilitasKeibadatan');
+const fasilitasPemerintah = require('./routes/fasilitasPemerintah');
 const usersRoutes = require('./routes/users');
 const reviewsRoutes = require('./routes/reviews');
 const adminRoutes = require('./routes/admin');
@@ -23,14 +25,14 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(session({
-    secret: 'gismgl', // Ganti dengan rahasia yang lebih aman
+    secret: 'gismgl',
     resave: false,
     saveUninitialized: false,
 }));
 app.use(fileUpload({
     limits: {
         fileSize: 50 * 1024 * 1024
-    }, // Batasan ukuran file (50 MB)
+    },
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('uploads'));
@@ -52,7 +54,7 @@ app.set('views', path.join(__dirname, 'views'));
 })();
 app.get('/', authMiddleware, (req, res) => {
     const user = req.session.user;
-    res.render('user/index',{
+    res.render('user/index', {
         user,
     }); // Sesuaikan path jika diperlukan
 });
@@ -70,6 +72,8 @@ app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/fasilitaspendidikan', fasilitasPendidikan);
 app.use('/fasilitaskesehatan', fasilitasKesehatan);
+app.use('/fasilitaskeibadatan', fasilitasKeibadatan);
+app.use('/fasilitaspemerintah', fasilitasPemerintah);
 app.use('/users', usersRoutes);
 app.use('/reviews', reviewsRoutes);
 

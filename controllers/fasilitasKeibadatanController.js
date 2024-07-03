@@ -1,12 +1,12 @@
-const FasilitasKesehatan = require('../models/fasilitasKesehatan');
+const FasilitasKeibadatan = require('../models/fasilitasKeibadatan');
 const path = require('path');
 const fs = require('fs');
 const __path = process.cwd();
 
-// Fungsi untuk mendapatkan semua fasilitas kesehatan
-exports.getAllFasilitasKesehatan = async (req, res) => {
+// Fungsi untuk mendapatkan semua fasilitas keibadatan
+exports.getAllFasilitasKeibadatan = async (req, res) => {
     try {
-        const fasilitas = await FasilitasKesehatan.findAll();
+        const fasilitas = await FasilitasKeibadatan.findAll();
         res.json(fasilitas);
     } catch (error) {
         res.status(500).json({
@@ -15,10 +15,10 @@ exports.getAllFasilitasKesehatan = async (req, res) => {
     }
 };
 
-// Fungsi untuk mendapatkan fasilitas kesehatan berdasarkan ID
-exports.getFasilitasKesehatanById = async (req, res) => {
+// Fungsi untuk mendapatkan fasilitas keibadatan berdasarkan ID
+exports.getFasilitasKeibadatanById = async (req, res) => {
     try {
-        const fasilitas = await FasilitasKesehatan.findByPk(req.params.id);
+        const fasilitas = await FasilitasKeibadatan.findByPk(req.params.id);
         if (fasilitas) {
             res.json(fasilitas);
         } else {
@@ -33,21 +33,17 @@ exports.getFasilitasKesehatanById = async (req, res) => {
     }
 };
 
-// Fungsi untuk membuat fasilitas kesehatan baru (dengan atau tanpa foto)
-exports.createFasilitasKesehatan = async (req, res) => {
+// Fungsi untuk membuat fasilitas keibadatan baru (dengan atau tanpa foto)
+exports.createFasilitasKeibadatan = async (req, res) => {
     try {
         const {
             nama,
-            kepala_instansi,
             fasilitas,
-            layanan,
-            jamBuka,
-            jamTutup,
-            deskripsi_singkat,
-            tags,
-            latitude,
+            jambuka,
+            jamtutup,
+            alamat,
             longitude,
-            alamat
+            latitude
         } = req.body;
 
         let foto = null;
@@ -71,27 +67,23 @@ exports.createFasilitasKesehatan = async (req, res) => {
                 });
             }
 
-            const uploadPath = path.join(__path, 'uploads', 'kesehatan', fileName);
+            const uploadPath = path.join(__path, 'uploads', 'keibadatan', fileName);
             await file.mv(uploadPath);
-            foto = `${req.protocol}://${req.get('host')}/kesehatan/${fileName}`;
+            foto = `${req.protocol}://${req.get('host')}/keibadatan/${fileName}`;
         }
 
-        const fasilitasKesehatan = await FasilitasKesehatan.create({
+        const fasilitasKeibadatan = await FasilitasKeibadatan.create({
             nama,
-            kepala_instansi,
             fasilitas,
-            layanan,
-            jamBuka,
-            jamTutup,
-            foto,
-            deskripsi_singkat,
-            tags,
-            latitude,
+            jambuka,
+            jamtutup,
+            alamat,
             longitude,
-            alamat
+            latitude,
+            foto
         });
 
-        res.status(201).json(fasilitasKesehatan);
+        res.status(201).json(fasilitasKeibadatan);
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -100,10 +92,10 @@ exports.createFasilitasKesehatan = async (req, res) => {
     }
 };
 
-// Fungsi untuk update fasilitas kesehatan berdasarkan ID (dengan atau tanpa foto)
-exports.updateFasilitasKesehatan = async (req, res) => {
+// Fungsi untuk update fasilitas keibadatan berdasarkan ID (dengan atau tanpa foto)
+exports.updateFasilitasKeibadatan = async (req, res) => {
     try {
-        const existingFasilitas = await FasilitasKesehatan.findByPk(req.params.id);
+        const existingFasilitas = await FasilitasKeibadatan.findByPk(req.params.id);
         if (!existingFasilitas) {
             return res.status(404).json({
                 error: 'Data tidak ditemukan'
@@ -112,16 +104,12 @@ exports.updateFasilitasKesehatan = async (req, res) => {
 
         const {
             nama,
-            kepala_instansi,
             fasilitas,
-            layanan,
-            jamBuka,
-            jamTutup,
-            deskripsi_singkat,
-            tags,
-            latitude,
+            jambuka,
+            jamtutup,
+            alamat,
             longitude,
-            alamat
+            latitude
         } = req.body;
 
         let foto = existingFasilitas.foto;
@@ -145,24 +133,28 @@ exports.updateFasilitasKesehatan = async (req, res) => {
                 });
             }
 
-             const uploadPath = path.join(__path, 'uploads', 'kesehatan', fileName);
-             await file.mv(uploadPath);
-            foto = `${req.protocol}://${req.get('host')}/kesehatan/${fileName}`;
+            const uploadPath = path.join(__path, 'uploads', 'keibadatan', fileName);
+            await file.mv(uploadPath);
+            foto = `${req.protocol}://${req.get('host')}/keibadatan/${fileName}`;
+
+            // Hapus file foto lama jika ada
+            if (existingFasilitas.foto) {
+                const filePath = path.join(__path, existingFasilitas.foto);
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+            }
         }
 
         await existingFasilitas.update({
             nama: nama || existingFasilitas.nama,
-            kepala_instansi: kepala_instansi || existingFasilitas.kepala_instansi,
             fasilitas: fasilitas || existingFasilitas.fasilitas,
-            layanan: layanan || existingFasilitas.layanan,
-            jamBuka: jamBuka || existingFasilitas.jamBuka,
-            jamTutup: jamTutup || existingFasilitas.jamTutup,
-            foto: foto,
-            deskripsi_singkat: deskripsi_singkat || existingFasilitas.deskripsi_singkat,
-            tags: tags || existingFasilitas.tags,
-            latitude: latitude || existingFasilitas.latitude,
+            jambuka: jambuka || existingFasilitas.jambuka,
+            jamtutup: jamtutup || existingFasilitas.jamtutup,
+            alamat: alamat || existingFasilitas.alamat,
             longitude: longitude || existingFasilitas.longitude,
-            alamat: alamat || existingFasilitas.alamat
+            latitude: latitude || existingFasilitas.latitude,
+            foto: foto || existingFasilitas.foto,
         });
 
         res.json(existingFasilitas);
@@ -173,10 +165,11 @@ exports.updateFasilitasKesehatan = async (req, res) => {
         });
     }
 };
-// Fungsi untuk menghapus fasilitas kesehatan berdasarkan ID
-exports.deleteFasilitasKesehatan = async (req, res) => {
+
+// Fungsi untuk menghapus fasilitas keibadatan berdasarkan ID
+exports.deleteFasilitasKeibadatan = async (req, res) => {
     try {
-        const existingFasilitas = await FasilitasKesehatan.findByPk(req.params.id);
+        const existingFasilitas = await FasilitasKeibadatan.findByPk(req.params.id);
         if (!existingFasilitas) {
             return res.status(404).json({
                 error: 'Data tidak ditemukan'

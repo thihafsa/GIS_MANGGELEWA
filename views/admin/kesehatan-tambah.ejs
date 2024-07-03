@@ -414,9 +414,8 @@
                                             <div class="mb-3">
                                                 <label class="form-label" for="nama">Nama Instansi
                                                     <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="nama"
-                                                    name="nama" placeholder="Masukkan nama instansi.."
-                                                    required="">
+                                                <input type="text" class="form-control" id="nama" name="nama"
+                                                    placeholder="Masukkan nama instansi.." required="">
                                                 <div class="invalid-feedback">
                                                     Harap masukkan nama instansi.
                                                 </div>
@@ -476,6 +475,15 @@
                                                     name="longitude" step="0.000001" placeholder="Masukkan longitude..">
                                             </div>
                                             <div class="mb-3">
+                                                <label class="form-label">Generate Alamat</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="alamat" name="alamat"
+                                                        placeholder="Tekan Generate untuk isi alamat secara otomatis">
+                                                    <button type="button" class="btn btn-primary"
+                                                        onclick="generateAddress()">Generate</button>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
                                                 <label class="form-label" for="jamBuka">Jam Buka</label>
                                                 <div class="input-group clockpicker" data-placement="bottom"
                                                     data-align="top" data-autoclose="true">
@@ -526,15 +534,21 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label" for="deskripsi_singkat">Deskripsi Singkat
-                                                    <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="deskripsi_singkat"
-                                                    name="deskripsi_singkat" rows="5"
-                                                    placeholder="Deskripsikan singkat instansi kesehatan.."
-                                                    required=""></textarea>
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="input-group">
+                                                    <textarea class="form-control" id="deskripsi_singkat"
+                                                        name="deskripsi_singkat" rows="5"
+                                                        placeholder="Deskripsikan singkat.." required></textarea>
+                                                    <button class="btn btn-primary" type="button"
+                                                        id="generateDescriptionBtn"
+                                                        onclick="generateDescription()">Generate</button>
+                                                </div>
                                                 <div class="invalid-feedback">
                                                     Harap masukkan deskripsi singkat.
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                     <div class="mb-3 row">
@@ -554,15 +568,110 @@
         <%- include('../template/footer.ejs') %>
 
         <script>
+            function generateDescription() {
+                const nama_instansi = document.getElementById('nama').value;
+                const kepala = document.getElementById('kepala_instansi').value;
+                const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
+                    opt.value).join(',');
+                const layanan = Array.from(document.getElementById('layanan').selectedOptions).map(opt =>
+                    opt.value).join(',');
+                const alamat = document.getElementById('alamat').value;
+                const jam_buka = document.getElementById('jamBuka').value;
+                const jam_tutup = document.getElementById('jamTutup').value;
+
+                fetch('/ai/generate-description', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            nama_instansi,
+                            kepala,
+                            fasilitas,
+                            layanan,
+                            alamat,
+                            jam_buka,
+                            jam_tutup
+                        }),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById('deskripsi_singkat').value = ''
+                        document.getElementById('deskripsi_singkat').value = data.description;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Gagal menghasilkan deskripsi singkat. Silakan coba lagi.'
+                        });
+                    });
+            }
+
+            function generateAddress() {
+                const lat = document.getElementById('latitude').value;
+                const lng = document.getElementById('longitude').value;
+
+                // Validasi apakah latitude atau longitude kosong
+                if (!lat || !lng) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Latitude dan Longitude harus diisi untuk menghasilkan alamat.'
+                    });
+                    return;
+                }
+
+                const apiKey = 'AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk'; // Ganti dengan API Key Anda
+
+                fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch address');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.results.length > 0) {
+                            const addressComponents = data.results[0].address_components;
+                            // Cari dan gabungkan komponen alamat kecuali kode lokasi (G74X+F8V)
+                            const filteredAddress = addressComponents
+                                .filter(component => !component.types.includes('plus_code'))
+                                .map(component => component.long_name)
+                                .join(', ');
+
+                            document.getElementById('alamat').value = filteredAddress;
+                        } else {
+                            document.getElementById('alamat').value = 'Alamat tidak ditemukan';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching address:', error);
+                        document.getElementById('alamat').value = 'Error: Gagal mengambil alamat';
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Gagal mengambil alamat dari Google Maps. Silakan coba lagi.'
+                        });
+                    });
+            }
+
             function submitForm() {
                 const formData = new FormData();
                 formData.append('nama', document.getElementById('nama').value);
                 formData.append('kepala_instansi', document.getElementById('kepala_instansi').value);
                 formData.append('fasilitas', Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
-                opt.value).join(','));
+                    opt.value).join(','));
                 formData.append('tags', document.getElementById('tags').value);
                 formData.append('latitude', document.getElementById('latitude').value);
                 formData.append('longitude', document.getElementById('longitude').value);
+                formData.append('alamat', document.getElementById('alamat').value);
                 formData.append('jamBuka', document.getElementById('jamBuka').value);
                 formData.append('jamTutup', document.getElementById('jamTutup').value);
                 const layanan = Array.from(document.getElementById('layanan').selectedOptions).map(opt =>

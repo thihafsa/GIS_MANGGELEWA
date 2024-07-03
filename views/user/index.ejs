@@ -540,9 +540,43 @@
                 .then(fasilitasKesehatan => {
                     console.log('Data Fasilitas Kesehatan:', fasilitasKesehatan);
                     addMarkers(fasilitasKesehatan, 'kesehatan',
-                        'https://telegra.ph/file/1e5bdd413ceba6174725a.png');
+                        'https://telegra.ph/file/8a5ffa940e5deaf967d91.png');
                 })
                 .catch(error => console.error('Error fetching data:', error));
+
+                // Fetch data for pemerintah
+            fetch('/fasilitaspemerintah')
+                .then(response => response.json())
+                .then(fasilitasPemerintah => {
+                    console.log('Data Fasilitas Pemerintah:', fasilitasPemerintah);
+                    addMarkers(fasilitasPemerintah, 'pemerintah',
+                        'https://telegra.ph/file/752a0e236138b9c0d53a7.png');
+                })
+                .catch(error => console.error('Error fetching data:', error));
+              
+                // Fetch data for keibadatan
+           // Fetch data for keibadatan
+           fetch('/fasilitaskeibadatan')
+           .then(response => response.json())
+           .then(fasilitasKeibadatan => {
+           console.log('Data Fasilitas Keibadatan:', fasilitasKeibadatan);
+
+           fasilitasKeibadatan.forEach(fasilitas => {
+           let iconUrl = 'https://telegra.ph/file/8b7aafa52ab7d44fa3308.png'; // Default icon
+
+           // Determine icon based on the facility name
+           if (fasilitas.nama.toLowerCase().includes('masjid')) {
+           iconUrl = 'https://telegra.ph/file/fde274d597a207de235b9.png';
+           } else if (fasilitas.nama.toLowerCase().includes('gereja')) {
+           iconUrl = 'https://telegra.ph/file/fa0d76c10cfe1724cf268.png';
+           } else if (fasilitas.nama.toLowerCase().includes('pura')) {
+           iconUrl = 'https://telegra.ph/file/f34a8a67a86fe6e7de255.png';
+           }
+
+           addMarkers([fasilitas], 'keibadatan', iconUrl);
+           });
+           })
+           .catch(error => console.error('Error fetching data:', error));
         }
 
         function addMarkers(fasilitasData, type, iconUrl) {
