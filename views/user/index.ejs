@@ -71,9 +71,12 @@
             /* Add some margin to the right */
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
             /* Add subtle inner shadow */
-             min-width: 0; /* Ensure the input doesn't shrink less than its content */
-             max-width: 100%; /* Ensure the input doesn't exceed its container's width */
-             box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            min-width: 0;
+            /* Ensure the input doesn't shrink less than its content */
+            max-width: 100%;
+            /* Ensure the input doesn't exceed its container's width */
+            box-sizing: border-box;
+            /* Include padding and border in the element's total width and height */
         }
 
         /* Search button */
@@ -113,7 +116,7 @@
             max-height: 300px;
             overflow-y: auto;
             background: white;
-           
+
             border-radius: 15px;
             /* Updated border-radius for rounded corners */
             display: none;
@@ -251,7 +254,7 @@
 
         /* Hover effect for map type options */
         .map-type-option:hover {
-  border-radius: 8px;
+            border-radius: 8px;
             background-color: #f9f9f9;
             /* Warna latar belakang lebih lembut saat hover */
             color: #f8a961;
@@ -301,30 +304,31 @@
             padding: 10px 15px;
             /* Tambahkan padding untuk lebih banyak ruang */
         }
+
         .facility-container {
-        font-family: 'Cairo', sans-serif;
-        width: 100%;
-        max-width: 250px;
-        margin: 0 auto;
-        padding: 10px;
-        background-color: #fff;
-        border-radius: 8px;
-        text-align: left;
+            font-family: 'Cairo', sans-serif;
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            text-align: left;
         }
 
         .facility-container h3 {
-        margin-top: 0;
-        font-size: 1.5em;
+            margin-top: 0;
+            font-size: 1.5em;
         }
 
         .facility-container p {
-        margin: 5px 0;
-        font-size: 1em;
+            margin: 5px 0;
+            font-size: 1em;
         }
 
         .facility-details {
-        margin: 5px 0;
-        font-size: 1em;
+            margin: 5px 0;
+            font-size: 1em;
         }
 
         .facility-button {
@@ -355,7 +359,7 @@
             background-color: #e72428;
             text-decoration: none;
             padding: 5px;
-              border-radius: 4px;
+            border-radius: 4px;
             color: #fff;
             font-size: 14px;
             display: inline-flex;
@@ -399,20 +403,21 @@
                 width: 95%;
                 /* Increase width to 95% on smaller screens */
             }
+
             .facility-container {
-            width: 90%;
-            max-width: none;
-            padding: 5px;
+                width: 90%;
+                max-width: none;
+                padding: 5px;
             }
 
             .facility-button {
-            font-size: 0.8em;
-            padding: 4px 8px;
+                font-size: 0.8em;
+                padding: 4px 8px;
             }
 
             .route-link a {
-            font-size: 0.9em;
-            padding: 6px 12px;
+                font-size: 0.9em;
+                padding: 6px 12px;
             }
         }
     </style>
@@ -467,6 +472,7 @@
             map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 10,
                 center: defaultLatLng,
+                mapTypeId: 'satellite',
                 mapTypeControl: false,
                 fullscreenControl: false,
             });
@@ -544,7 +550,7 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
 
-                // Fetch data for pemerintah
+            // Fetch data for pemerintah
             fetch('/fasilitaspemerintah')
                 .then(response => response.json())
                 .then(fasilitasPemerintah => {
@@ -553,30 +559,30 @@
                         'https://telegra.ph/file/752a0e236138b9c0d53a7.png');
                 })
                 .catch(error => console.error('Error fetching data:', error));
-              
-                // Fetch data for keibadatan
-           // Fetch data for keibadatan
-           fetch('/fasilitaskeibadatan')
-           .then(response => response.json())
-           .then(fasilitasKeibadatan => {
-           console.log('Data Fasilitas Keibadatan:', fasilitasKeibadatan);
 
-           fasilitasKeibadatan.forEach(fasilitas => {
-           let iconUrl = 'https://telegra.ph/file/8b7aafa52ab7d44fa3308.png'; // Default icon
+            // Fetch data for keibadatan
+            // Fetch data for keibadatan
+            fetch('/fasilitaskeibadatan')
+                .then(response => response.json())
+                .then(fasilitasKeibadatan => {
+                    console.log('Data Fasilitas Keibadatan:', fasilitasKeibadatan);
 
-           // Determine icon based on the facility name
-           if (fasilitas.nama.toLowerCase().includes('masjid')) {
-           iconUrl = 'https://telegra.ph/file/fde274d597a207de235b9.png';
-           } else if (fasilitas.nama.toLowerCase().includes('gereja')) {
-           iconUrl = 'https://telegra.ph/file/fa0d76c10cfe1724cf268.png';
-           } else if (fasilitas.nama.toLowerCase().includes('pura')) {
-           iconUrl = 'https://telegra.ph/file/f34a8a67a86fe6e7de255.png';
-           }
+                    fasilitasKeibadatan.forEach(fasilitas => {
+                        let iconUrl = 'https://telegra.ph/file/8b7aafa52ab7d44fa3308.png'; // Default icon
 
-           addMarkers([fasilitas], 'keibadatan', iconUrl);
-           });
-           })
-           .catch(error => console.error('Error fetching data:', error));
+                        // Determine icon based on the facility name
+                        if (fasilitas.nama.toLowerCase().includes('masjid')) {
+                            iconUrl = 'https://telegra.ph/file/fde274d597a207de235b9.png';
+                        } else if (fasilitas.nama.toLowerCase().includes('gereja')) {
+                            iconUrl = 'https://telegra.ph/file/fa0d76c10cfe1724cf268.png';
+                        } else if (fasilitas.nama.toLowerCase().includes('pura')) {
+                            iconUrl = 'https://telegra.ph/file/f34a8a67a86fe6e7de255.png';
+                        }
+
+                        addMarkers([fasilitas], 'keibadatan', iconUrl);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
         }
 
         function addMarkers(fasilitasData, type, iconUrl) {
@@ -605,7 +611,7 @@
                         });
 
                         const infoWindow = new google.maps.InfoWindow({
-                            content:`<div class="facility-container">
+                            content: `<div class="facility-container">
     <h3>${fasilitas.nama}</h3>
     <p><i class="fas fa-map-marker-alt"></i> Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
     <div class="facility-details">
