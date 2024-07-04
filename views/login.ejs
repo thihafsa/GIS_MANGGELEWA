@@ -116,21 +116,11 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Login berhasil
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Login Berhasil',
-                        text: data.message,
-                        timer: 1500,
-                        showConfirmButton: false,
-                    }).then(() => {
-                        // Redirect berdasarkan role pengguna
-                        if (data.user.role === 'Admin') {
-                            window.location.href = '/admin';
-                        } else if (data.user.role === 'User') {
-                            window.location.href = '/'; // Ganti dengan rute halaman user Anda
-                        }
-                    });
+                    if (data.user.role === 'Admin') {
+                        window.location.href = '/admin';
+                    } else if (data.user.role === 'User') {
+                        window.location.href = '/'; // Ganti dengan rute halaman user Anda
+                    }
                 } else {
                     // Login gagal
                     Swal.fire({

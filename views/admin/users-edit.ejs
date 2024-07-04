@@ -422,7 +422,8 @@
                                                 <label class="form-label" for="username">Username <span
                                                         class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="username" name="username"
-                                                    placeholder="Enter username" value="<%=UserData.username %>" required>
+                                                    placeholder="Enter username" value="<%=UserData.username %>"
+                                                    required>
                                                 <div class="invalid-feedback">
                                                     Please enter a username.
                                                 </div>
@@ -455,20 +456,21 @@
                                         </div>
 
                                         <div class="col-xl-6">
-                                           <div class="mb-3">
-                                               <label class="form-label" for="role">Role <span
-                                                       class="text-danger">*</span></label>
-                                               <select class="form-control" id="role" name="role" required>
-                                                   <option value="">Select role</option>
-                                                   <option value="Admin"
-                                                       <%= UserData.role === 'Admin' ? 'selected' : '' %>>Admin</option>
-                                                   <option value="User"
-                                                       <%= UserData.role === 'User' ? 'selected' : '' %>>User</option>
-                                               </select>
-                                               <div class="invalid-feedback">
-                                                   Please select a role.
-                                               </div>
-                                           </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="role">Role <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-control" id="role" name="role" required>
+                                                    <option value="">Select role</option>
+                                                    <option value="Admin"
+                                                        <%= UserData.role === 'Admin' ? 'selected' : '' %>>Admin
+                                                    </option>
+                                                    <option value="User"
+                                                        <%= UserData.role === 'User' ? 'selected' : '' %>>User</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    Please select a role.
+                                                </div>
+                                            </div>
                                             <div class="mb-3">
                                                 <label class="form-label" for="foto">Foto</label>
                                                 <input type="file" class="form-control" id="foto" name="foto"
@@ -498,18 +500,19 @@
         <%- include('../template/footer.ejs') %>
         <script>
             function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
-            if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            togglePasswordIcon.classList.remove('fa-eye');
-            togglePasswordIcon.classList.add('fa-eye-slash');
-            } else {
-            passwordInput.type = 'password';
-            togglePasswordIcon.classList.remove('fa-eye-slash');
-            togglePasswordIcon.classList.add('fa-eye');
+                const passwordInput = document.getElementById('password');
+                const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    togglePasswordIcon.classList.remove('fa-eye');
+                    togglePasswordIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    togglePasswordIcon.classList.remove('fa-eye-slash');
+                    togglePasswordIcon.classList.add('fa-eye');
+                }
             }
-            }
+
             function submitForm() {
                 const formData = new FormData();
                 formData.append('username', document.getElementById('username').value);
