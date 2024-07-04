@@ -253,7 +253,7 @@
         }
 
         /* Hover effect for map type options */
-        .map-type-option:hover {
+        .map-type-dropdown .map-type-option:hover {
             border-radius: 8px;
             background-color: #f9f9f9;
             /* Warna latar belakang lebih lembut saat hover */
@@ -261,6 +261,14 @@
             /* Warna teks berubah saat hover */
         }
 
+        #dropdown-menu a:hover {
+        background-color: #f9f9f9;
+        /* Warna latar belakang lebih lembut saat hover */
+        color: #f8a961;
+        /* Warna teks berubah saat hover */
+        border-radius: 8px;
+        /* Membuat sudut lebih bulat */
+        }
         /* Styling untuk ikon pada dropdown menu */
         #dropdown-menu a {
             display: flex;
@@ -269,7 +277,7 @@
             /* Menghapus garis bawah */
             color: #333;
             /* Warna teks yang diinginkan */
-            padding: 10px 15px;
+            padding: 1px 10px;
             /* Tambahkan padding untuk lebih banyak ruang */
         }
 
@@ -430,6 +438,11 @@
             <div class="dropdown-item" id="map-type">
                 <i class="fas fa-map"></i> Map Type
             </div>
+              <% if (user.role === 'Admin') { %>
+              <div class="dropdown-item" id="admin-panel">
+                  <a href="/admin"><i class="fas fa-crown"></i> Admin</a>
+              </div>
+              <% } %>
             <div class="dropdown-item" id="logout">
                 <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
