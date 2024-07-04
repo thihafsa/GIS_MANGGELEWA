@@ -24,7 +24,7 @@ const Users = db.define('users', {
     },
     foto: {
         type: DataTypes.STRING,
-        defaultValue: 'default.png',
+        defaultValue: 'https://sigmanggelewa.site/users/default.png',
     },
     role: { // Tambahkan field role
         type: DataTypes.ENUM('Admin', 'User'), // Menggunakan ENUM untuk membatasi pilihan
