@@ -174,11 +174,11 @@ exports.updateUser = async (req, res) => {
 
         // Hash password baru jika ada
         let hashedPassword = existingUser.password;
-        if (password) {
+        // Jika password yang dikirimkan tidak kosong, hash password baru
+        if (password !== '') {
             const saltRounds = 10;
             hashedPassword = await bcrypt.hash(password, saltRounds);
         }
-
         let foto = existingUser.foto; // Default menggunakan foto lama
 
         if (req.files && req.files.foto) {
