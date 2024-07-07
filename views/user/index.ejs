@@ -262,13 +262,14 @@
         }
 
         #dropdown-menu a:hover {
-        background-color: #f9f9f9;
-        /* Warna latar belakang lebih lembut saat hover */
-        color: #f8a961;
-        /* Warna teks berubah saat hover */
-        border-radius: 8px;
-        /* Membuat sudut lebih bulat */
+            background-color: #f9f9f9;
+            /* Warna latar belakang lebih lembut saat hover */
+            color: #f8a961;
+            /* Warna teks berubah saat hover */
+            border-radius: 8px;
+            /* Membuat sudut lebih bulat */
         }
+
         /* Styling untuk ikon pada dropdown menu */
         #dropdown-menu a {
             display: flex;
@@ -389,7 +390,81 @@
             margin-left: 5px;
         }
 
+        #legend-toggle {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            z-index: 5;
+            transition: opacity 0.3s ease;
+        }
 
+        #legend-toggle h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        #legend-toggle div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        #legend-toggle div img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        #legend-toggle.hidden {
+            display: none;
+        }
+
+        #legend-toggle button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #888;
+            font-size: 16px;
+        }
+
+        #legend-toggle button:hover {
+            color: #555;
+        }
+
+        #legend-info-icon {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+            background: #852d42;
+            color: #ffcd69;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+
+        #legend-info-icon.hidden {
+            display: none;
+        }
+
+        #legend-info-icon:hover {
+            background-color: #fb5968;
+        }
 
         /* Responsive adjustments */
         @media (max-width: 600px) {
@@ -427,6 +502,22 @@
                 font-size: 0.9em;
                 padding: 6px 12px;
             }
+
+            #legend-toggle {
+                bottom: 10px;
+                right: 10px;
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            #legend-toggle h4 {
+                font-size: 14px;
+            }
+
+            #legend-toggle div img {
+                width: 16px;
+                height: 16px;
+            }
         }
     </style>
 </head>
@@ -438,11 +529,11 @@
             <div class="dropdown-item" id="map-type">
                 <i class="fas fa-map"></i> Map Type
             </div>
-              <% if (user.role === 'Admin') { %>
-              <div class="dropdown-item" id="admin-panel">
-                  <a href="/admin"><i class="fas fa-crown"></i> Admin</a>
-              </div>
-              <% } %>
+            <% if (user.role === 'Admin') { %>
+            <div class="dropdown-item" id="admin-panel">
+                <a href="/admin"><i class="fas fa-crown"></i> Admin</a>
+            </div>
+            <% } %>
             <div class="dropdown-item" id="logout">
                 <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
@@ -468,7 +559,18 @@
         <div id="search-results"></div>
     </div>
     <div id="map"></div>
-
+    <div id="legend-toggle" class="legend">
+        <h4>Legenda</h4>
+        <div><img src="https://telegra.ph/file/1abb1eb8ef958f37dbca0.png" alt="Pendidikan"> Pendidikan</div>
+        <div><img src="https://telegra.ph/file/8a5ffa940e5deaf967d91.png" alt="Kesehatan"> Kesehatan</div>
+        <div><img src="https://telegra.ph/file/752a0e236138b9c0d53a7.png" alt="Pemerintah"> Pemerintah</div>
+        <div><img src="https://telegra.ph/file/8b7aafa52ab7d44fa3308.png" alt="Keibadatan"> Keibadatan</div>
+        <div><img src="https://telegra.ph/file/fde274d597a207de235b9.png" alt="Masjid"> Masjid</div>
+        <div><img src="https://telegra.ph/file/fa0d76c10cfe1724cf268.png" alt="Gereja"> Gereja</div>
+        <div><img src="https://telegra.ph/file/f34a8a67a86fe6e7de255.png" alt="Pura"> Pura</div>
+        <button onclick="toggleLegend()"><i class="fas fa-minus"></i></button>
+    </div>
+    <button onclick="toggleLegend()" id="legend-info-icon" class="hidden"><i class="fas fa-question fa-xl"></i></button>
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk&callback=initMap&libraries=places&v=weekly"
         defer></script>
@@ -488,6 +590,11 @@
                 mapTypeId: 'roadmap',
                 mapTypeControl: false,
                 fullscreenControl: false,
+                zoomControl: false,
+                streetViewControl: true,
+                streetViewControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_BOTTOM,
+                },
             });
 
             fetchDataAndAddMarkers();
@@ -756,12 +863,47 @@
 
             // Reset map to default center and zoom
             map.setCenter(defaultLatLng);
-            map.setZoom(10);
+            map.setZoom(12);
         }
+
+        // Function to initialize legend visibility based on sessionStorage
+        function initializeLegendVisibility() {
+            const legend = document.getElementById('legend-toggle');
+            const buttonShow = document.getElementById('legend-info-icon');
+
+            // Check if there is a stored visibility state in sessionStorage
+            const legendVisible = sessionStorage.getItem('legendVisible');
+
+            // If no visibility state is stored or it's true, show the legend
+            if (legendVisible === null || legendVisible === 'true') {
+                legend.classList.remove('hidden');
+                buttonShow.classList.add('hidden');
+            } else {
+                legend.classList.add('hidden');
+                buttonShow.classList.remove('hidden');
+            }
+        }
+
+        // Call the initialize function when the document is ready
+        document.addEventListener('DOMContentLoaded', initializeLegendVisibility);
+
+        // Function to toggle legend visibility and store state in sessionStorage
+        function toggleLegend() {
+            const legend = document.getElementById('legend-toggle');
+            const buttonShow = document.getElementById('legend-info-icon');
+
+            // Toggle visibility of legend and info button
+            legend.classList.toggle('hidden');
+            buttonShow.classList.toggle('hidden');
+
+            // Store current visibility state in sessionStorage
+            const legendVisible = !legend.classList.contains('hidden');
+            sessionStorage.setItem('legendVisible', legendVisible.toString());
+        }
+
 
         window.initMap = initMap;
     </script>
-
 </body>
 
 </html>
