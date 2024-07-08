@@ -390,6 +390,24 @@
             margin-left: 5px;
         }
 
+        .detail-button {
+            background-color: #30578c;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+           
+            transition: background-color 0.3s;
+        }
+
+        .detail-button:hover {
+            background-color: #30578c;
+        }
+        
+
         #legend-toggle {
             position: absolute;
             bottom: 20px;
@@ -465,6 +483,80 @@
         #legend-info-icon:hover {
             background-color: #fb5968;
         }
+         
+
+ #comments-section {
+ margin-top: 20px;
+ }
+
+ #comments-list {
+ max-height: 200px; /* Maksimum tinggi comments-list */
+ overflow-y: auto; /* Scroll jika melebihi tinggi maksimum */
+ margin-bottom: 10px;
+ padding-right: 15px; /* Padding untuk scroll bar */
+ }
+
+ .comment-item {
+ margin-bottom: 15px;
+ padding: 10px;
+ border: 1px solid #ddd;
+ border-radius: 5px;
+ background-color: #f9f9f9;
+ }
+
+ .comment-item .comment-header {
+ display: flex;
+ align-items: center;
+ margin-bottom: 5px;
+ }
+
+ .comment-item .comment-header i {
+ margin-right: 5px;
+ color: #888;
+ }
+
+ .comment-item .comment-author {
+ margin: 0;
+ font-weight: bold;
+ }
+
+ .comment-item .comment-content {
+ margin: 5px 0;
+ text-align: left;
+ }
+ #comment-form {
+ margin-top: 20px;
+ display: flex;
+ flex-direction: column;
+ }
+
+ #comment-input {
+ padding: 10px;
+ margin-bottom: 10px;
+ resize: vertical;
+ border: 1px solid #ddd;
+ border-radius: 5px;
+ font-size: 14px;
+ }
+
+ #comment-form button {
+ padding: 10px;
+ background-color: #007bff;
+ color: white;
+ border: none;
+ cursor: pointer;
+ border-radius: 5px;
+ transition: background-color 0.3s;
+ font-size: 14px;
+ align-self: flex-end;
+ width: 120px;
+ text-align: center;
+ }
+
+ #comment-form button:hover {
+ background-color: #0056b3;
+ }
+
 
         /* Responsive adjustments */
         @media (max-width: 600px) {
@@ -571,6 +663,7 @@
         <button onclick="toggleLegend()"><i class="fas fa-minus"></i></button>
     </div>
     <button onclick="toggleLegend()" id="legend-info-icon" class="hidden"><i class="fas fa-question fa-xl"></i></button>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk&callback=initMap&libraries=places&v=weekly"
         defer></script>
@@ -654,7 +747,7 @@
             fetch('/fasilitaspendidikan')
                 .then(response => response.json())
                 .then(fasilitasPendidikan => {
-                    console.log('Data Fasilitas Pendidikan:', fasilitasPendidikan);
+                   
                     addMarkers(fasilitasPendidikan, 'pendidikan',
                         'https://telegra.ph/file/1abb1eb8ef958f37dbca0.png');
                 })
@@ -664,7 +757,7 @@
             fetch('/fasilitaskesehatan')
                 .then(response => response.json())
                 .then(fasilitasKesehatan => {
-                    console.log('Data Fasilitas Kesehatan:', fasilitasKesehatan);
+                    
                     addMarkers(fasilitasKesehatan, 'kesehatan',
                         'https://telegra.ph/file/8a5ffa940e5deaf967d91.png');
                 })
@@ -674,7 +767,7 @@
             fetch('/fasilitaspemerintah')
                 .then(response => response.json())
                 .then(fasilitasPemerintah => {
-                    console.log('Data Fasilitas Pemerintah:', fasilitasPemerintah);
+                    
                     addMarkers(fasilitasPemerintah, 'pemerintah',
                         'https://telegra.ph/file/752a0e236138b9c0d53a7.png');
                 })
@@ -685,8 +778,7 @@
             fetch('/fasilitaskeibadatan')
                 .then(response => response.json())
                 .then(fasilitasKeibadatan => {
-                    console.log('Data Fasilitas Keibadatan:', fasilitasKeibadatan);
-
+                    
                     fasilitasKeibadatan.forEach(fasilitas => {
                         let iconUrl = 'https://telegra.ph/file/8b7aafa52ab7d44fa3308.png'; // Default icon
 
@@ -746,7 +838,12 @@
         <a href="https://www.google.com/maps/dir/?api=1&destination=${fasilitas.latitude},${fasilitas.longitude}" target="_blank">
             <i class="fas fa-route"></i> <strong>Rute</strong>
         </a>
+        <button class="detail-button"
+            onclick="showDetails('${fasilitas.nama}', '${fasilitas.id}', '${fasilitas.tags}')">
+            <i class="fas fa-comment"></i> Komentar
+        </button>
     </div>
+    
 </div>
 `
                         });
@@ -830,8 +927,12 @@
                                          target="_blank">
                                          <i class="fas fa-route"></i> <strong>Rute</strong>
                                      </a>
+                                     <button class="detail-button"
+                                         onclick="showDetails('${fasilitas.nama}', '${fasilitas.id}', '${fasilitas.tags}')">
+                                         <i class="fas fa-comment"></i> Komentar
+                                     </button>
                                  </div>
-
+ 
                              </div>`
                         });
 
@@ -900,6 +1001,139 @@
             const legendVisible = !legend.classList.contains('hidden');
             sessionStorage.setItem('legendVisible', legendVisible.toString());
         }
+
+        function showDetails(nama, idFasilitas, tag) {
+        let tags = tag.toLowerCase();
+        const idUser = <%= user.id %>;
+        let userIds = [];
+
+        Swal.fire({
+        title: `${nama}`,
+        html: `
+       
+
+        <div id="comments-section">
+            <h4>Komentar</h4>
+            <div id="comments-list">
+                <!-- Comments will be dynamically added here -->
+            </div>
+
+            <div id="comment-form">
+                <textarea id="comment-input" placeholder="Tambahkan komentar..." rows="3"></textarea>
+                <button onclick="addComment('${idUser}', '${idFasilitas}', '${tags}')">Tambah Komentar</button>
+            </div>
+        </div>
+        `,
+        showCloseButton: true,
+        showConfirmButton: false,
+        customClass: {
+        container: 'swal-wide', // Adjust width if necessary
+        },
+        didOpen: async () => {
+        try {
+        // Fetch comments based on facility ID and tag
+        const response = await fetch(`/reviews/${tags}/${idFasilitas}`);
+        const comments = await response.json();
+
+        const commentsList = document.getElementById('comments-list');
+        commentsList.innerHTML = ''; // Clear existing comments
+
+        // Render fetched comments
+        comments.forEach(comment => {
+        userIds.push(comment.id_user);
+        console.log(userIds);
+
+        // Fetch user details based on userId
+        fetch(`/users/${comment.id_user}`)
+        .then(response => response.json())
+        .then(user => {
+        const newComment = document.createElement('div');
+        newComment.classList.add('comment-item');
+        newComment.innerHTML = `
+        <div class="comment-header">
+            <i class="fas fa-user-circle"></i>
+            <p class="comment-author">${user.username || 'Nama Tidak Tersedia'}</p>
+        </div>
+        <p class="comment-content">${comment.komentar}</p>
+        `;
+        commentsList.appendChild(newComment);
+        })
+        .catch(error => {
+        console.error('Failed to fetch user details:', error);
+        });
+        });
+        } catch (error) {
+        console.error('Failed to fetch comments:', error);
+        }
+        },
+        });
+        }
+
+
+        async function addComment(idUser, idFasilitas, tags) {
+            const commentInput = document.getElementById('comment-input').value;
+            if (commentInput.trim() === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Komentar tidak boleh kosong!',
+                });
+                return;
+            }
+
+            try {
+                // Simulate adding comment to backend
+                const response = await fetch(`/reviews/${tags}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        komentar: commentInput,
+                        id_fasilitas: idFasilitas,
+                        id_user: idUser, // Assuming you have a way to identify the user
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to add comment');
+                }
+                let nama
+                if (idUser === <%= user.id %>) {
+                    nama = user.username
+                }
+                // Add new comment to UI
+                const commentsList = document.getElementById('comments-list');
+                const newComment = document.createElement('div');
+                newComment.classList.add('comment-item');
+                newComment.innerHTML = `
+<div class="comment-header">
+    <i class="fas fa-user-circle"></i>
+    <p class="comment-author">${nama}</p>
+</div>
+<p class="comment-content">${commentInput}</p>
+`;
+                commentsList.appendChild(newComment);
+
+                // Clear the comment input field
+                document.getElementById('comment-input').value = '';
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Komentar ditambahkan!',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            } catch (error) {
+                console.error('Failed to add comment:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Gagal menambahkan komentar!',
+                });
+            }
+        }
+
 
 
         window.initMap = initMap;

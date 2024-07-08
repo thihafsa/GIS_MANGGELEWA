@@ -165,6 +165,7 @@ router.route('/')
  *         description: Pengguna tidak ditemukan
  */
 router.route('/:id')
+    .get(usersController.getUserById)
     .put(usersController.updateUser)
     .delete(usersController.deleteUser);
 /**

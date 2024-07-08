@@ -20,16 +20,18 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
     try {
         const user = await Users.findByPk(req.params.id);
-        if (user) {
-            res.json(user);
-        } else {
-            res.status(404).json({
-                error: 'Data tidak ditemukan'
+
+        if (!user) {
+            return res.status(404).json({
+                error: 'User dengan ID tersebut tidak ditemukan'
             });
         }
+
+        res.json(user);
     } catch (error) {
+        console.error('Gagal mengambil data user:', error);
         res.status(500).json({
-            error: 'Gagal mengambil data'
+            error: 'Gagal mengambil data user'
         });
     }
 };

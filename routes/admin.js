@@ -7,6 +7,7 @@ const FasilitasKeibadatan = require('../models/fasilitasKeibadatan');
 const isAdmin = require('../middleware/roleMiddleware');
 const authMiddleware = require('../middleware/authMiddleware');
 const Users = require('../models/users');
+const Reviews = require('../models/reviews');
 
 
 // Rute utama admin (dashboard)
@@ -240,5 +241,41 @@ router.get('/users/:id/edit', authMiddleware, isAdmin, async (req, res) => {
         res.status(500).send('Terjadi kesalahan saat mengambil data Users');
     }
 });
+router.get('/reviews', authMiddleware, isAdmin, async (req, res) => {
+    const user = req.session.user;
+    try {
+        const reviews = await Reviews.findAll({
+            include: [{
+                    model: FasilitasPendidikan,
+                    as: 'fasilitasPendidikan',
+                },
+                {
+                    model: FasilitasKesehatan,
+                    as: 'fasilitasKesehatan',
+                },
+                {
+                    model: FasilitasPemerintah,
+                    as: 'fasilitasPemerintah',
+                },
+                {
+                    model: FasilitasKeibadatan,
+                    as: 'fasilitasKeibadatan',
+                },
+                {
+                    model: Users,
+                    as: 'user',
+                }
+            ],
+        });
 
+        res.render('admin/reviews', {
+            ReviewsData: reviews,
+            title: 'Reviews',
+            user
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Terjadi kesalahan saat mengambil data reviews');
+    }
+});
 module.exports = router;
