@@ -16,6 +16,7 @@ const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
 const aiRoutes = require('./routes/Ai');
 const authMiddleware = require('./middleware/authMiddleware');
+const { runtime } = require('./middleware/func');
 const app = express();
 
 // Middleware (misalnya, body-parser, cors, dll.)
@@ -68,6 +69,13 @@ app.get('/register', (req, res) => {
 app.get('/logout', (req, res) => {
     req.session.destroy(); // Hapus sesi
     res.redirect('/login'); // Redirect ke halaman login
+});
+app.get('/uptime', (req, res) => {
+    const uptime = runtime(process.uptime());
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({
+        uptime
+    });
 });
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/ai', aiRoutes);
