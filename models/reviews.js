@@ -2,11 +2,8 @@ const {
     DataTypes
 } = require('sequelize');
 const db = require('../config/database');
-const FasilitasPendidikan = require('./fasilitasPendidikan'); // Import model FasilitasPendidikan
-const FasilitasKesehatan = require('./fasilitasKesehatan'); // Import model FasilitasKesehatan
-const FasilitasPemerintah = require('./fasilitasPemerintah'); // Import model FasilitasPemerintah
-const FasilitasKeibadatan = require('./fasilitasKeibadatan'); // Import model FasilitasKeibadatan
-const Users = require('./users'); // Import model Users
+const Users = require('./users'); // Pastikan path sesuai dengan struktur proyek Anda
+const Fasilitas = require('./Fasilitas'); // Import model Fasilitas
 
 const Reviews = db.define('reviews', {
     id: {
@@ -25,58 +22,25 @@ const Reviews = db.define('reviews', {
             key: 'id',
         },
     },
-    id_fasilitas_pendidikan: { // Foreign key untuk FasilitasPendidikan (opsional)
+    id_fasilitas: {
         type: DataTypes.INTEGER,
         references: {
-            model: FasilitasPendidikan,
+            model: Fasilitas,
             key: 'id',
         },
-        allowNull: true, // Izinkan null jika review untuk fasilitas lain
-    },
-    id_fasilitas_kesehatan: { // Foreign key untuk FasilitasKesehatan (opsional)
-        type: DataTypes.INTEGER,
-        references: {
-            model: FasilitasKesehatan,
-            key: 'id',
-        },
-        allowNull: true, // Izinkan null jika review untuk fasilitas lain
-    },
-    id_fasilitas_pemerintah: { // Foreign key untuk FasilitasPemerintah (opsional)
-        type: DataTypes.INTEGER,
-        references: {
-            model: FasilitasPemerintah,
-            key: 'id',
-        },
-        allowNull: true, // Izinkan null jika review untuk fasilitas lain
-    },
-    id_fasilitas_keibadatan: { // Foreign key untuk FasilitasKeibadatan (opsional)
-        type: DataTypes.INTEGER,
-        references: {
-            model: FasilitasKeibadatan,
-            key: 'id',
-        },
-        allowNull: true, // Izinkan null jika review untuk fasilitas lain
     },
 });
-// Definisikan hubungan antara Reviews dengan masing-masing fasilitas
-Reviews.belongsTo(FasilitasPendidikan, {
-    foreignKey: 'id_fasilitas_pendidikan',
-    as: 'fasilitasPendidikan'
-});
-Reviews.belongsTo(FasilitasKesehatan, {
-    foreignKey: 'id_fasilitas_kesehatan',
-    as: 'fasilitasKesehatan'
-});
-Reviews.belongsTo(FasilitasPemerintah, {
-    foreignKey: 'id_fasilitas_pemerintah',
-    as: 'fasilitasPemerintah'
-});
-Reviews.belongsTo(FasilitasKeibadatan, {
-    foreignKey: 'id_fasilitas_keibadatan',
-    as: 'fasilitasKeibadatan'
-});
+
+// Definisi relasi dengan Users
 Reviews.belongsTo(Users, {
     foreignKey: 'id_user',
     as: 'user'
 });
+
+// Definisi relasi dengan Fasilitas
+Reviews.belongsTo(Fasilitas, {
+    foreignKey: 'id_fasilitas',
+    as: 'fasilitas'
+});
+
 module.exports = Reviews;

@@ -1,9 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const FasilitasPendidikan = require('../models/fasilitasPendidikan'); // Import model FasilitasPendidikan
-const FasilitasKesehatan = require('../models/fasilitasKesehatan');
-const FasilitasPemerintah = require('../models/fasilitasPemerintah');
-const FasilitasKeibadatan = require('../models/fasilitasKeibadatan');
 const isAdmin = require('../middleware/roleMiddleware');
 const authMiddleware = require('../middleware/authMiddleware');
 const Users = require('../models/users');
@@ -13,18 +9,10 @@ const Reviews = require('../models/reviews');
 // Rute utama admin (dashboard)
 router.get('/', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;
-    const kesehatanCount = await FasilitasKesehatan.count();
-    const pendidikanCount = await FasilitasPendidikan.count();
-    const pemerintahCount = await FasilitasPemerintah.count();
-    const keibadatanCount = await FasilitasKeibadatan.count();
 
     res.render('admin/index', {
         title: 'Dashboard Admin',
         user,
-        kesehatanCount,
-        pendidikanCount,
-        pemerintahCount,
-        keibadatanCount
     });
 });
 

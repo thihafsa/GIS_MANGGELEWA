@@ -1,8 +1,5 @@
 const Reviews = require('../models/reviews');
-const FasilitasPendidikan = require('../models/fasilitasPendidikan');
-const FasilitasKesehatan = require('../models/fasilitasKesehatan');
-const FasilitasPemerintah = require('../models/fasilitasPemerintah');
-const FasilitasKeibadatan = require('../models/fasilitasKeibadatan');
+const Fasilitas = require('../models/Fasilitas');
 const Users = require('../models/users');
 
 // Fungsi untuk mendapatkan semua review
@@ -10,20 +7,8 @@ exports.getAllReviews = async (req, res) => {
     try {
         const reviews = await Reviews.findAll({
             include: [{
-                    model: FasilitasPendidikan,
-                    as: 'fasilitasPendidikan', // Pastikan asosiasi 'fasilitasPendidikan' ada
-                },
-                {
-                    model: FasilitasKesehatan,
-                    as: 'fasilitasKesehatan', // Pastikan asosiasi 'fasilitasKesehatan' ada
-                },
-                {
-                    model: FasilitasPemerintah,
-                    as: 'fasilitasPemerintah', // Pastikan asosiasi 'fasilitasPemerintah' ada
-                },
-                {
-                    model: FasilitasKeibadatan,
-                    as: 'fasilitasKeibadatan', // Pastikan asosiasi 'fasilitasKeibadatan' ada
+                    model: Fasilitas,
+                    as: 'fasilitas', // Pastikan asosiasi 'fasilitas' ada
                 },
                 {
                     model: Users,
@@ -32,25 +17,7 @@ exports.getAllReviews = async (req, res) => {
             ],
         });
 
-        res.json(reviews.map(review => {
-            let fasilitas = null;
-
-            // Tentukan fasilitas yang sesuai berdasarkan asosiasi yang ditemukan
-            if (review.fasilitasPendidikan) {
-                fasilitas = review.fasilitasPendidikan;
-            } else if (review.fasilitasKesehatan) {
-                fasilitas = review.fasilitasKesehatan;
-            } else if (review.fasilitasPemerintah) {
-                fasilitas = review.fasilitasPemerintah;
-            } else if (review.fasilitasKeibadatan) {
-                fasilitas = review.fasilitasKeibadatan;
-            }
-
-            return {
-                ...review.toJSON(),
-                fasilitas,
-            };
-        }));
+        res.json(reviews);
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -65,12 +32,8 @@ exports.getReviewById = async (req, res) => {
     try {
         const review = await Reviews.findByPk(req.params.id, {
             include: [{
-                    model: FasilitasPendidikan,
-                    as: 'fasilitasPendidikan'
-                },
-                {
-                    model: FasilitasKesehatan,
-                    as: 'fasilitasKesehatan'
+                    model: Fasilitas,
+                    as: 'fasilitas'
                 },
                 {
                     model: Users,
@@ -80,14 +43,7 @@ exports.getReviewById = async (req, res) => {
         });
 
         if (review) {
-            const fasilitas = review.id_fasilitas_pendidikan ?
-                review.fasilitasPendidikan :
-                review.fasilitasKesehatan;
-
-            res.json({
-                ...review.toJSON(),
-                fasilitas,
-            });
+            res.json(review);
         } else {
             res.status(404).json({
                 error: 'Data tidak ditemukan'
@@ -101,94 +57,26 @@ exports.getReviewById = async (req, res) => {
     }
 };
 
-// Fungsi untuk menambah review berdasarkan jenis fasilitas
-exports.addReviewByTag = async (req, res) => {
-    try {
-        const {
-            komentar,
-            id_fasilitas,
-            id_user
-        } = req.body;
-
-        // Menentukan model dan kolom berdasarkan tag
-        let model;
-        let foreignKey;
-        switch (req.params.tag) {
-            case 'kesehatan':
-                model = FasilitasKesehatan;
-                foreignKey = 'id_fasilitas_kesehatan';
-                break;
-            case 'pendidikan':
-                model = FasilitasPendidikan;
-                foreignKey = 'id_fasilitas_pendidikan';
-                break;
-            case 'pemerintah':
-                model = FasilitasPemerintah;
-                foreignKey = 'id_fasilitas_pemerintah';
-                break;
-            case 'keibadatan':
-                model = FasilitasKeibadatan;
-                foreignKey = 'id_fasilitas_keibadatan';
-                break;
-            default:
-                return res.status(400).json({
-                    error: 'Jenis fasilitas tidak valid'
-                });
-        }
-
-        // Pastikan fasilitas yang akan direview sudah ada
-        const fasilitas = await model.findByPk(id_fasilitas);
-        if (!fasilitas) {
-            return res.status(404).json({
-                error: 'Fasilitas tidak ditemukan'
-            });
-        }
-
-        // Menambahkan review ke dalam database
-        const newReview = await Reviews.create({
-            komentar,
-            [foreignKey]: id_fasilitas,
-            id_user
-        });
-
-        res.status(201).json(newReview);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Gagal menambahkan review'
-        });
-    }
-};
-
-
-
 // Fungsi untuk membuat review baru
 exports.createReview = async (req, res) => {
     try {
         const {
             komentar,
             id_user,
-            id_fasilitas_pendidikan,
-            id_fasilitas_kesehatan,
-            id_fasilitas_pemerintah,
-            id_fasilitas_keibadatan
+            id_fasilitas
         } = req.body;
 
         // Validasi: Pastikan hanya satu id_fasilitas yang diisi
-        const fasilitasCount = [id_fasilitas_pendidikan, id_fasilitas_kesehatan, id_fasilitas_pemerintah, id_fasilitas_keibadatan].filter(id => id !== undefined).length;
-        if (fasilitasCount !== 1) {
+        if (!id_fasilitas) {
             return res.status(400).json({
-                error: 'Hanya boleh mengisi satu id_fasilitas'
+                error: 'Harap sertakan id_fasilitas'
             });
         }
 
         const review = await Reviews.create({
             komentar,
             id_user,
-            id_fasilitas_pendidikan,
-            id_fasilitas_kesehatan,
-            id_fasilitas_pemerintah,
-            id_fasilitas_keibadatan
+            id_fasilitas
         });
 
         res.status(201).json(review);
@@ -213,27 +101,20 @@ exports.updateReview = async (req, res) => {
         const {
             komentar,
             id_user,
-            id_fasilitas_pendidikan,
-            id_fasilitas_kesehatan,
-            id_fasilitas_pemerintah,
-            id_fasilitas_keibadatan
+            id_fasilitas
         } = req.body;
 
-        // Validasi: Pastikan hanya satu id_fasilitas yang diisi (jika ada perubahan)
-        const fasilitasCount = [id_fasilitas_pendidikan, id_fasilitas_kesehatan, id_fasilitas_pemerintah, id_fasilitas_keibadatan].filter(id => id !== undefined).length;
-        if (fasilitasCount > 1) {
+        // Validasi: Pastikan hanya satu id_fasilitas yang diisi
+        if (id_fasilitas === undefined) {
             return res.status(400).json({
-                error: 'Hanya boleh mengisi satu id_fasilitas'
+                error: 'Harap sertakan id_fasilitas'
             });
         }
 
         await existingReview.update({
             komentar: komentar || existingReview.komentar,
             id_user: id_user || existingReview.id_user,
-            id_fasilitas_pendidikan: id_fasilitas_pendidikan || existingReview.id_fasilitas_pendidikan,
-            id_fasilitas_kesehatan: id_fasilitas_kesehatan || existingReview.id_fasilitas_kesehatan,
-            id_fasilitas_pemerintah: id_fasilitas_pemerintah || existingReview.id_fasilitas_pemerintah,
-            id_fasilitas_keibadatan: id_fasilitas_keibadatan || existingReview.id_fasilitas_keibadatan
+            id_fasilitas: id_fasilitas || existingReview.id_fasilitas
         });
 
         res.json(existingReview);
