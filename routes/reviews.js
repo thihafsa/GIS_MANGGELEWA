@@ -15,27 +15,29 @@ const reviewsController = require('../controllers/reviewsController');
  *         id_user:
  *           type: integer
  *           description: ID pengguna yang memberikan review
- *         id_fasilitas_pendidikan:
+ *         id_fasilitas:
  *           type: integer
- *           description: ID fasilitas pendidikan yang direview
- *         id_fasilitas_kesehatan:
- *           type: integer
- *           description: ID fasilitas kesehatan yang direview
- *         id_fasilitas_pemerintah:
- *           type: integer
- *           description: ID fasilitas pemerintah yang direview
- *         id_fasilitas_keibadatan:
- *           type: integer
- *           description: ID fasilitas keibadatan yang direview
+ *           description: ID fasilitas yang direview
  *     Review:
- *       allOf:
- *         - $ref: '#/components/schemas/ReviewInput'
- *         - type: object
- *           properties:
- *             id:
- *               type: integer
- *               description: ID review
- *               readOnly: true
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID review
+ *         komentar:
+ *           type: string
+ *           description: Komentar review
+ *         id_user:
+ *           type: integer
+ *           description: ID pengguna yang memberikan review
+ *         id_fasilitas:
+ *           type: integer
+ *           description: ID fasilitas yang direview
+ *       required:
+ *         - id
+ *         - komentar
+ *         - id_user
+ *         - id_fasilitas
  */
 
 /**
@@ -141,38 +143,12 @@ router.route('/:id')
     .get(reviewsController.getReviewById)
     .put(reviewsController.updateReview)
     .delete(reviewsController.deleteReview);
-/**
- * @swagger
- * /reviews/kesehatan/{id}:
- *   get:
- *     summary: Mendapatkan review berdasarkan ID fasilitas kesehatan
- *     tags: [Reviews]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID fasilitas kesehatan
- *     responses:
- *       200:
- *         description: Review berhasil diambil
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Review'
- *       500:
- *         description: Gagal mengambil data
- */
-router.get('/kesehatan/:id', reviewsController.getReviewsByFasilitasKesehatanId);
 
 /**
  * @swagger
- * /reviews/pendidikan/{id}:
+ * /reviews/fasilitas/{id}:
  *   get:
- *     summary: Mendapatkan review berdasarkan ID fasilitas pendidikan
+ *     summary: Mendapatkan review berdasarkan ID fasilitas
  *     tags: [Reviews]
  *     parameters:
  *       - in: path
@@ -180,10 +156,10 @@ router.get('/kesehatan/:id', reviewsController.getReviewsByFasilitasKesehatanId)
  *         schema:
  *           type: integer
  *         required: true
- *         description: ID fasilitas pendidikan
+ *         description: ID fasilitas
  *     responses:
  *       200:
- *         description: Review berhasil diambil
+ *         description: Daftar review fasilitas berhasil diambil
  *         content:
  *           application/json:
  *             schema:
@@ -193,98 +169,39 @@ router.get('/kesehatan/:id', reviewsController.getReviewsByFasilitasKesehatanId)
  *       500:
  *         description: Gagal mengambil data
  */
-router.get('/pendidikan/:id', reviewsController.getReviewsByFasilitasPendidikanId);
+router.get('/fasilitas/:id', reviewsController.getReviewByIdFasilitas);
 
 /**
  * @swagger
- * /reviews/pemerintah/{id}:
- *   get:
- *     summary: Mendapatkan review berdasarkan ID fasilitas pemerintah
- *     tags: [Reviews]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID fasilitas pemerintah
- *     responses:
- *       200:
- *         description: Review berhasil diambil
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Review'
- *       500:
- *         description: Gagal mengambil data
- */
-router.get('/pemerintah/:id', reviewsController.getReviewsByFasilitasPemerintahId);
-
-/**
- * @swagger
- * /reviews/keibadatan/{id}:
- *   get:
- *     summary: Mendapatkan review berdasarkan ID fasilitas keibadatan
- *     tags: [Reviews]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID fasilitas keibadatan
- *     responses:
- *       200:
- *         description: Review berhasil diambil
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Review'
- *       500:
- *         description: Gagal mengambil data
- */
-router.get('/keibadatan/:id', reviewsController.getReviewsByFasilitasKeibadatanId);
-/**
- * @swagger
- * /{tag}:
+ * /reviews/fasilitas/{id}/create:
  *   post:
- *     summary: Menambah review berdasarkan jenis fasilitas
- *     tags:
- *       - Reviews
+ *     summary: Membuat review baru berdasarkan ID fasilitas
+ *     tags: [Reviews]
  *     parameters:
  *       - in: path
- *         name: tag
- *         required: true
+ *         name: id
  *         schema:
- *           type: string
- *         description: Tag untuk jenis fasilitas (kesehatan, pendidikan, pemerintah, keibadatan)
- *       - in: body
- *         name: review
+ *           type: integer
  *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             komentar:
- *               type: string
- *               description: Komentar atau review yang ditambahkan
- *             id_fasilitas:
- *               type: integer
- *               description: ID fasilitas terkait
- *             id_user:
- *               type: integer
- *               description: ID pengguna yang menambahkan review
+ *         description: ID fasilitas
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ReviewInput'
  *     responses:
- *       '201':
- *         description: Review berhasil ditambahkan
- *       '400':
- *         description: Permintaan tidak valid
- *       '500':
- *         description: Gagal menambahkan review
+ *       201:
+ *         description: Review fasilitas berhasil dibuat
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Review'
+ *       400:
+ *         description: Harap sertakan id_fasilitas dan id_user
+ *       500:
+ *         description: Gagal membuat data
  */
-router.post('/:tag', reviewsController.addReviewByTag);
+router.post('/fasilitas/:id', reviewsController.createReviewByIdFasilitas);
 
 module.exports = router;

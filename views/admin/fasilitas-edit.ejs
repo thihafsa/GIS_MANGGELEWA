@@ -369,7 +369,7 @@
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
                             <div class="dashboard_bar">
-                                Tambah Fasilitas Keibadatan
+                                Edit Fasilitas <%=jenisFasilitas%>
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
@@ -398,7 +398,7 @@
                                 </a>
                             </li>
                             <li class='nav-item'>
-                                <a href='/admin/keibadatan' class='btn btn-primary'>
+                                <a href='/admin/<%=jenisFasilitas%>' class='btn btn-primary'>
                                     <i class='las la-arrow-left scale5'></i> Kembali
                                 </a>
                             </li>
@@ -419,104 +419,160 @@
                                     <div class="row">
                                         <div class="col-xl-6">
                                             <div class="mb-3">
-                                                <label class="form-label" for="nama">Nama Tempat Ibadah <span
+                                                <label class="form-label" for="nama_fasilitas">Nama Fasilitas <span
                                                         class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="nama" name="nama"
-                                                    placeholder="Masukkan nama tempat ibadah.." required="">
+                                                <input type="text" class="form-control" id="nama_fasilitas"
+                                                    name="nama_fasilitas" placeholder="Masukkan nama fasilitas.."
+                                                    value="<%= fasilitas.nama_fasilitas %>" required>
                                                 <div class="invalid-feedback">
-                                                    Harap masukkan nama tempat ibadah.
+                                                    Harap masukkan nama fasilitas.
                                                 </div>
                                             </div>
-                                            <div class="mb-3"> <label class="form-label" for="latitude">Latitude</label>
+                                            <input type="hidden" id="idjenis" name="idjenis"
+                                                value="<%= idJenisfasil %>">
+
+                                            <div class="mb-3">
+                                                <label class="form-label" for="jam_buka">Jam Buka <span
+                                                        class="text-danger">*</span></label>
+                                                <div class="input-group clockpicker" data-placement="bottom"
+                                                    data-align="top" data-autoclose="true">
+                                                    <input type="text" class="form-control" id="jam_buka"
+                                                        name="jam_buka" value="<%= fasilitas.jam_buka %>">
+                                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="jam_tutup">Jam Tutup <span
+                                                        class="text-danger">*</span></label>
+                                                <div class="input-group clockpicker" data-placement="bottom"
+                                                    data-align="top" data-autoclose="true">
+                                                    <input type="text" class="form-control" id="jam_tutup"
+                                                        name="jam_tutup" value="<%= fasilitas.jam_tutup %>">
+                                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xl-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="latitude">Latitude</label>
                                                 <input type="number" class="form-control" id="latitude" name="latitude"
-                                                    step="0.000001" placeholder="Masukkan latitude..">
+                                                    step="0.000001" value="<%= fasilitas.latitude %>"
+                                                    placeholder="Masukkan latitude..">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label" for="longitude">Longitude</label>
                                                 <input type="number" class="form-control" id="longitude"
-                                                    name="longitude" step="0.000001" placeholder="Masukkan longitude..">
+                                                    name="longitude" step="0.000001" value="<%= fasilitas.longitude %>"
+                                                    placeholder="Masukkan longitude..">
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Generate Alamat</label>
+                                                <label class="form-label" for="alamat">Alamat <span
+                                                        class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" id="alamat" name="alamat"
-                                                        placeholder="Tekan Generate untuk isi alamat secara otomatis">
+                                                        value="<%= fasilitas.alamat %>" placeholder="Masukkan alamat.."
+                                                        required>
                                                     <button type="button" class="btn btn-primary"
                                                         onclick="generateAddress()">Generate</button>
                                                 </div>
+                                                <div class="invalid-feedback">Harap masukkan alamat.</div>
                                             </div>
+                                           <div class="mb-3">
+                                               <label class="form-label" for="fasilitas">Fasilitas</label>
+                                               <select class="multi-select" id="fasilitas" name="fasilitas[]"
+                                                   multiple="multiple">
+                                                   <% listFasilitas.forEach(item => { %>
+                                                   <option value="<%= item %>"
+                                                       <%= fasilitas.fasilitas.includes(item) ? 'selected' : '' %>>
+                                                       <%= item %></option>
+                                                   <% }); %>
+                                               </select>
+                                           </div>
+
 
                                         </div>
 
                                         <div class="col-xl-6">
                                             <div class="mb-3">
-                                                <label class="form-label" for="jamBuka">Jam Buka</label>
-                                                <div class="input-group clockpicker" data-placement="bottom"
-                                                    data-align="top" data-autoclose="true">
-                                                    <input type="text" class="form-control" id="jamBuka" name="jamBuka"
-                                                        value="09:30">
-                                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                                                </div>
+                                                <label class="form-label" for="foto">Foto</label>
+                                                <input type="file" class="form-control" id="foto" name="foto"
+                                                    onchange="previewImage(this);">
+                                                <img id="imagePreview"
+                                                    src="/fasilitas/<%= fasilitas.foto%>"
+                                                    alt="Image Preview"
+                                                    style="max-width: 200px; max-height: 200px; margin-top: 10px;">
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label" for="jamTutup">Jam Tutup</label>
-                                                <div class="input-group clockpicker" data-placement="bottom"
-                                                    data-align="top" data-autoclose="true">
-                                                    <input type="text" class="form-control" id="jamTutup"
-                                                        name="jamTutup" value="17:30">
-                                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label" for="fasilitas">Fasilitas <span
-                                                        class="text-danger">*</span></label>
-                                                <select class="multi-select" id="fasilitas" name="fasilitas[]"
-                                                    multiple="multiple">
-                                                    <option value="Masjid">Masjid</option>
-                                                    <option value="Gereja">Gereja</option>
-                                                    <option value="Vihara">Vihara</option>
-                                                    <option value="Pura">Pura</option>
-                                                    <option value="Altar">Altar</option>
-                                                    <option value="Tempat Wudu">Tempat Wudu</option>
-                                                    <option value="Toilet">Toilet</option>
-                                                    <option value="Tempat Parkir">Tempat Parkir</option>
-                                                    <option value="Ruang Pertemuan">Ruang Pertemuan</option>
-                                                    <option value="Pengeras Suara">Pengeras Suara</option>
-                                                    <option value="Tempat Penitipan Sepatu">Tempat Penitipan Sepatu
-                                                    </option>
-                                                    <option value="Area Berdoa">Area Berdoa</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="foto">Foto</label>
-                                                    <input type="file" class="form-control" id="foto" name="foto"
-                                                        onchange="previewImage(this);">
-                                                    <img id="imagePreview" src="#" alt="Image Preview"
-                                                        style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
-                                                </div>
-
-
-
+                                                <label class="form-label" for="deskripsi">Deskripsi</label>
+                                                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="5"
+                                                    placeholder="Deskripsikan fasilitas.."
+                                                    required><%= fasilitas.deskripsi %></textarea>
                                             </div>
                                         </div>
-                                        <div class="mb-3 row">
-                                            <div class="col-lg-8 ms-auto">
+
+                                        <div class="col-12">
+                                            <div class="mb-3">
                                                 <button type="submit" class="btn btn-primary"
                                                     onclick="submitForm()">Submit</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
+
         <%- include('../template/footer.ejs') %>
         <script>
+            function generateDescription() {
+                const nama_instansi = document.getElementById('nama_fasilitas').value;
+                const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
+                    opt.value).join(',');
+                const alamat = document.getElementById('alamat').value;
+                const jam_buka = document.getElementById('jam_buka').value;
+                const jam_tutup = document.getElementById('jam_tutup').value;
+                console.log(nama_instansi);
+                fetch('/ai/generate-description', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            nama_instansi,
+                            kepala,
+                            fasilitas,
+                            alamat,
+                            jam_buka,
+                            jam_tutup
+                        }),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById('deskripsi_singkat').value = ''
+                        document.getElementById('deskripsi_singkat').value = data.description;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Gagal menghasilkan deskripsi singkat. Silakan coba lagi.'
+                        });
+                    });
+            }
+
             function generateAddress() {
                 const lat = document.getElementById('latitude').value;
                 const lng = document.getElementById('longitude').value;
@@ -568,21 +624,31 @@
 
             function submitForm() {
                 const formData = new FormData();
-                formData.append('nama', document.getElementById('nama').value);
+                formData.append('nama_fasilitas', document.getElementById('nama_fasilitas').value);
+                formData.append('jam_buka', document.getElementById('jam_buka').value);
+                formData.append('jam_tutup', document.getElementById('jam_tutup').value);
+                formData.append('alamat', document.getElementById('alamat').value);
                 formData.append('latitude', document.getElementById('latitude').value);
                 formData.append('longitude', document.getElementById('longitude').value);
-                formData.append('alamat', document.getElementById('alamat').value);
-                formData.append('jamBuka', document.getElementById('jamBuka').value);
-                formData.append('jamTutup', document.getElementById('jamTutup').value);
+                formData.append('deskripsi', document.getElementById('deskripsi').value);
+
+                // Mengambil fasilitas yang dipilih
                 const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
                     opt.value).join(',');
                 formData.append('fasilitas', fasilitas);
+
+                // Menambahkan idjenis jika diperlukan
+                const idjenis = document.getElementById('idjenis').value;
+                formData.append('idjenis', idjenis);
+
+                // Menambahkan foto jika ada
                 const foto = document.getElementById('foto').files[0];
                 if (foto) {
                     formData.append('foto', foto);
                 }
-                fetch('/fasilitaskeibadatan', {
-                        method: 'POST',
+
+                fetch('/fasilitas/<%=fasilitas.id%>', { // Sesuaikan endpoint ini sesuai dengan endpoint di server
+                        method: 'PUT',
                         body: formData
                     })
                     .then(response => {
@@ -593,9 +659,9 @@
                     })
                     .then(data => {
                         // Handle success response
-                        sessionStorage.setItem('submitSuccess', 'Data berhasil di tambah!');
-                        // Redirect to admin/keibadatan
-                        window.location.href = '/admin/keibadatan';
+                        sessionStorage.setItem('submitSuccess', 'Data berhasil ditambah!');
+                        // Redirect to admin page (sesuaikan URL ini jika diperlukan)
+                        window.location.href = '/admin/<%=jenisFasilitas%>';
                     })
                     .catch(error => {
                         // Handle error
@@ -607,6 +673,7 @@
                         });
                     });
             }
+
 
             function previewImage(input) {
                 const file = input.files[0];

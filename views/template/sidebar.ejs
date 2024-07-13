@@ -41,24 +41,26 @@
                 </a>
             </li>
             <li>
+                <a class='mt-2' href='/admin/jenisfasilitas'>
+                    <i class='ti-archive'></i>
+                    <span class='nav-text'>Jenis Fasilitas</span>
+                </a>
+            </li>
+            <li>
                 <a class='has-arrow ai-icon' href='#' aria-expanded='false'>
                     <i class='fas fa-folder-open'></i>
                     <span class='nav-text'>Data Fasilitas</span>
                 </a>
                 <ul aria-expanded='false'>
+                    <% jenisFasilitasList.forEach(jenis => { %>
                     <li>
-                        <a href='/admin/pendidikan'>Fasilitas Pendidikan</a>
+                        <a href='/admin/<%= jenis.nama.toLowerCase().replace(/\s+/g, '-') %>'>
+                            <%= jenis.nama %>
+                        </a>
                     </li>
-                    <li>
-                        <a href='/admin/kesehatan'>Fasilitas Kesehatan</a>
-                    </li>
-                    <li>
-                        <a href='/admin/pemerintah'>Fasilitas Pemerintah</a>
-                    </li>
-                    <li>
-                        <a href='/admin/keibadatan'>Fasilitas Ibadah</a>
-                    </li>
+                    <% }); %>
                 </ul>
+
             </li>
             <li>
                 <a class='mt-2' href='/admin/users'>
@@ -66,6 +68,7 @@
                     <span class='nav-text'>User</span>
                 </a>
             </li>
+            
             <li>
                 <a class='mt-2' href='/admin/reviews'>
                     <i class='ti-search'></i>
