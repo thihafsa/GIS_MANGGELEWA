@@ -1,6 +1,7 @@
 const JenisFasilitas = require('../models/JenisFasilitas');
 const path = require('path');
 const fs = require('fs/promises');
+const { Op } = require('sequelize');
 const __path = process.cwd(); // Adjust this path according to your project structure
 
 // Get all Jenis Fasilitas
@@ -34,6 +35,23 @@ exports.getJenisFasilitasById = async (req, res) => {
         res.status(500).json({
             message: 'Error fetching data',
             error
+        });
+    }
+};
+
+// Get Jenis Fasilitas List
+exports.getJenisFasilitasList = async (req, res) => {
+    try {
+        const jenisFasilitasList = await JenisFasilitas.findAll({
+            attributes: ['id', 'nama'], // Assuming you want to fetch only id and nama
+        });
+
+        res.status(200).json(jenisFasilitasList);
+    } catch (error) {
+        console.error('Error fetching jenis fasilitas:', error);
+        res.status(500).json({
+            message: 'Error fetching jenis fasilitas',
+            error: error.message
         });
     }
 };
@@ -98,6 +116,19 @@ exports.createJenisFasilitas = async (req, res) => {
             nama,
             list_fasilitas
         } = req.body;
+         const existingJenisFasilitas = await JenisFasilitas.findOne({
+             where: {
+                 nama: {
+                     [Op.like]: nama // Case insensitive search
+                 }
+             }
+         });
+
+         if (existingJenisFasilitas) {
+             return res.status(422).json({
+                 message: 'Nama Jenis Fasilitas sudah digunakan'
+             });
+         }
         const newJenisFasilitas = await JenisFasilitas.create({
             nama,
             icon,
@@ -176,6 +207,22 @@ exports.updateJenisFasilitas = async (req, res) => {
             nama,
             list_fasilitas
         } = req.body;
+         const existingJenisFasilitas = await JenisFasilitas.findOne({
+             where: {
+                 nama: {
+                     [Op.like]: nama // Case insensitive search
+                 },
+                 id: {
+                     [Op.not]: id // Exclude current record
+                 }
+             }
+         });
+
+         if (existingJenisFasilitas) {
+             return res.status(422).json({
+                 message: 'Nama Jenis Fasilitas sudah digunakan'
+             });
+         }
         const jenisFasilitas = await JenisFasilitas.findByPk(id);
         if (jenisFasilitas) {
             jenisFasilitas.nama = nama;

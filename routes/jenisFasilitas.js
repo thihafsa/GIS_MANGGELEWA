@@ -20,10 +20,22 @@ const JenisFasilitasController = require('../controllers/jenisFasilitasControlle
  *         icon:
  *           type: string
  *           description: The icon URL of the Jenis Fasilitas
+ *         marker:
+ *           type: string
+ *           description: The marker URL of the Jenis Fasilitas
+ *         list_fasilitas:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: List of facilities under this Jenis Fasilitas
  *       example:
  *         id: 1
  *         nama: "Perpustakaan"
  *         icon: "http://example.com/icon.png"
+ *         marker: "http://example.com/marker.png"
+ *         list_fasilitas:
+ *           - "Fasilitas A"
+ *           - "Fasilitas B"
  */
 
 /**
@@ -75,7 +87,6 @@ router.get('/', JenisFasilitasController.getAllJenisFasilitas);
  *         description: The Jenis Fasilitas was not found
  */
 router.get('/:id', JenisFasilitasController.getJenisFasilitasById);
-
 /**
  * @swagger
  * /jenisfasilitas:
@@ -94,6 +105,13 @@ router.get('/:id', JenisFasilitasController.getJenisFasilitasById);
  *               icon:
  *                 type: string
  *                 format: binary
+ *               marker:
+ *                 type: string
+ *                 format: binary
+ *               list_fasilitas:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *     responses:
  *       201:
  *         description: The Jenis Fasilitas was successfully created
@@ -101,9 +119,20 @@ router.get('/:id', JenisFasilitasController.getJenisFasilitasById);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/JenisFasilitas'
+ *       422:
+ *         description: Duplicate name error or validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Nama Jenis Fasilitas sudah digunakan
  *       500:
- *         description: Some server error
+ *         description: Server error
  */
+
 router.post('/', JenisFasilitasController.createJenisFasilitas);
 
 /**
@@ -131,6 +160,13 @@ router.post('/', JenisFasilitasController.createJenisFasilitas);
  *               icon:
  *                 type: string
  *                 format: binary
+ *               marker:
+ *                 type: string
+ *                 format: binary
+ *               list_fasilitas:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *     responses:
  *       200:
  *         description: The Jenis Fasilitas was updated
@@ -139,10 +175,29 @@ router.post('/', JenisFasilitasController.createJenisFasilitas);
  *             schema:
  *               $ref: '#/components/schemas/JenisFasilitas'
  *       404:
- *         description: The Jenis Fasilitas was not found
+ *         description: Jenis Fasilitas not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Jenis Fasilitas not found
+ *       422:
+ *         description: Duplicate name error or validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Nama Jenis Fasilitas sudah digunakan
  *       500:
- *         description: Some error happened
+ *         description: Server error
  */
+
 router.put('/:id', JenisFasilitasController.updateJenisFasilitas);
 
 /**

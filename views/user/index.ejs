@@ -359,6 +359,15 @@
             background-color: #e38d66;
         }
 
+        .facility-foto {
+        max-width: 10rem !important;
+        height: 10rem !important;
+        display: block;
+        margin: 0 auto; /* Untuk mengatur posisi gambar menjadi di tengah */
+        margin-bottom: 10px; /* Atur jarak antara gambar dengan elemen di atasnya */
+        }
+
+
         .route-link {
             margin: 10px 0;
             text-align: center;
@@ -652,14 +661,7 @@
     </div>
     <div id="map"></div>
     <div id="legend-toggle" class="legend">
-        <h4>Legenda</h4>
-        <div><img src="https://telegra.ph/file/1abb1eb8ef958f37dbca0.png" alt="Pendidikan"> Pendidikan</div>
-        <div><img src="https://telegra.ph/file/8a5ffa940e5deaf967d91.png" alt="Kesehatan"> Kesehatan</div>
-        <div><img src="https://telegra.ph/file/752a0e236138b9c0d53a7.png" alt="Pemerintah"> Pemerintah</div>
-        <div><img src="https://telegra.ph/file/8b7aafa52ab7d44fa3308.png" alt="Keibadatan"> Keibadatan</div>
-        <div><img src="https://telegra.ph/file/fde274d597a207de235b9.png" alt="Masjid"> Masjid</div>
-        <div><img src="https://telegra.ph/file/fa0d76c10cfe1724cf268.png" alt="Gereja"> Gereja</div>
-        <div><img src="https://telegra.ph/file/f34a8a67a86fe6e7de255.png" alt="Pura"> Pura</div>
+        <h4 class="legend-title">Legenda</h4>
         <button onclick="toggleLegend()"><i class="fas fa-minus"></i></button>
     </div>
     <button onclick="toggleLegend()" id="legend-info-icon" class="hidden"><i class="fas fa-question fa-xl"></i></button>
@@ -742,89 +744,51 @@
             });
         }
 
-        function fetchDataAndAddMarkers() {
-            // Fetch data for pendidikan
-            fetch('/fasilitaspendidikan')
-                .then(response => response.json())
-                .then(fasilitasPendidikan => {
-                   
-                    addMarkers(fasilitasPendidikan, 'pendidikan',
-                        'https://telegra.ph/file/1abb1eb8ef958f37dbca0.png');
-                })
-                .catch(error => console.error('Error fetching data:', error));
+         function fetchDataAndAddMarkers() {
+        // Fetch data for fasilitas
+        fetch('/fasilitas')
+            .then(response => response.json())
+            .then(fasilitas => {
+                fasilitas.forEach(fasilitas => {
+                     const iconUrl = `/markers/${fasilitas.jenis_fasilita.marker}`;
 
-            // Fetch data for kesehatan
-            fetch('/fasilitaskesehatan')
-                .then(response => response.json())
-                .then(fasilitasKesehatan => {
-                    
-                    addMarkers(fasilitasKesehatan, 'kesehatan',
-                        'https://telegra.ph/file/8a5ffa940e5deaf967d91.png');
-                })
-                .catch(error => console.error('Error fetching data:', error));
+                    addMarkers([fasilitas], fasilitas.jenis_fasilita.nama.toLowerCase(), iconUrl);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
 
-            // Fetch data for pemerintah
-            fetch('/fasilitaspemerintah')
-                .then(response => response.json())
-                .then(fasilitasPemerintah => {
-                    
-                    addMarkers(fasilitasPemerintah, 'pemerintah',
-                        'https://telegra.ph/file/752a0e236138b9c0d53a7.png');
-                })
-                .catch(error => console.error('Error fetching data:', error));
+    function addMarkers(fasilitasData, type, iconUrl) {
+        fasilitasData.forEach(fasilitas => {
+            if (fasilitas.latitude && fasilitas.longitude) {
+                const lat = parseFloat(fasilitas.latitude);
+                const lng = parseFloat(fasilitas.longitude);
 
-            // Fetch data for keibadatan
-            // Fetch data for keibadatan
-            fetch('/fasilitaskeibadatan')
-                .then(response => response.json())
-                .then(fasilitasKeibadatan => {
-                    
-                    fasilitasKeibadatan.forEach(fasilitas => {
-                        let iconUrl = 'https://telegra.ph/file/8b7aafa52ab7d44fa3308.png'; // Default icon
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    const icon = {
+                        url: iconUrl,
+                        scaledSize: new google.maps.Size(40, 40),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(20, 40),
+                    };
 
-                        // Determine icon based on the facility name
-                        if (fasilitas.nama.toLowerCase().includes('masjid')) {
-                            iconUrl = 'https://telegra.ph/file/fde274d597a207de235b9.png';
-                        } else if (fasilitas.nama.toLowerCase().includes('gereja')) {
-                            iconUrl = 'https://telegra.ph/file/fa0d76c10cfe1724cf268.png';
-                        } else if (fasilitas.nama.toLowerCase().includes('pura')) {
-                            iconUrl = 'https://telegra.ph/file/f34a8a67a86fe6e7de255.png';
-                        }
-
-                        addMarkers([fasilitas], 'keibadatan', iconUrl);
+                    const marker = new google.maps.Marker({
+                        position: {
+                            lat,
+                            lng
+                        },
+                        map,
+                        icon,
+                        title: fasilitas.nama_fasilitas,
+                        animation: google.maps.Animation.DROP,
                     });
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
 
-        function addMarkers(fasilitasData, type, iconUrl) {
-            fasilitasData.forEach(fasilitas => {
-                if (fasilitas.latitude && fasilitas.longitude) {
-                    const lat = parseFloat(fasilitas.latitude);
-                    const lng = parseFloat(fasilitas.longitude);
-
-                    if (!isNaN(lat) && !isNaN(lng)) {
-                        const icon = {
-                            url: iconUrl,
-                            scaledSize: new google.maps.Size(40, 40),
-                            origin: new google.maps.Point(0, 0),
-                            anchor: new google.maps.Point(20, 40),
-                        };
-
-                        const marker = new google.maps.Marker({
-                            position: {
-                                lat,
-                                lng
-                            },
-                            map,
-                            icon,
-                            title: fasilitas.nama,
-                            animation: google.maps.Animation.DROP,
-                        });
-
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `<div class="facility-container">
-    <h3>${fasilitas.nama}</h3>
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `
+                        <div class="facility-container">
+                            <img src="/fasilitas/${fasilitas.foto}" alt="${fasilitas.nama_fasilitas}"
+                                class="facility-foto">
+    <h3>${fasilitas.nama_fasilitas}</h3>
     <p><i class="fas fa-map-marker-alt"></i> Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
     <div class="facility-details">
         <i class="fas fa-building"></i>
@@ -832,82 +796,84 @@
         ${fasilitas.fasilitas ? fasilitas.fasilitas.split(',').map(fasilitasItem => 
         `<button class="facility-button">${fasilitasItem.trim()}</button>`).join(' ') : 'Tidak ada informasi fasilitas'}
     </div>
-    <p><i class="fas fa-clock"></i> Jam Buka: ${fasilitas.jamBuka || 'Tidak ada informasi'}</p>
-    <p><i class="fas fa-clock"></i> Jam Tutup: ${fasilitas.jamTutup || 'Tidak ada informasi'}</p>
+    <p><i class="fas fa-clock"></i> Jam Buka: ${fasilitas.jam_buka || 'Tidak ada informasi'}</p>
+    <p><i class="fas fa-clock"></i> Jam Tutup: ${fasilitas.jam_tutup || 'Tidak ada informasi'}</p>
     <div class="route-link">
         <a href="https://www.google.com/maps/dir/?api=1&destination=${fasilitas.latitude},${fasilitas.longitude}" target="_blank">
             <i class="fas fa-route"></i> <strong>Rute</strong>
         </a>
         <button class="detail-button"
-            onclick="showDetails('${fasilitas.nama}', '${fasilitas.id}', '${fasilitas.tags}')">
+            onclick="showDetails('${fasilitas.nama_fasilitas}', '${fasilitas.id}')">
             <i class="fas fa-comment"></i> Komentar
         </button>
     </div>
     
 </div>
 `
-                        });
+                    });
 
-                        marker.addListener('click', () => {
-                            if (activeInfoWindow) {
-                                activeInfoWindow.close();
-                            }
-
-                            infoWindow.open(map, marker);
-                            activeInfoWindow = infoWindow;
-                        });
-
-                        markers.push({
-                            marker,
-                            fasilitas,
-                            type
-                        });
-                    } else {
-                        console.error('Invalid latitude or longitude for:', fasilitas);
-                    }
-                }
-            });
-        }
-
-        function handleSearch(event) {
-            const query = event.target.value.toLowerCase();
-            const resultsContainer = document.getElementById('search-results');
-            resultsContainer.innerHTML = '';
-
-            if (query) {
-                const results = markers.filter(({
-                    fasilitas
-                }) => {
-                    return fasilitas.nama.toLowerCase().includes(query) || (fasilitas.alamat && fasilitas.alamat
-                        .toLowerCase().includes(query));
-                });
-
-                results.forEach(({
-                    fasilitas,
-                    marker
-                }) => {
-                    const item = document.createElement('div');
-                    item.classList.add('search-result-item');
-                    item.textContent = fasilitas.nama;
-                    item.addEventListener('click', () => {
-                        // Update search input value with selected result
-                        document.getElementById('search-input').value = fasilitas.nama;
-
-                        // Clear search results and hide container
-                        resultsContainer.style.display = 'none';
-
-                        // Center map to selected marker
-                        map.setCenter(marker.getPosition());
-                        map.setZoom(15);
-
+                    marker.addListener('click', () => {
                         if (activeInfoWindow) {
                             activeInfoWindow.close();
                         }
 
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `
+                        infoWindow.open(map, marker);
+                        activeInfoWindow = infoWindow;
+                    });
+
+                    markers.push({
+                        marker,
+                        fasilitas,
+                        type
+                    });
+                } else {
+                    console.error('Invalid latitude or longitude for:', fasilitas);
+                }
+            }
+        });
+    }
+
+    function handleSearch(event) {
+        const query = event.target.value.toLowerCase();
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = '';
+
+        if (query) {
+            const results = markers.filter(({
+                fasilitas
+            }) => {
+                return fasilitas.nama_fasilitas.toLowerCase().includes(query) || (fasilitas.alamat && fasilitas.alamat
+                    .toLowerCase().includes(query));
+            });
+
+            results.forEach(({
+                fasilitas,
+                marker
+            }) => {
+                const item = document.createElement('div');
+                item.classList.add('search-result-item');
+                item.textContent = fasilitas.nama_fasilitas;
+                item.addEventListener('click', () => {
+                    // Update search input value with selected result
+                    document.getElementById('search-input').value = fasilitas.nama_fasilitas;
+
+                    // Clear search results and hide container
+                    resultsContainer.style.display = 'none';
+
+                    // Center map to selected marker
+                    map.setCenter(marker.getPosition());
+                    map.setZoom(15);
+
+                    if (activeInfoWindow) {
+                        activeInfoWindow.close();
+                    }
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `
                              <div style="font-family: 'Cairo', sans-serif; width: 250px;">
-                                 <h3 style="margin-top: 0;">${fasilitas.nama}</h3>
+                                 <img src="/fasilitas/${fasilitas.foto}" alt="${fasilitas.nama_fasilitas}"
+                                     class="facility-foto">
+                                 <h3 style="margin-top: 0;">${fasilitas.nama_fasilitas}</h3>
                                  <p style="margin: 5px 0;"><i class="fas fa-map-marker-alt"></i> Alamat:
                                      ${fasilitas.alamat || 'Tidak ada alamat'}</p>
                                  <div style="margin: 5px 0;">
@@ -917,9 +883,9 @@
                                      `<button class="facility-button">${fasilitasItem.trim()}</button>`).join(' ') :
                                      'Tidak ada informasi fasilitas'}
                                  </div>
-                                 <p style="margin: 5px 0;"><i class="fas fa-clock"></i> Jam Buka: ${fasilitas.jamBuka ||
+                                 <p style="margin: 5px 0;"><i class="fas fa-clock"></i> Jam Buka: ${fasilitas.jam_buka ||
                                      'Tidak ada informasi'}</p>
-                                 <p style="margin: 5px 0;"><i class="fas fa-clock"></i> Jam Tutup: ${fasilitas.jamTutup
+                                 <p style="margin: 5px 0;"><i class="fas fa-clock"></i> Jam Tutup: ${fasilitas.jam_tutup
                                      || 'Tidak ada informasi'}</p>
 
                                  <div class="route-link">
@@ -928,28 +894,25 @@
                                          <i class="fas fa-route"></i> <strong>Rute</strong>
                                      </a>
                                      <button class="detail-button"
-                                         onclick="showDetails('${fasilitas.nama}', '${fasilitas.id}', '${fasilitas.tags}')">
+                                         onclick="showDetails('${fasilitas.nama_fasilitas}', '${fasilitas.id}')">
                                          <i class="fas fa-comment"></i> Komentar
                                      </button>
                                  </div>
  
                              </div>`
-                        });
-
-                        infoWindow.open(map, marker);
-                        activeInfoWindow = infoWindow;
                     });
-                    resultsContainer.appendChild(item);
-                });
 
-                resultsContainer.style.display = 'block';
-                document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
-            } else {
-                fetchDataAndAddMarkers();
-                resultsContainer.style.display = 'none';
-                clearSearch();
-            }
+                    infoWindow.open(map, marker);
+                    activeInfoWindow = infoWindow;
+                });
+                resultsContainer.appendChild(item);
+            });
+
+            resultsContainer.style.display = 'block';
+        } else {
+            resultsContainer.style.display = 'none';
         }
+    }
 
         function clearSearch() {
             document.getElementById('search-input').value = '';
@@ -1002,8 +965,7 @@
             sessionStorage.setItem('legendVisible', legendVisible.toString());
         }
 
-        function showDetails(nama, idFasilitas, tag) {
-        let tags = tag.toLowerCase();
+        function showDetails(nama, idFasilitas) {
         const idUser = <%= user.id %>;
         let userIds = [];
 
@@ -1020,7 +982,7 @@
 
             <div id="comment-form">
                 <textarea id="comment-input" placeholder="Tambahkan komentar..." rows="3"></textarea>
-                <button onclick="addComment('${idUser}', '${idFasilitas}', '${tags}')">Tambah Komentar</button>
+                <button onclick="addComment('${idUser}', '${idFasilitas}')">Tambah Komentar</button>
             </div>
         </div>
         `,
@@ -1032,7 +994,7 @@
         didOpen: async () => {
         try {
         // Fetch comments based on facility ID and tag
-        const response = await fetch(`/reviews/${tags}/${idFasilitas}`);
+        const response = await fetch(`/reviews/fasilitas/${idFasilitas}`);
         const comments = await response.json();
 
         const commentsList = document.getElementById('comments-list');
@@ -1070,7 +1032,7 @@
         }
 
 
-        async function addComment(idUser, idFasilitas, tags) {
+        async function addComment(idUser, idFasilitas) {
             const commentInput = document.getElementById('comment-input').value;
             if (commentInput.trim() === '') {
                 Swal.fire({
@@ -1083,7 +1045,7 @@
 
             try {
                 // Simulate adding comment to backend
-                const response = await fetch(`/reviews/${tags}`, {
+                const response = await fetch(`/reviews/fasilitas/${idFasilitas}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1134,6 +1096,30 @@
             }
         }
 
+         document.addEventListener("DOMContentLoaded", function () {
+         fetch('/jenisfasilitas')
+         .then(response => response.json())
+         .then(data => {
+         const legendToggle = document.getElementById('legend-toggle');
+         const legendTitle = legendToggle.querySelector('.legend-title'); // Select h4 with class 'legend-title'
+         
+
+         data.forEach(item => {
+         const div = document.createElement('div');
+         const img = document.createElement('img');
+         img.src = `/markers/${item.marker}`;
+         img.alt = item.nama;
+         const text = document.createTextNode(` ${item.nama}`);
+         div.appendChild(img);
+         div.appendChild(text);
+         legendTitle.appendChild(div);
+         });
+
+         // Insert legendContainer after legendTitle
+         legendToggle.insertBefore(legendTitle, legendToggle.nextSibling);
+         })
+         .catch(error => console.error('Error fetching jenis fasilitas:', error));
+         });
 
 
         window.initMap = initMap;

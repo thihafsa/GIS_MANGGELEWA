@@ -9,16 +9,17 @@ const FasilitasController = require('../controllers/fasilitasController');
  *     Fasilitas:
  *       type: object
  *       required:
- *         - nama
+ *         - nama_fasilitas
  *         - jam_buka
  *         - jam_tutup
  *         - alamat
  *         - idjenis
+ *         - fasilitas
  *       properties:
  *         id:
  *           type: integer
  *           description: The auto-generated id of the Fasilitas
- *         nama:
+ *         nama_fasilitas:
  *           type: string
  *           description: The name of the Fasilitas
  *         jam_buka:
@@ -45,9 +46,14 @@ const FasilitasController = require('../controllers/fasilitasController');
  *         idjenis:
  *           type: integer
  *           description: Foreign key referencing Jenis Fasilitas
+ *         fasilitas:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: List of facilities available in the Fasilitas
  *       example:
  *         id: 1
- *         nama: "Perpustakaan"
+ *         nama_fasilitas: "Perpustakaan"
  *         jam_buka: "08:00"
  *         jam_tutup: "17:00"
  *         alamat: "Jl. Pendidikan No. 10"
@@ -56,6 +62,7 @@ const FasilitasController = require('../controllers/fasilitasController');
  *         longitude: 106.8650
  *         deskripsi: "Perpustakaan dengan koleksi buku lengkap"
  *         idjenis: 1
+ *         fasilitas: ["Toilet", "Musholla"]
  */
 
 /**
@@ -99,7 +106,7 @@ router.get('/', FasilitasController.getAllFasilitas);
  *     responses:
  *       200:
  *         description: The Fasilitas description by id
- *         contents:
+ *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Fasilitas'
@@ -135,7 +142,6 @@ router.get('/:id', FasilitasController.getFasilitasById);
  */
 router.get('/jenis/:idjenis', FasilitasController.getFasilitasByIdJenis);
 
-
 /**
  * @swagger
  * /fasilitas:
@@ -149,7 +155,7 @@ router.get('/jenis/:idjenis', FasilitasController.getFasilitasByIdJenis);
  *           schema:
  *             type: object
  *             properties:
- *               nama:
+ *               nama_fasilitas:
  *                 type: string
  *               jam_buka:
  *                 type: string
@@ -168,6 +174,10 @@ router.get('/jenis/:idjenis', FasilitasController.getFasilitasByIdJenis);
  *                 type: string
  *               idjenis:
  *                 type: integer
+ *               fasilitas:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *     responses:
  *       201:
  *         description: The Fasilitas was successfully created
@@ -200,7 +210,7 @@ router.post('/', FasilitasController.createFasilitas);
  *           schema:
  *             type: object
  *             properties:
- *               nama:
+ *               nama_fasilitas:
  *                 type: string
  *               jam_buka:
  *                 type: string
@@ -219,6 +229,10 @@ router.post('/', FasilitasController.createFasilitas);
  *                 type: string
  *               idjenis:
  *                 type: integer
+ *               fasilitas:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *     responses:
  *       200:
  *         description: The Fasilitas was updated

@@ -57,6 +57,64 @@ exports.getReviewById = async (req, res) => {
     }
 };
 
+// Fungsi untuk mendapatkan review berdasarkan ID fasilitas
+exports.getReviewByIdFasilitas = async (req, res) => {
+    try {
+        const reviews = await Reviews.findAll({
+            where: {
+                id_fasilitas: req.params.id
+            },
+            include: [{
+                    model: Fasilitas,
+                    as: 'fasilitas'
+                },
+                {
+                    model: Users,
+                    as: 'user'
+                }
+            ],
+        });
+
+        res.json(reviews);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Gagal mengambil data'
+        });
+    }
+};
+
+// Fungsi untuk membuat review baru berdasarkan ID fasilitas
+exports.createReviewByIdFasilitas = async (req, res) => {
+    try {
+        const {
+            komentar,
+            id_user,
+            id_fasilitas
+        } = req.body;
+        
+        // Validasi: Pastikan id_fasilitas dan id_user tersedia
+        if (!id_fasilitas || !id_user) {
+            return res.status(400).json({
+                error: 'Harap sertakan id_fasilitas dan id_user'
+            });
+        }
+
+        const review = await Reviews.create({
+            komentar,
+            id_user,
+            id_fasilitas
+        });
+
+        res.status(201).json(review);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Gagal membuat data'
+        });
+    }
+};
+
 // Fungsi untuk membuat review baru
 exports.createReview = async (req, res) => {
     try {
@@ -146,127 +204,6 @@ exports.deleteReview = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             error: 'Gagal menghapus data'
-        });
-    }
-};
-
-
-// Fungsi untuk mendapatkan review berdasarkan ID fasilitas kesehatan
-exports.getReviewsByFasilitasKesehatanId = async (req, res) => {
-    try {
-        const reviews = await Reviews.findAll({
-            where: {
-                id_fasilitas_kesehatan: req.params.id
-            },
-            include: [{
-                    model: FasilitasKesehatan,
-                    as: 'fasilitasKesehatan'
-                },
-                {
-                    model: Users,
-                    as: 'user'
-                }
-            ],
-        });
-
-        res.json(reviews.map(review => ({
-            ...review.toJSON(),
-            fasilitas: review.fasilitasKesehatan,
-        })));
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Gagal mengambil data'
-        });
-    }
-};
-
-// Fungsi untuk mendapatkan review berdasarkan ID fasilitas pendidikan
-exports.getReviewsByFasilitasPendidikanId = async (req, res) => {
-    try {
-        const reviews = await Reviews.findAll({
-            where: {
-                id_fasilitas_pendidikan: req.params.id
-            },
-            include: [{
-                    model: FasilitasPendidikan,
-                    as: 'fasilitasPendidikan'
-                },
-                {
-                    model: Users,
-                    as: 'user'
-                }
-            ],
-        });
-
-        res.json(reviews.map(review => ({
-            ...review.toJSON(),
-            fasilitas: review.fasilitasPendidikan,
-        })));
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Gagal mengambil data'
-        });
-    }
-};
-
-// Fungsi untuk mendapatkan review berdasarkan ID fasilitas pemerintah
-exports.getReviewsByFasilitasPemerintahId = async (req, res) => {
-    try {
-        const reviews = await Reviews.findAll({
-            where: {
-                id_fasilitas_pemerintah: req.params.id
-            },
-            include: [{
-                    model: FasilitasPemerintah,
-                    as: 'fasilitasPemerintah'
-                },
-                {
-                    model: Users,
-                    as: 'user'
-                }
-            ],
-        });
-
-        res.json(reviews.map(review => ({
-            ...review.toJSON(),
-            fasilitas: review.fasilitasPemerintah,
-        })));
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Gagal mengambil data'
-        });
-    }
-};
-
-// Fungsi untuk mendapatkan review berdasarkan ID fasilitas keibadatan
-exports.getReviewsByFasilitasKeibadatanId = async (req, res) => {
-    try {
-        const reviews = await Reviews.findAll({
-            where: {
-                id_fasilitas_keibadatan: req.params.id
-            },
-            include: [{
-                    model: FasilitasKeibadatan,
-                    as: 'fasilitasKeibadatan'
-                },
-                {
-                    model: Users,
-                    as: 'user'
-                }
-            ],
-        });
-
-        res.json(reviews.map(review => ({
-            ...review.toJSON(),
-            fasilitas: review.fasilitasKeibadatan,
-        })));
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Gagal mengambil data'
         });
     }
 };

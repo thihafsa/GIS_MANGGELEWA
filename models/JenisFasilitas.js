@@ -22,7 +22,7 @@ const JenisFasilitas = db.define('jenis_fasilitas', {
         allowNull: true,
     },
     list_fasilitas: {
-        type: DataTypes.JSONB,
+        type: DataTypes.JSON,
         allowNull: true,
     },
 });

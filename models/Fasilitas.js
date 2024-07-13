@@ -30,6 +30,10 @@ const Fasilitas = db.define('fasilitas', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    fasilitas: {
+        type: DataTypes.JSON,
+        allowNull: true,
+    },
     latitude: {
         type: DataTypes.DOUBLE,
         allowNull: false,

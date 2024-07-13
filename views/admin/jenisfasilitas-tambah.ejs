@@ -369,7 +369,7 @@
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
                             <div class="dashboard_bar">
-                                Tambah Fasilitas Pendidikan
+                                Tambah Jenis Fasilitas
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
@@ -398,7 +398,7 @@
                                 </a>
                             </li>
                             <li class='nav-item'>
-                                <a href='/admin/pendidikan' class='btn btn-primary'>
+                                <a href='/admin/jenisfasilitas' class='btn btn-primary'>
                                     <i class='las la-arrow-left scale5'></i> Kembali
                                 </a>
                             </li>
@@ -418,147 +418,52 @@
                                 <div class="form-validation">
                                     <div class="row">
                                         <div class="col-xl-6">
-                                            <div class="mb-3"> <label class="form-label" for="nama">Nama Sekolah
-                                                    <span class="text-danger">*</span></label>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="nama">Nama <span
+                                                        class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="nama" name="nama"
-                                                    placeholder="Masukkan nama sekolah.." required="">
+                                                    placeholder="Enter nama" required>
                                                 <div class="invalid-feedback">
-                                                    Harap masukkan nama sekolah.
+                                                    Please enter a nama.
                                                 </div>
-                                            </div>
-                                            <div class="mb-3"> <label class="form-label" for="kepala_sekolah">Nama
-                                                    Kepala Sekolah</label>
-                                                <input type="text" class="form-control" id="kepala_sekolah"
-                                                    name="kepala_sekolah" placeholder="Masukkan nama kepala sekolah..">
-                                            </div>
-                                            <div class="mb-3"> <label class="form-label" for="jumlah_murid">Jumlah
-                                                    Murid</label>
-                                                <input type="number" class="form-control" id="jumlah_murid"
-                                                    name="jumlah_murid" placeholder="Masukkan jumlah murid..">
-                                            </div>
-                                            <div class="mb-3"> <label class="form-label" for="jumlah_guru">Jumlah
-                                                    Guru</label>
-                                                <input type="number" class="form-control" id="jumlah_guru"
-                                                    name="jumlah_guru" placeholder="Masukkan jumlah guru..">
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label" for="tags">Tags <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="tags" name="tags"
-                                                    placeholder="Masukkan tags (dipisah koma).." required="">
-                                                <div class="invalid-feedback">
-                                                    Harap masukkan tags.
-                                                </div>
+                                                <label class="form-label" for="icon">Icon</label>
+                                                <input type="file" class="form-control" id="icon" name="icon"
+                                                    onchange="previewImage(this);">
+                                                <img id="iconPreview" src="#" alt="Icon Preview"
+                                                    style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="marker">Marker</label>
+                                                <input type="file" class="form-control" id="marker" name="marker"
+                                                    onchange="previewImage(this);">
+                                                <img id="markerPreview" src="#" alt="Marker Preview"
+                                                    style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
                                             </div>
                                         </div>
 
                                         <div class="col-xl-6">
-                                            <div class="mb-3"> <label class="form-label" for="latitude">Latitude</label>
-                                                <input type="number" class="form-control" id="latitude" name="latitude"
-                                                    step="0.000001" placeholder="Masukkan latitude..">
-                                            </div>
                                             <div class="mb-3">
-                                                <label class="form-label" for="longitude">Longitude</label>
-                                                <input type="number" class="form-control" id="longitude"
-                                                    name="longitude" step="0.000001" placeholder="Masukkan longitude..">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Generate Alamat</label>
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" id="alamat" name="alamat"
-                                                        placeholder="Tekan Generate untuk isi alamat secara otomatis"
-                                                        >
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="generateAddress()">Generate</button>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label" for="jamBuka">Jam Buka</label>
-                                                <div class="input-group clockpicker" data-placement="bottom"
-                                                    data-align="top" data-autoclose="true">
-                                                    <input type="text" class="form-control" id="jamBuka" name="jamBuka"
-                                                        value="09:30">
-                                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label" for="jamTutup">Jam Tutup</label>
-                                                <div class="input-group clockpicker" data-placement="bottom"
-                                                    data-align="top" data-autoclose="true">
-                                                    <input type="text" class="form-control" id="jamTutup"
-                                                        name="jamTutup" value="17:30">
-                                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label" for="fasilitas">Fasilitas <span
-                                                        class="text-danger">*</span></label>
-                                                <select class="multi-select" id="fasilitas" name="fasilitas[]"
-                                                    multiple="multiple">
-                                                    <option value="Ruang kelas ber-AC">Ruang kelas ber-AC</option>
-                                                    <option value="Laboratorium komputer">Laboratorium komputer
-                                                    </option>
-                                                    <option value="Perpustakaan">Perpustakaan</option>
-                                                    <option value="Lapangan olahraga">Lapangan olahraga</option>
-                                                    <option value="Kantin">Kantin</option>
-                                                    <option value="Ruang UKS">Ruang UKS</option>
-                                                    <option value="Ruang guru">Ruang guru</option>
-                                                    <option value="Auditorium">Auditorium</option>
-                                                    <option value="Mushola">Mushola</option>
-                                                    <option value="Lapangan parkir">Lapangan parkir</option>
-                                                    <option value="Taman sekolah">Taman sekolah</option>
-                                                    <option value="Toilet bersih">Toilet bersih</option>
-                                                    <option value="Koneksi internet">Koneksi internet</option>
-                                                    <option value="Ruang seni">Ruang seni</option>
-                                                    <option value="Ruang musik">Ruang musik</option>
-                                                    <option value="Lapangan upacara">Lapangan upacara</option>
-                                                    <option value="Ruang OSIS">Ruang OSIS</option>
-                                                    <option value="Ruang bimbingan konseling">Ruang bimbingan
-                                                        konseling</option>
-                                                    <option value="Koperasi siswa">Koperasi siswa</option>
-                                                </select>
+                                                <label class="form-label" for="list_fasilitas">List Fasilitas</label>
+                                                <textarea class="form-control" id="list_fasilitas" name="list_fasilitas"
+                                                    placeholder="Enter list_fasilitas"></textarea>
                                             </div>
                                         </div>
 
                                         <div class="col-12">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="foto">Foto</label>
-                                                <input type="file" class="form-control" id="foto" name="foto"
-                                                    onchange="previewImage(this);">
-                                                <img id="imagePreview" src="#" alt="Image Preview"
-                                                    style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label" for="deskripsi_singkat">Deskripsi Singkat
-                                                    <span class="text-danger">*</span>
-                                                </label>
-                                                <div class="input-group">
-                                                    <textarea class="form-control" id="deskripsi_singkat"
-                                                        name="deskripsi_singkat" rows="5"
-                                                        placeholder="Deskripsikan singkat sekolah.."
-                                                        required></textarea>
-                                                    <button class="btn btn-primary" type="button"
-                                                        id="generateDescriptionBtn"
-                                                        onclick="generateDescription()">Generate</button>
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    Harap masukkan deskripsi singkat.
+                                            <div class="mb-3 row">
+                                                <div class="col-lg-8 ms-auto">
+                                                    <button type="submit" class="btn btn-primary"
+                                                        onclick="submitForm()">Submit</button>
                                                 </div>
                                             </div>
-
-
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 row">
-                                        <div class="col-lg-8 ms-auto">
-                                            <button type="submit" class="btn btn-primary"
-                                                onclick="submitForm()">Submit</button>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -566,120 +471,13 @@
 
         <%- include('../template/footer.ejs') %>
         <script>
-            function generateDescription() {
-                const nama_instansi = document.getElementById('nama').value;
-                const kepala = document.getElementById('kepala_sekolah').value;
-                const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
-                    opt.value).join(',');
-                const alamat = document.getElementById('alamat').value;
-                const jam_buka = document.getElementById('jamBuka').value;
-                const jam_tutup = document.getElementById('jamTutup').value;
-                console.log(nama_instansi);
-                fetch('/ai/generate-description', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            nama_instansi,
-                            kepala,
-                            fasilitas,
-                            alamat,
-                            jam_buka,
-                            jam_tutup
-                        }),
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        document.getElementById('deskripsi_singkat').value = ''
-                        document.getElementById('deskripsi_singkat').value = data.description;
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Gagal menghasilkan deskripsi singkat. Silakan coba lagi.'
-                        });
-                    });
-            }
-
-            function generateAddress() {
-                const lat = document.getElementById('latitude').value;
-                const lng = document.getElementById('longitude').value;
-
-                // Validasi apakah latitude atau longitude kosong
-                if (!lat || !lng) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Latitude dan Longitude harus diisi untuk menghasilkan alamat.'
-                    });
-                    return;
-                }
-
-                const apiKey = 'AIzaSyD4P3rMVrMzwD_8l1I1ETldunN6Vdx7Tqk'; // Ganti dengan API Key Anda
-
-                fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch address');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.results.length > 0) {
-                            const addressComponents = data.results[0].address_components;
-                            // Cari dan gabungkan komponen alamat kecuali kode lokasi (G74X+F8V)
-                            const filteredAddress = addressComponents
-                                .filter(component => !component.types.includes('plus_code'))
-                                .map(component => component.long_name)
-                                .join(', ');
-
-                            document.getElementById('alamat').value = filteredAddress;
-                        } else {
-                            document.getElementById('alamat').value = 'Alamat tidak ditemukan';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching address:', error);
-                        document.getElementById('alamat').value = 'Error: Gagal mengambil alamat';
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Gagal mengambil alamat dari Google Maps. Silakan coba lagi.'
-                        });
-                    });
-            }
-
-
             function submitForm() {
                 const formData = new FormData();
                 formData.append('nama', document.getElementById('nama').value);
-                formData.append('kepala_sekolah', document.getElementById('kepala_sekolah').value);
-                formData.append('jumlah_murid', document.getElementById('jumlah_murid').value);
-                formData.append('jumlah_guru', document.getElementById('jumlah_guru').value);
-                formData.append('tags', document.getElementById('tags').value);
-                formData.append('latitude', document.getElementById('latitude').value);
-                formData.append('longitude', document.getElementById('longitude').value);
-                formData.append('alamat', document.getElementById('alamat').value);
-                formData.append('jamBuka', document.getElementById('jamBuka').value);
-                formData.append('jamTutup', document.getElementById('jamTutup').value);
-                const fasilitas = Array.from(document.getElementById('fasilitas').selectedOptions).map(opt =>
-                    opt.value).join(',');
-                formData.append('fasilitas', fasilitas);
-                const foto = document.getElementById('foto').files[0];
-                if (foto) {
-                    formData.append('foto', foto);
-                }
-                formData.append('deskripsi_singkat', document.getElementById('deskripsi_singkat').value);
-
-                fetch('/fasilitaspendidikan', {
+                formData.append('icon', document.getElementById('icon').files[0]);
+                formData.append('marker', document.getElementById('marker').files[0]);
+                formData.append('list_fasilitas', document.getElementById('list_fasilitas').value);
+                fetch('/jenisfasilitas', {
                         method: 'POST',
                         body: formData
                     })
@@ -691,9 +489,9 @@
                     })
                     .then(data => {
                         // Handle success response
-                        sessionStorage.setItem('submitSuccess', 'Data berhasil di tambah!');
-                        // Redirect to admin/pendidikan
-                        window.location.href = '/admin/pendidikan';
+                        sessionStorage.setItem('submitSuccess', 'Data berhasil ditambahkan!');
+                        // Redirect or refresh as needed
+                        window.location.href = '/admin/jenisfasilitas'; // Ganti sesuai kebutuhan
                     })
                     .catch(error => {
                         // Handle error
@@ -701,17 +499,19 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Failed to submit form. Please try again later.'
+                            text: 'Gagal mengirimkan formulir. Silakan coba lagi nanti.'
                         });
                     });
             }
 
+
             function previewImage(input) {
                 const file = input.files[0];
                 const reader = new FileReader();
+                const previewId = input.id + 'Preview'; // Membuat id pratinjau dinamis berdasarkan id input
 
                 reader.onload = function (e) {
-                    const preview = document.getElementById('imagePreview');
+                    const preview = document.getElementById(previewId);
                     preview.src = e.target.result;
                     preview.style.display = 'block';
                 };

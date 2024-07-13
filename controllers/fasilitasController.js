@@ -1,20 +1,26 @@
 const Fasilitas = require('../models/Fasilitas');
 const path = require('path');
+const JenisFasilitas = require('../models/JenisFasilitas');
 const __path = process.cwd(); // Adjust this path according to your project structure
 
 // Get all Fasilitas
 exports.getAllFasilitas = async (req, res) => {
     try {
-        const fasilitas = await Fasilitas.findAll();
+        const fasilitas = await Fasilitas.findAll({
+            include: {
+                model: JenisFasilitas,
+                attributes: ['nama', 'icon', 'marker', 'list_fasilitas']
+            }
+        });
         res.status(200).json(fasilitas);
     } catch (error) {
+        console.error('Error fetching data:', error);
         res.status(500).json({
             message: 'Error fetching data',
             error
         });
     }
 };
-
 // Get Fasilitas by ID
 exports.getFasilitasById = async (req, res) => {
     try {
@@ -63,8 +69,6 @@ exports.getFasilitasByIdJenis = async (req, res) => {
     }
 };
 
-
-// Create a new Fasilitas
 exports.createFasilitas = async (req, res) => {
     let foto = null;
     if (req.files && req.files.foto) {
@@ -86,24 +90,26 @@ exports.createFasilitas = async (req, res) => {
             });
         }
 
-        const uploadPath = path.join(__path, 'uploads', 'fasilitas', fileName);
+        const uploadPath = path.join(__dirname, '..', 'uploads', 'fasilitas', fileName);
         await file.mv(uploadPath);
-        foto = `${fileName}`;
+        foto = fileName;
     }
 
     try {
         const {
-            nama,
+            nama_fasilitas,
             jam_buka,
             jam_tutup,
             alamat,
             latitude,
             longitude,
             deskripsi,
-            idjenis
+            idjenis,
+            fasilitas // Add fasilitas field here
         } = req.body;
+
         const newFasilitas = await Fasilitas.create({
-            nama,
+            nama_fasilitas,
             jam_buka,
             jam_tutup,
             alamat,
@@ -111,10 +117,13 @@ exports.createFasilitas = async (req, res) => {
             latitude,
             longitude,
             deskripsi,
-            idjenis
+            idjenis,
+            fasilitas // Assign fasilitas data
         });
+
         res.status(201).json(newFasilitas);
     } catch (error) {
+        console.error(error);
         res.status(500).json({
             message: 'Error creating data',
             error
@@ -122,7 +131,6 @@ exports.createFasilitas = async (req, res) => {
     }
 };
 
-// Update a Fasilitas
 exports.updateFasilitas = async (req, res) => {
     let foto = null;
     if (req.files && req.files.foto) {
@@ -144,9 +152,9 @@ exports.updateFasilitas = async (req, res) => {
             });
         }
 
-        const uploadPath = path.join(__path, 'uploads', 'fasilitas', fileName);
+        const uploadPath = path.join(__dirname, '..', 'uploads', 'fasilitas', fileName);
         await file.mv(uploadPath);
-        foto = `${fileName}`;
+        foto = fileName;
     }
 
     try {
@@ -154,36 +162,42 @@ exports.updateFasilitas = async (req, res) => {
             id
         } = req.params;
         const {
-            nama,
+            nama_fasilitas,
             jam_buka,
             jam_tutup,
             alamat,
             latitude,
             longitude,
             deskripsi,
-            idjenis
+            idjenis,
+            fasilitas // Add fasilitas field here
         } = req.body;
-        const fasilitas = await Fasilitas.findByPk(id);
-        if (fasilitas) {
-            fasilitas.nama = nama;
-            fasilitas.jam_buka = jam_buka;
-            fasilitas.jam_tutup = jam_tutup;
-            fasilitas.alamat = alamat;
+
+        const fasilitast = await Fasilitas.findByPk(id);
+
+        if (fasilitast) {
+            fasilitast.nama_fasilitas = nama_fasilitas;
+            fasilitast.jam_buka = jam_buka;
+            fasilitast.jam_tutup = jam_tutup;
+            fasilitast.alamat = alamat;
             if (foto) {
-                fasilitas.foto = foto;
+                fasilitast.foto = foto;
             }
-            fasilitas.latitude = latitude;
-            fasilitas.longitude = longitude;
-            fasilitas.deskripsi = deskripsi;
-            fasilitas.idjenis = idjenis;
-            await fasilitas.save();
-            res.status(200).json(fasilitas);
+            fasilitast.latitude = latitude;
+            fasilitast.longitude = longitude;
+            fasilitast.deskripsi = deskripsi;
+            fasilitast.idjenis = idjenis;
+            fasilitast.fasilitas = fasilitas; // Assign fasilitas data
+
+            await fasilitast.save();
+            res.status(200).json(fasilitast);
         } else {
             res.status(404).json({
                 message: 'Fasilitas not found'
             });
         }
     } catch (error) {
+        console.error(error);
         res.status(500).json({
             message: 'Error updating data',
             error
