@@ -373,13 +373,7 @@
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item">
-                                <div class="input-group search-area">
-                                    <input type="text" class="form-control" placeholder="Search here...">
-                                    <span class="input-group-text"><a href="javascript:void(0)"><i
-                                                class="flaticon-381-search-2"></i></a></span>
-                                </div>
-                            </li>
+                           
 
 
                             <li class="nav-item dropdown notification_dropdown">
@@ -422,7 +416,7 @@
                                                 <label class="form-label" for="username">Username <span
                                                         class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="username" name="username"
-                                                    placeholder="Enter username" value="<%=UserData.username %>"
+                                                    placeholder="Masukkan username" value="<%=UserData.username %>"
                                                     required>
                                                 <div class="invalid-feedback">
                                                     Please enter a username.
@@ -432,7 +426,7 @@
                                                 <label class="form-label" for="email">Email <span
                                                         class="text-danger">*</span></label>
                                                 <input type="email" class="form-control" id="email" name="email"
-                                                    placeholder="Enter email" value="<%=UserData.email %>" required>
+                                                    placeholder="Masukkan email" value="<%=UserData.email %>" required>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid email.
                                                 </div>
@@ -442,7 +436,7 @@
                                                         class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="password" class="form-control" id="password"
-                                                        name="password" placeholder="Enter password"
+                                                        name="password" placeholder="Masukkan password"
                                                         value="" required>
                                                     <button type="button" class="btn btn-outline-secondary"
                                                         onclick="togglePassword()">
@@ -460,7 +454,7 @@
                                                 <label class="form-label" for="role">Role <span
                                                         class="text-danger">*</span></label>
                                                 <select class="form-control" id="role" name="role" required>
-                                                    <option value="">Select role</option>
+                                                    <option value="">Pilih role</option>
                                                     <option value="Admin"
                                                         <%= UserData.role === 'Admin' ? 'selected' : '' %>>Admin
                                                     </option>
