@@ -134,41 +134,35 @@ router.get('/users/:id/edit', authMiddleware, isAdmin, async (req, res) => {
 router.get('/reviews', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;
     try {
+        const jenisFasilitasData = await getJenisFasilitasData(req);
         const reviews = await Reviews.findAll({
             include: [{
-                    model: FasilitasPendidikan,
-                    as: 'fasilitasPendidikan',
-                },
-                {
-                    model: FasilitasKesehatan,
-                    as: 'fasilitasKesehatan',
-                },
-                {
-                    model: FasilitasPemerintah,
-                    as: 'fasilitasPemerintah',
-                },
-                {
-                    model: FasilitasKeibadatan,
-                    as: 'fasilitasKeibadatan',
+                    model: Fasilitas,
+                    as: 'fasilitas',
+                    include: [{
+                        model: JenisFasilitas,
+                    }]
                 },
                 {
                     model: Users,
-                    as: 'user',
+                    as: 'user'
                 }
-            ],
+            ]
         });
+
 
         res.render('admin/reviews', {
             ReviewsData: reviews,
             title: 'Reviews',
             user,
-            jenisFasilitasList: jenisFasilitasData,
+            jenisFasilitasList: jenisFasilitasData, // Pastikan jenisFasilitasData didefinisikan sebelumnya
         });
     } catch (error) {
         console.error(error);
         res.status(500).send('Terjadi kesalahan saat mengambil data reviews');
     }
 });
+
 // Rute untuk halaman fasilitas berdasarkan jenis
 router.get('/:jenis', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;

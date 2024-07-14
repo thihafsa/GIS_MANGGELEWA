@@ -457,7 +457,7 @@
 
         <%- include('../template/footer.ejs') %>
         <script>
-            function deleteUsers(id) {
+            function deleteJenisFasilitas(id) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Data ini akan dihapus secara permanen!",
@@ -468,7 +468,7 @@
                     confirmButtonText: 'Ya, hapus!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch(`/users/${id}`, {
+                        fetch(`/jenisfasilitas/${id}`, {
                                 method: 'DELETE'
                             })
                             .then(response => {
@@ -481,7 +481,7 @@
                                 console.log('Success:', data);
                                 Swal.fire(
                                     'Terhapus!',
-                                    'Data user telah dihapus.',
+                                    'Data telah dihapus.',
                                     'success',
                                 ).then(() => {
                                     location.reload(); // Refresh halaman setelah menghapus
@@ -491,7 +491,7 @@
                                 console.error('Error:', error);
                                 Swal.fire(
                                     'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data user.',
+                                    'Terjadi kesalahan saat menghapus data.',
                                     'error'
                                 );
                             });

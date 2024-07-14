@@ -60,13 +60,16 @@ exports.getJenisFasilitasList = async (req, res) => {
 exports.createJenisFasilitas = async (req, res) => {
     let icon = null;
     let marker = null;
-
+    const {
+        nama,
+        list_fasilitas
+    } = req.body;
     // Handle icon file upload
     if (req.files && req.files.icon) {
         const file = req.files.icon;
         const fileSize = file.size;
         const ext = path.extname(file.name);
-        const fileName = file.md5 + ext;
+        const fileName = nama +'_icon' + ext;
         const allowedTypes = ['.png', '.jpg', '.jpeg'];
 
         if (!allowedTypes.includes(ext.toLowerCase())) {
@@ -91,7 +94,7 @@ exports.createJenisFasilitas = async (req, res) => {
         const file = req.files.marker;
         const fileSize = file.size;
         const ext = path.extname(file.name);
-        const fileName = file.md5 + ext;
+        const fileName = nama +'_marker' + ext;
         const allowedTypes = ['.png', '.jpg', '.jpeg'];
 
         if (!allowedTypes.includes(ext.toLowerCase())) {
@@ -112,10 +115,7 @@ exports.createJenisFasilitas = async (req, res) => {
     }
 
     try {
-        const {
-            nama,
-            list_fasilitas
-        } = req.body;
+        
          const existingJenisFasilitas = await JenisFasilitas.findOne({
              where: {
                  nama: {
@@ -148,13 +148,16 @@ exports.createJenisFasilitas = async (req, res) => {
 exports.updateJenisFasilitas = async (req, res) => {
     let icon = null;
     let marker = null;
-
+    const {
+        nama,
+        list_fasilitas
+    } = req.body;
     // Handle icon file upload
     if (req.files && req.files.icon) {
         const file = req.files.icon;
         const fileSize = file.size;
         const ext = path.extname(file.name);
-        const fileName = file.md5 + ext;
+        const fileName = nama+'_icon' + ext;
         const allowedTypes = ['.png', '.jpg', '.jpeg'];
 
         if (!allowedTypes.includes(ext.toLowerCase())) {
@@ -179,7 +182,7 @@ exports.updateJenisFasilitas = async (req, res) => {
         const file = req.files.marker;
         const fileSize = file.size;
         const ext = path.extname(file.name);
-        const fileName = file.md5 + ext;
+        const fileName = nama +'_marker'+ ext;
         const allowedTypes = ['.png', '.jpg', '.jpeg'];
 
         if (!allowedTypes.includes(ext.toLowerCase())) {
@@ -203,10 +206,6 @@ exports.updateJenisFasilitas = async (req, res) => {
         const {
             id
         } = req.params;
-        const {
-            nama,
-            list_fasilitas
-        } = req.body;
          const existingJenisFasilitas = await JenisFasilitas.findOne({
              where: {
                  nama: {
