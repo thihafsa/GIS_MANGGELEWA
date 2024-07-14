@@ -373,13 +373,7 @@
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item">
-                                <div class="input-group search-area">
-                                    <input type="text" class="form-control" placeholder="Search here...">
-                                    <span class="input-group-text"><a href="javascript:void(0)"><i
-                                                class="flaticon-381-search-2"></i></a></span>
-                                </div>
-                            </li>
+                           
                             <li class="nav-item dropdown notification_dropdown">
                                 <a class='nav-link' id='settings' href='javascript:void(0);'>
                                     <svg fill='#4f7086' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg'
@@ -417,7 +411,7 @@
                                     <table id="example3" class="display text-center" style="min-width: 845px">
                                         <thead>
                                             <tr>
-                                                <th>Fasilitas</th>
+                                                <th>Jenis Fasilitas</th>
                                                 <th>Nama Fasilitas</th>
                                                 <th>User</th>
                                                 <th>Komentar</th>
@@ -427,7 +421,7 @@
                                         <tbody>
                                             <% ReviewsData.forEach(review => { %>
                                             <tr>
-                                                <td>
+                                                <td> Fasilitas
                                                     <% if (review.fasilitas) { %>
                                                     <%= review.fasilitas.jenis_fasilita.nama %>
                                                     <% } else { %>
