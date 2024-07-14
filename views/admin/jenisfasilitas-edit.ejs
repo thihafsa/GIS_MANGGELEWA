@@ -373,7 +373,7 @@
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
-                           
+
 
 
                             <li class="nav-item dropdown notification_dropdown">
@@ -417,8 +417,7 @@
                                                         class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="nama" name="nama"
                                                     placeholder="Masukkan nama jenis fasilitas"
-                                                    value="<%= jenisFasilitas.nama %>"
-                                                    required>
+                                                    value="<%= jenisFasilitas.nama %>" required>
                                                 <div class="invalid-feedback">
                                                     Please enter a nama.
                                                 </div>
@@ -445,8 +444,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label" for="list_fasilitas">List Fasilitas</label>
                                                 <textarea class="form-control" id="list_fasilitas" name="list_fasilitas"
-                                                     placeholder="Masukkan fasilitas"
-                                                     <%= jenisFasilitas.list_fasilitas %></textarea>
+                                                    placeholder="Masukkan fasilitas"><%= jenisFasilitas.list_fasilitas %></textarea>
                                             </div>
                                         </div>
 
@@ -489,7 +487,7 @@
                     })
                     .then(data => {
                         // Handle success response
-                        sessionStorage.setItem('submitSuccess', 'Data berhasil ditambahkan!');
+                        sessionStorage.setItem('submitSuccess', 'Data berhasil diubah!');
                         // Redirect or refresh as needed
                         window.location.href = '/admin/jenisfasilitas'; // Ganti sesuai kebutuhan
                     })
