@@ -167,7 +167,7 @@ router.post('/register', async (req, res) => {
         // Validate input
         if (!username || !email || !password) {
             return res.status(400).json({
-                message: 'Username, email, and password are required'
+                message: 'Username, email, dan password harus diisi'
             });
         }
 
@@ -179,7 +179,7 @@ router.post('/register', async (req, res) => {
         });
         if (existingUser) {
             return res.status(400).json({
-                message: 'User with this email already exists'
+                message: 'User dengan email ini sudah ada'
             });
         }
 
@@ -196,7 +196,7 @@ router.post('/register', async (req, res) => {
 
         // Return success message
         return res.status(200).json({
-            message: 'User registered successfully'
+            message: 'User berhasil register'
         });
 
     } catch (error) {
