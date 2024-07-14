@@ -41,7 +41,7 @@
                 </a>
             </li>
             <li>
-                <a class='mt-2' href='/admin/jenisfasilitas'>
+                <a class='mb-2' href='/admin/jenisfasilitas'>
                     <i class='ti-archive'></i>
                     <span class='nav-text'>Jenis Fasilitas</span>
                 </a>
@@ -55,7 +55,7 @@
                     <% jenisFasilitasList.forEach(jenis => { %>
                     <li>
                         <a href='/admin/<%= jenis.nama.toLowerCase().replace(/\s+/g, '-') %>'>
-                            <%= jenis.nama %>
+                            Fasilitas <%= jenis.nama %>
                         </a>
                     </li>
                     <% }); %>
