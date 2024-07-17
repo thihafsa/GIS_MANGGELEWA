@@ -373,7 +373,7 @@
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
-                           
+
 
 
                             <li class="nav-item dropdown notification_dropdown">
@@ -472,17 +472,17 @@
                                                 </div>
                                                 <div class="invalid-feedback">Harap masukkan alamat.</div>
                                             </div>
-                                           <div class="mb-3">
-                                               <label class="form-label" for="fasilitas">Fasilitas</label>
-                                               <select class="multi-select" id="fasilitas" name="fasilitas[]"
-                                                   multiple="multiple">
-                                                   <% listFasilitas.forEach(item => { %>
-                                                   <option value="<%= item %>"
-                                                       <%= fasilitas.fasilitas.includes(item) ? 'selected' : '' %>>
-                                                       <%= item %></option>
-                                                   <% }); %>
-                                               </select>
-                                           </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="fasilitas">Fasilitas</label>
+                                                <select class="multi-select" id="fasilitas" name="fasilitas[]"
+                                                    multiple="multiple">
+                                                    <% listFasilitas.forEach(item => { %>
+                                                    <option value="<%= item %>"
+                                                        <%= fasilitas.fasilitas.includes(item) ? 'selected' : '' %>>
+                                                        <%= item %></option>
+                                                    <% }); %>
+                                                </select>
+                                            </div>
 
 
                                         </div>
@@ -492,8 +492,7 @@
                                                 <label class="form-label" for="foto">Foto</label>
                                                 <input type="file" class="form-control" id="foto" name="foto"
                                                     onchange="previewImage(this);">
-                                                <img id="imagePreview"
-                                                    src="/fasilitas/<%= fasilitas.foto%>"
+                                                <img id="imagePreview" src="/fasilitas/<%= fasilitas.foto%>"
                                                     alt="Image Preview"
                                                     style="max-width: 200px; max-height: 200px; margin-top: 10px;">
                                             </div>
@@ -640,32 +639,36 @@
                 if (foto) {
                     formData.append('foto', foto);
                 }
-
-                fetch('/fasilitas/<%=fasilitas.id%>', { // Sesuaikan endpoint ini sesuai dengan endpoint di server
+                try {
+                    const response = await fetch('/fasilitas/<%=fasilitas.id%>', {
                         method: 'PUT',
                         body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
                         // Handle success response
                         sessionStorage.setItem('submitSuccess', 'Data berhasil diubah!');
                         // Redirect to admin page (sesuaikan URL ini jika diperlukan)
                         window.location.href = '/admin/<%=jenisFasilitas%>';
-                    })
-                    .catch(error => {
-                        // Handle error
-                        console.error('Error:', error);
+                    } else {
+                        // Login gagal
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Failed to submit form. Please try again later.'
+                            text: data.message,
                         });
+                    }
+                } catch (error) {
+                    // Handle error
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message // Pesan kesalahan yang diambil dari server
                     });
+                }
+
             }
 
 

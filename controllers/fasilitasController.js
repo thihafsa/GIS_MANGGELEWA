@@ -107,7 +107,60 @@ exports.createFasilitas = async (req, res) => {
             idjenis,
             fasilitas // Add fasilitas field here
         } = req.body;
+        // Input validation
+        if (!nama_fasilitas) {
+            return res.status(400).json({
+                message: 'Nama fasilitas harus diisi'
+            });
+        }
 
+        if (!jam_buka) {
+            return res.status(400).json({
+                message: 'Jam buka harus diisi'
+            });
+        }
+
+        if (!jam_tutup) {
+            return res.status(400).json({
+                message: 'Jam tutup harus diisi'
+            });
+        }
+
+        if (!alamat) {
+            return res.status(400).json({
+                message: 'Alamat harus diisi'
+            });
+        }
+
+        if (!latitude) {
+            return res.status(400).json({
+                message: 'Latitude harus diisi'
+            });
+        }
+
+        if (!longitude) {
+            return res.status(400).json({
+                message: 'Longitude harus diisi'
+            });
+        }
+
+        if (!deskripsi) {
+            return res.status(400).json({
+                message: 'Deskripsi harus diisi'
+            });
+        }
+
+        if (!idjenis) {
+            return res.status(400).json({
+                message: 'ID jenis harus diisi'
+            });
+        }
+
+        if (!fasilitas) {
+            return res.status(400).json({
+                message: 'Fasilitas harus diisi'
+            });
+        }
         const newFasilitas = await Fasilitas.create({
             nama_fasilitas,
             jam_buka,
@@ -172,7 +225,65 @@ exports.updateFasilitas = async (req, res) => {
             idjenis,
             fasilitas // Add fasilitas field here
         } = req.body;
+        // Input validation
+        if (!nama_fasilitas && !jam_buka && !jam_tutup && !alamat && !latitude && !longitude && !deskripsi && !idjenis && !fasilitas) {
+            return res.status(400).json({
+                message: 'Semua field harus diisi'
+            });
+        }
+        if (!nama_fasilitas) {
+            return res.status(400).json({
+                message: 'Nama fasilitas harus diisi'
+            });
+        }
 
+        if (!jam_buka) {
+            return res.status(400).json({
+                message: 'Jam buka harus diisi'
+            });
+        }
+
+        if (!jam_tutup) {
+            return res.status(400).json({
+                message: 'Jam tutup harus diisi'
+            });
+        }
+
+        if (!alamat) {
+            return res.status(400).json({
+                message: 'Alamat harus diisi'
+            });
+        }
+
+        if (!latitude) {
+            return res.status(400).json({
+                message: 'Latitude harus diisi'
+            });
+        }
+
+        if (!longitude) {
+            return res.status(400).json({
+                message: 'Longitude harus diisi'
+            });
+        }
+
+        if (!deskripsi) {
+            return res.status(400).json({
+                message: 'Deskripsi harus diisi'
+            });
+        }
+
+        if (!idjenis) {
+            return res.status(400).json({
+                message: 'ID jenis harus diisi'
+            });
+        }
+
+        if (!fasilitas) {
+            return res.status(400).json({
+                message: 'Fasilitas harus diisi'
+            });
+        }
         const fasilitast = await Fasilitas.findByPk(id);
 
         if (fasilitast) {
