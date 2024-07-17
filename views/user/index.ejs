@@ -628,6 +628,11 @@ margin-top: 10px !important;
 background-color: #886aa0 !important;
 }
 
+.swal2-container .swal2-image{
+ margin: 0 !important;
+ border-radius: 5px !important;
+}
+
         /* Responsive adjustments */
         @media (max-width: 600px) {
             #search-container {
@@ -1048,8 +1053,8 @@ function showDetails(nama_fasilitas, jam_buka, jam_tutup, alamat, foto, fasilita
         confirmButtonText: 'Tutup',
         imageUrl: `/fasilitas/${foto}`, // Ganti dengan path gambar default jika foto kosong
         imageAlt: 'Image',
-        imageWidth: 120,
-        imageHeight: 120,
+        imageWidth: 640,
+        imageHeight: 340,
         customClass: {
             popup: 'swal2-custom-popup',
             content: 'swal2-custom-content',

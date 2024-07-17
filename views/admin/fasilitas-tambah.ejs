@@ -373,7 +373,7 @@
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
-                           
+
 
 
                             <li class="nav-item dropdown notification_dropdown">
@@ -607,7 +607,7 @@
             }
 
 
-            function submitForm() {
+           async function submitForm() {
                 const formData = new FormData();
                 formData.append('nama_fasilitas', document.getElementById('nama_fasilitas').value);
                 formData.append('jam_buka', document.getElementById('jam_buka').value);
@@ -632,31 +632,35 @@
                     formData.append('foto', foto);
                 }
 
-                fetch('/fasilitas', { // Sesuaikan endpoint ini sesuai dengan endpoint di server
+                try {
+                    const response = await fetch('/fasilitas', {
                         method: 'POST',
                         body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
                         // Handle success response
                         sessionStorage.setItem('submitSuccess', 'Data berhasil ditambah!');
                         // Redirect to admin page (sesuaikan URL ini jika diperlukan)
                         window.location.href = '/admin/<%=jenisFasilitas%>';
-                    })
-                    .catch(error => {
-                        // Handle error
-                        console.error('Error:', error);
+                    } else {
+                        // Login gagal
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Failed to submit form. Please try again later.'
+                            text: data.message,
                         });
+                    }
+                } catch (error) {
+                    // Handle error
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message // Pesan kesalahan yang diambil dari server
                     });
+                }
             }
 
 
