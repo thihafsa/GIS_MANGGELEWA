@@ -639,35 +639,31 @@
                 if (foto) {
                     formData.append('foto', foto);
                 }
-                try {
-                    const response = await fetch('/fasilitas/<%=fasilitas.id%>', {
+                fetch('/fasilitas/<%=fasilitas.id%>', {
                         method: 'PUT',
                         body: formData
-                    });
-
-                    const data = await response.json();
-                    if (response.ok) {
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
                         // Handle success response
                         sessionStorage.setItem('submitSuccess', 'Data berhasil diubah!');
-                        // Redirect to admin page (sesuaikan URL ini jika diperlukan)
-                        window.location.href = '/admin/<%=jenisFasilitas%>';
-                    } else {
-                        // Login gagal
+                        // Redirect or refresh as needed
+                        window.location.href = '/admin/<%=jenisFasilitas%>'; // Ganti sesuai kebutuhan
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error('Error:', error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: data.message,
+                            text: 'Gagal mengirimkan formulir. Silakan coba lagi nanti.'
                         });
-                    }
-                } catch (error) {
-                    // Handle error
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.message // Pesan kesalahan yang diambil dari server
                     });
-                }
 
             }
 
