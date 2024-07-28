@@ -32,6 +32,79 @@
             background-color: #f4f4f4;
             /* Background color for the page */
         }
+        #route-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    max-width: 600px; /* Maximum width */
+    width: 100%; /* Full width on smaller screens */
+    margin: auto; /* Center horizontally */
+}
+
+#route-container .route-header {
+    text-align: center;
+}
+
+#route-container .route-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#route-container .route-card p {
+    margin: 0;
+}
+
+#route-container .btn-close {
+    background: #f5f5f5;
+    border: none;
+    color: #333;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#route-container .btn-close i {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    #route-container {
+        padding: 15px;
+    }
+
+    #route-container .route-card {
+        padding: 8px;
+    }
+
+    #route-container .btn-close {
+        top: 8px;
+        right: 8px;
+        width: 30px;
+        height: 30px;
+    }
+
+    #route-container .btn-close i {
+        font-size: 1.2em;
+    }
+}
+
 
         /* Map container */
         #map {
@@ -373,28 +446,29 @@
             text-align: center;
         }
 
-        .route-link a {
+        .route-link .routebtn {
             background-color: #e72428;
             text-decoration: none;
             padding: 5px;
             border-radius: 4px;
+            border-style: none;
             color: #fff;
             font-size: 14px;
             display: inline-flex;
             align-items: center;
         }
 
-        .route-link a:hover {
+        .route-link .routebtn:hover {
             background-color: #fff;
             color: #cc2b2e;
         }
 
-        .route-link a i {
+        .route-link .routebtn i {
             margin-right: 5px;
             font-size: 16px;
         }
 
-        .route-link a strong {
+        .route-link .routebtn strong {
             font-weight: bold;
             margin-left: 5px;
         }
@@ -696,14 +770,19 @@ background-color: #886aa0 !important;
             <div class="dropdown-item" id="map-type">
                 <i class="fas fa-map"></i> Map Type
             </div>
-            <% if (user.role === 'Admin') { %>
-            <div class="dropdown-item" id="admin-panel">
-                <a href="/admin"><i class="fas fa-crown"></i> Admin</a>
-            </div>
-            <% } %>
-            <div class="dropdown-item" id="logout">
-                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
+          <% if (user && user.role === 'Admin') { %>
+          <div class="dropdown-item" id="admin-panel">
+              <a href="/admin"><i class="fas fa-crown"></i> Admin</a>
+          </div>
+          <div class="dropdown-item" id="logout">
+              <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+          <% } else { %>
+          <div class="dropdown-item" id="login">
+              <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+          </div>
+          <% } %>
+
         </div>
 
         <div id="map-type-dropdown" class="map-type-dropdown">
@@ -865,9 +944,11 @@ background-color: #886aa0 !important;
     <p><i class="fas fa-clock"></i> Jam Buka: ${fasilitas.jam_buka || 'Tidak ada informasi'}</p>
     <p><i class="fas fa-clock"></i> Jam Tutup: ${fasilitas.jam_tutup || 'Tidak ada informasi'}</p>
     <div class="route-link">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=${fasilitas.latitude},${fasilitas.longitude}" target="_blank">
-            <i class="fas fa-route"></i> <strong>Rute</strong>
-        </a>
+         <button class="routebtn"
+             onclick="showRoute('${fasilitas.latitude}', '${fasilitas.longitude}', '${fasilitas.nama_fasilitas}', '${iconUrl}')">
+                                    <i class="fas fa-route"></i> <strong>Rute</strong>
+                                </button>
+
         <button class="komentar-button" onclick="showKomentar('${fasilitas.nama_fasilitas}', '${fasilitas.id}')">
             <i class="fas fa-comment"></i> Komentar
         </button>
@@ -960,9 +1041,10 @@ background-color: #886aa0 !important;
                             <p><i class="fas fa-clock"></i> Jam Buka: ${fasilitas.jam_buka || 'Tidak ada informasi'}</p>
                             <p><i class="fas fa-clock"></i> Jam Tutup: ${fasilitas.jam_tutup || 'Tidak ada informasi'}</p>
                             <div class="route-link">
-                                <a href="https://www.google.com/maps/dir/?api=1&destination=${fasilitas.latitude},${fasilitas.longitude}" target="_blank">
+                               <button class="routebtn" onclick="showRoute('${fasilitas.latitude}', '${fasilitas.longitude}', '${fasilitas.nama_fasilitas}')">
                                     <i class="fas fa-route"></i> <strong>Rute</strong>
-                                </a>
+                                </button>
+
                                 <button class="komentar-button" onclick="showKomentar('${fasilitas.nama_fasilitas}', '${fasilitas.id}')">
                                     <i class="fas fa-comment"></i> Komentar
                                 </button>
@@ -1034,6 +1116,131 @@ background-color: #886aa0 !important;
         // Call the initialize function when the document is ready
         document.addEventListener('DOMContentLoaded', initializeLegendVisibility);
 
+    function showRoute(latitude, longitude, namaLokasi, Icon) {
+    // Clear all existing markers from the map
+   
+
+    // Get current location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const origin = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            // Save the current state of search-container
+            const previousSearchContainerContent = document.getElementById('search-container').innerHTML;
+
+            // Show SweetAlert2 dialog
+            Swal.fire({
+                title: 'Ingin menggunakan rute pada aplikasi Gmaps atau website ini?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Website',
+                denyButtonText: 'Google Maps',
+                confirmButtonColor: '#3085d6',
+                denyButtonColor: '#d33',
+                input: 'select',
+                inputOptions: {
+                    'driving': 'Mobil',
+                    'transit': 'Transportasi Umum',
+                    'walking': 'Jalan Kaki',
+                    'bicycling': 'Sepeda'
+                },
+                inputPlaceholder: 'Pilih mode perjalanan',
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value) {
+                            resolve();
+                        } else {
+                            resolve('Pilih mode perjalanan!');
+                        }
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const travelMode = result.value;
+                    const destination = `${latitude},${longitude}`;
+                    const directionsService = new google.maps.DirectionsService();
+                    const directionsRenderer = new google.maps.DirectionsRenderer({
+                        polylineOptions: {
+                            strokeColor: '#ff0000'
+                        }
+                    });
+
+                    directionsRenderer.setMap(map);
+
+                    directionsService.route({
+                        origin: origin,
+                        destination: destination,
+                        travelMode: google.maps.TravelMode[travelMode.toUpperCase()],
+                    }, (response, status) => {
+                        if (status === 'OK') {
+                             markers.forEach(({ marker }) => {
+                             marker.setMap(null);
+                             });
+                            directionsRenderer.setDirections(response);
+
+                               // Create start marker
+                          
+                            // Update the search-container with route information
+                            document.getElementById('search-container').innerHTML = `
+                                <div id="route-container">
+                                    <button id="close-route" class="btn-close">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <div class="route-header">
+                                        <h3>Rute dari Lokasi Saat Ini ke Tujuan</h3>
+                                    </div>
+                                    <div class="route-card">
+                                        <p><strong>Start:</strong> Lokasi Anda</p>
+                                        <p><strong>Destination:</strong> ${namaLokasi}</p>
+                                    </div>
+                                    <div class="route-card">
+                                        <p><strong>Distance:</strong> ${response.routes[0].legs[0].distance.text}</p>
+                                        <p><strong>Duration:</strong> ${response.routes[0].legs[0].duration.text}</p>
+                                    </div>
+                                </div>
+                            `;
+
+                            // Add event listener to close button
+                            document.getElementById('close-route').addEventListener('click', () => {
+                                // Restore the previous state of search-container
+                                document.getElementById('search-container').innerHTML = previousSearchContainerContent;
+
+                                // Add all markers back to the map
+                                fetchDataAndAddMarkers()
+                                map.setCenter(defaultLatLng);
+                                map.setZoom(12);
+
+                                // Remove directions from the map
+                                directionsRenderer.setMap(null);
+                            });
+                        } else {
+                            Swal.fire('Gagal', 'Tidak dapat menampilkan rute', 'error');
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('Pilih Google Maps', 'Akan membuka Google Maps untuk rute', 'info').then(() => {
+                        window.open(`https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`, '_blank');
+                        // Restore the previous state of search-container
+                        document.getElementById('search-container').innerHTML = previousSearchContainerContent;
+
+                       
+                    });
+                }
+            });
+        }, () => {
+            Swal.fire('Gagal', 'Tidak dapat mendapatkan lokasi saat ini', 'error');
+            
+        });
+    } else {
+        Swal.fire('Gagal', 'Geolokasi tidak didukung oleh browser ini', 'error');
+      
+    }
+}
+
+
         // Fungsi untuk menampilkan detail fasilitas menggunakan SweetAlert2
 function showDetails(nama_fasilitas, jam_buka, jam_tutup, alamat, foto, fasilitas, latitude, longitude, deskripsi) {
     Swal.fire({
@@ -1083,8 +1290,14 @@ function showDetails(nama_fasilitas, jam_buka, jam_tutup, alamat, foto, fasilita
         }
 
         function showKomentar(nama, idFasilitas) {
-        const idUser = <%= user.id %>;
-        let userIds = [];
+       <% if (user && user.id) { %>
+       const idUser = <%= user.id %>;
+       let userIds = [];
+       <% } else { %>
+       const idUser = null; // atau nilai default yang sesuai
+       let userIds = [];
+       <% } %>
+
 
         Swal.fire({
         title: `${nama}`,
@@ -1222,26 +1435,7 @@ icon: 'error'
                 if (!response.ok) {
                     throw new Error('Failed to add comment');
                 }
-                let nama
-                if (idUser === <%= user.id %>) {
-                    nama = user.username
-                }
-                // Add new comment to UI
-                const commentsList = document.getElementById('comments-list');
-                const newComment = document.createElement('div');
-                newComment.classList.add('comment-item');
-                newComment.innerHTML = `
-<div class="comment-header">
-    <i class="fas fa-user-circle"></i>
-    <p class="comment-author">${nama}</p>
-</div>
-<p class="comment-content">${commentInput}</p>
-`;
-                commentsList.appendChild(newComment);
-
-                // Clear the comment input field
-                document.getElementById('comment-input').value = '';
-
+                
                 Swal.fire({
                     icon: 'success',
                     title: 'Komentar ditambahkan!',

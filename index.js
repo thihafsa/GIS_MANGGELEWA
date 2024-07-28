@@ -51,7 +51,7 @@ app.set('views', path.join(__dirname, 'views'));
         console.error('Error syncing database:', error);
     }
 })();
-app.get('/', authMiddleware, (req, res) => {
+app.get('/', (req, res) => {
     const user = req.session.user;
     res.render('user/index', {
         user,
