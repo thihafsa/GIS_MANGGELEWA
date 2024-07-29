@@ -447,6 +447,7 @@
         }
 
         .route-link .routebtn {
+             cursor: pointer;
             background-color: #e72428;
             text-decoration: none;
             padding: 5px;
@@ -777,6 +778,10 @@ background-color: #886aa0 !important;
           <div class="dropdown-item" id="logout">
               <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
           </div>
+          <% }  else if (user){ %>
+        <div class="dropdown-item" id="logout">
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
           <% } else { %>
           <div class="dropdown-item" id="login">
               <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
@@ -816,121 +821,121 @@ background-color: #886aa0 !important;
         defer></script>
     <script>
         let map;
-        let activeInfoWindow;
-        let markers = [];
-        const defaultLatLng = {
-            lat: -8.532829,
-            lng: 118.305939
-        };
+ let activeInfoWindow;
+ let markers = [];
+ const defaultLatLng = {
+     lat: -8.532829,
+     lng: 118.305939
+ };
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 12,
-                center: defaultLatLng,
-                mapTypeId: 'roadmap',
-                mapTypeControl: false,
-                fullscreenControl: false,
-                zoomControl: false,
-                streetViewControl: false,
-                streetViewControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_BOTTOM,
-                },
-            });
+ function initMap() {
+     map = new google.maps.Map(document.getElementById("map"), {
+         zoom: 12,
+         center: defaultLatLng,
+         mapTypeId: 'roadmap',
+         mapTypeControl: false,
+         fullscreenControl: false,
+         zoomControl: false,
+         streetViewControl: false,
+         streetViewControlOptions: {
+             position: google.maps.ControlPosition.LEFT_BOTTOM,
+         },
+     });
 
-            fetchDataAndAddMarkers();
+     fetchDataAndAddMarkers();
 
-            document.getElementById('search-input').addEventListener('input', handleSearch);
-            document.getElementById('search-button').addEventListener('click', clearSearch);
+     document.getElementById('search-input').addEventListener('input', handleSearch);
+     document.getElementById('search-button').addEventListener('click', clearSearch);
 
-            const hamburgerMenu = document.getElementById('hamburger-menu');
-            const dropdownMenu = document.getElementById('dropdown-menu');
-            const mapTypeDropdown = document.getElementById('map-type-dropdown');
+     const hamburgerMenu = document.getElementById('hamburger-menu');
+     const dropdownMenu = document.getElementById('dropdown-menu');
+     const mapTypeDropdown = document.getElementById('map-type-dropdown');
 
-            hamburgerMenu.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('show');
-                mapTypeDropdown.classList.remove('show'); // Hide map type dropdown when main dropdown is shown
-            });
+     hamburgerMenu.addEventListener('click', () => {
+         dropdownMenu.classList.toggle('show');
+         mapTypeDropdown.classList.remove('show'); // Hide map type dropdown when main dropdown is shown
+     });
 
-            document.addEventListener('click', (event) => {
-                if (!event.target.closest('#dropdown-menu') && !event.target.closest('#hamburger-menu')) {
-                    dropdownMenu.classList.remove('show');
-                }
-                if (!event.target.closest('.map-type-dropdown') && !event.target.closest('#map-type')) {
-                    mapTypeDropdown.classList.remove('show');
-                }
-            });
+     document.addEventListener('click', (event) => {
+         if (!event.target.closest('#dropdown-menu') && !event.target.closest('#hamburger-menu')) {
+             dropdownMenu.classList.remove('show');
+         }
+         if (!event.target.closest('.map-type-dropdown') && !event.target.closest('#map-type')) {
+             mapTypeDropdown.classList.remove('show');
+         }
+     });
 
-            document.getElementById('map-type').addEventListener('click', () => {
-                mapTypeDropdown.classList.toggle('show');
-            });
+     document.getElementById('map-type').addEventListener('click', () => {
+         mapTypeDropdown.classList.toggle('show');
+     });
 
-            document.getElementById('roadmap').addEventListener('click', () => {
-                map.setMapTypeId('roadmap');
-                mapTypeDropdown.classList.remove('show');
-            });
+     document.getElementById('roadmap').addEventListener('click', () => {
+         map.setMapTypeId('roadmap');
+         mapTypeDropdown.classList.remove('show');
+     });
 
-            document.getElementById('satellite').addEventListener('click', () => {
-                map.setMapTypeId('satellite');
-                mapTypeDropdown.classList.remove('show');
-            });
+     document.getElementById('satellite').addEventListener('click', () => {
+         map.setMapTypeId('satellite');
+         mapTypeDropdown.classList.remove('show');
+     });
 
-            document.getElementById('hybrid').addEventListener('click', () => {
-                map.setMapTypeId('hybrid');
-                mapTypeDropdown.classList.remove('show');
-            });
+     document.getElementById('hybrid').addEventListener('click', () => {
+         map.setMapTypeId('hybrid');
+         mapTypeDropdown.classList.remove('show');
+     });
 
-            document.getElementById('terrain').addEventListener('click', () => {
-                map.setMapTypeId('terrain');
-                mapTypeDropdown.classList.remove('show');
-            });
+     document.getElementById('terrain').addEventListener('click', () => {
+         map.setMapTypeId('terrain');
+         mapTypeDropdown.classList.remove('show');
+     });
 
-            document.getElementById('logout').addEventListener('click', () => {
-                dropdownMenu.classList.remove('show');
-            });
-        }
+     document.getElementById('logout').addEventListener('click', () => {
+         dropdownMenu.classList.remove('show');
+     });
+ }
 
-         function fetchDataAndAddMarkers() {
-        // Fetch data for fasilitas
-        fetch('/fasilitas')
-            .then(response => response.json())
-            .then(fasilitas => {
-                 markers = [];
-                fasilitas.forEach(fasilitas => {
-                     const iconUrl = `/markers/${fasilitas.jenis_fasilita.marker}`;
+ function fetchDataAndAddMarkers() {
+     // Fetch data for fasilitas
+     fetch('/fasilitas')
+         .then(response => response.json())
+         .then(fasilitas => {
+             markers = [];
+             fasilitas.forEach(fasilitas => {
+                 const iconUrl = `/markers/${fasilitas.jenis_fasilita.marker}`;
 
-                    addMarkers([fasilitas], fasilitas.jenis_fasilita.nama.toLowerCase(), iconUrl);
-                });
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }
+                 addMarkers([fasilitas], fasilitas.jenis_fasilita.nama.toLowerCase(), iconUrl);
+             });
+         })
+         .catch(error => console.error('Error fetching data:', error));
+ }
 
-    function addMarkers(fasilitasData, type, iconUrl) {
-        fasilitasData.forEach(fasilitas => {
-            if (fasilitas.latitude && fasilitas.longitude) {
-                const lat = parseFloat(fasilitas.latitude);
-                const lng = parseFloat(fasilitas.longitude);
+ function addMarkers(fasilitasData, type, iconUrl) {
+     fasilitasData.forEach(fasilitas => {
+         if (fasilitas.latitude && fasilitas.longitude) {
+             const lat = parseFloat(fasilitas.latitude);
+             const lng = parseFloat(fasilitas.longitude);
 
-                if (!isNaN(lat) && !isNaN(lng)) {
-                    const icon = {
-                        url: iconUrl,
-                        scaledSize: new google.maps.Size(40, 40),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(20, 40),
-                    };
+             if (!isNaN(lat) && !isNaN(lng)) {
+                 const icon = {
+                     url: iconUrl,
+                     scaledSize: new google.maps.Size(40, 40),
+                     origin: new google.maps.Point(0, 0),
+                     anchor: new google.maps.Point(20, 40),
+                 };
 
-                    const marker = new google.maps.Marker({
-                        position: {
-                            lat,
-                            lng
-                        },
-                        map,
-                        icon,
-                        title: fasilitas.nama_fasilitas,
-                        // animation: google.maps.Animation.DROP,
-                    });
+                 const marker = new google.maps.Marker({
+                     position: {
+                         lat,
+                         lng
+                     },
+                     map,
+                     icon,
+                     title: fasilitas.nama_fasilitas,
+                     // animation: google.maps.Animation.DROP,
+                 });
 
-                    const infoWindow = new google.maps.InfoWindow({
-                        content: `
+                 const infoWindow = new google.maps.InfoWindow({
+                     content: `
                         <div class="facility-container">
    
     <h3>${fasilitas.nama_fasilitas}</h3>
@@ -967,68 +972,75 @@ background-color: #886aa0 !important;
 </div>
 
 `
-                    });
+                 });
 
-                    marker.addListener('click', () => {
-                        if (activeInfoWindow) {
-                            activeInfoWindow.close();
-                        }
+                 marker.addListener('click', () => {
+                     if (activeInfoWindow) {
+                         activeInfoWindow.close();
+                     }
 
-                        infoWindow.open(map, marker);
-                        activeInfoWindow = infoWindow;
-                    });
+                     infoWindow.open(map, marker);
+                     activeInfoWindow = infoWindow;
+                 });
 
-                    markers.push({
-                        marker,
-                        fasilitas,
-                        type
-                    });
-                } else {
-                    console.error('Invalid latitude or longitude for:', fasilitas);
-                }
-            }
-        });
-    }
+                 markers.push({
+                     marker,
+                     fasilitas,
+                     type
+                 });
+             } else {
+                 console.error('Invalid latitude or longitude for:', fasilitas);
+             }
+         }
+     });
+ }
 
-    function handleSearch(event) {
-    const query = event.target.value.toLowerCase();
-    const resultsContainer = document.getElementById('search-results');
-    resultsContainer.innerHTML = '';
+ function handleSearch(event) {
+     const query = event.target.value.toLowerCase();
+     const resultsContainer = document.getElementById('search-results');
+     resultsContainer.innerHTML = '';
 
-    // Clear all existing markers from the map
-    markers.forEach(({ marker }) => {
-        marker.setMap(null);
-    });
+     // Clear all existing markers from the map
+     markers.forEach(({
+         marker
+     }) => {
+         marker.setMap(null);
+     });
 
-    if (query) {
-        const results = markers.filter(({ fasilitas }) => {
-            return fasilitas.nama_fasilitas.toLowerCase().includes(query) || (fasilitas.alamat && fasilitas.alamat.toLowerCase().includes(query));
-        });
+     if (query) {
+         const results = markers.filter(({
+             fasilitas
+         }) => {
+             return fasilitas.nama_fasilitas.toLowerCase().includes(query) || (fasilitas.alamat && fasilitas.alamat.toLowerCase().includes(query));
+         });
 
-        results.forEach(({ fasilitas, marker }) => {
-            // Add the marker back to the map
-            marker.setMap(map);
+         results.forEach(({
+             fasilitas,
+             marker
+         }) => {
+             // Add the marker back to the map
+             marker.setMap(map);
 
-            const item = document.createElement('div');
-            item.classList.add('search-result-item');
-            item.textContent = fasilitas.nama_fasilitas;
-            item.addEventListener('click', () => {
-                // Update search input value with selected result
-                document.getElementById('search-input').value = fasilitas.nama_fasilitas;
+             const item = document.createElement('div');
+             item.classList.add('search-result-item');
+             item.textContent = fasilitas.nama_fasilitas;
+             item.addEventListener('click', () => {
+                 // Update search input value with selected result
+                 document.getElementById('search-input').value = fasilitas.nama_fasilitas;
 
-                // Clear search results and hide container
-                resultsContainer.style.display = 'none';
+                 // Clear search results and hide container
+                 resultsContainer.style.display = 'none';
 
-                // Center map to selected marker
-                map.setCenter(marker.getPosition());
-                map.setZoom(15);
+                 // Center map to selected marker
+                 map.setCenter(marker.getPosition());
+                 map.setZoom(15);
 
-                if (activeInfoWindow) {
-                    activeInfoWindow.close();
-                }
+                 if (activeInfoWindow) {
+                     activeInfoWindow.close();
+                 }
 
-                const infoWindow = new google.maps.InfoWindow({
-                    content: `
+                 const infoWindow = new google.maps.InfoWindow({
+                     content: `
                         <div class="facility-container">
                             <h3>${fasilitas.nama_fasilitas}</h3>
                             <p><i class="fas fa-map-marker-alt"></i> Alamat: ${fasilitas.alamat || 'Tidak ada alamat'}</p>
@@ -1062,129 +1074,131 @@ background-color: #886aa0 !important;
                             </div>
                         </div>
                     `
-                });
+                 });
 
-                infoWindow.open(map, marker);
-                activeInfoWindow = infoWindow;
-            });
-            resultsContainer.appendChild(item);
-        });
+                 infoWindow.open(map, marker);
+                 activeInfoWindow = infoWindow;
+             });
+             resultsContainer.appendChild(item);
+         });
 
-        resultsContainer.style.display = 'block';
-        document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
-    } else {
-        resultsContainer.style.display = 'none';
-        document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
+         resultsContainer.style.display = 'block';
+         document.getElementById('search-button').classList.replace('fa-search', 'fa-times');
+     } else {
+         resultsContainer.style.display = 'none';
+         document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
          fetchDataAndAddMarkers();
-    }
-}
+     }
+ }
 
-        function clearSearch() {
-            document.getElementById('search-input').value = '';
-            document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
-            const resultsContainer = document.getElementById('search-results');
-            resultsContainer.style.display = 'none';
-            fetchDataAndAddMarkers();
-            // Close all info windows
-            if (activeInfoWindow) {
-                activeInfoWindow.close();
-            }
+ function clearSearch() {
+     document.getElementById('search-input').value = '';
+     document.getElementById('search-button').classList.replace('fa-times', 'fa-search');
+     const resultsContainer = document.getElementById('search-results');
+     resultsContainer.style.display = 'none';
+     fetchDataAndAddMarkers();
+     // Close all info windows
+     if (activeInfoWindow) {
+         activeInfoWindow.close();
+     }
 
-            // Reset map to default center and zoom
-            map.setCenter(defaultLatLng);
-            map.setZoom(12);
-        }
+     // Reset map to default center and zoom
+     map.setCenter(defaultLatLng);
+     map.setZoom(12);
+ }
 
-        // Function to initialize legend visibility based on sessionStorage
-        function initializeLegendVisibility() {
-            const legend = document.getElementById('legend-toggle');
-            const buttonShow = document.getElementById('legend-info-icon');
+ // Function to initialize legend visibility based on sessionStorage
+ function initializeLegendVisibility() {
+     const legend = document.getElementById('legend-toggle');
+     const buttonShow = document.getElementById('legend-info-icon');
 
-            // Check if there is a stored visibility state in sessionStorage
-            const legendVisible = sessionStorage.getItem('legendVisible');
+     // Check if there is a stored visibility state in sessionStorage
+     const legendVisible = sessionStorage.getItem('legendVisible');
 
-            // If no visibility state is stored or it's true, show the legend
-            if (legendVisible === null || legendVisible === 'true') {
-                legend.classList.remove('hidden');
-                buttonShow.classList.add('hidden');
-            } else {
-                legend.classList.add('hidden');
-                buttonShow.classList.remove('hidden');
-            }
-        }
+     // If no visibility state is stored or it's true, show the legend
+     if (legendVisible === null || legendVisible === 'true') {
+         legend.classList.remove('hidden');
+         buttonShow.classList.add('hidden');
+     } else {
+         legend.classList.add('hidden');
+         buttonShow.classList.remove('hidden');
+     }
+ }
 
-        // Call the initialize function when the document is ready
-        document.addEventListener('DOMContentLoaded', initializeLegendVisibility);
+ // Call the initialize function when the document is ready
+ document.addEventListener('DOMContentLoaded', initializeLegendVisibility);
 
-    function showRoute(latitude, longitude, namaLokasi, Icon) {
-    // Clear all existing markers from the map
-   
+ function showRoute(latitude, longitude, namaLokasi, Icon) {
+     // Clear all existing markers from the map
 
-    // Get current location
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-            const origin = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
 
-            // Save the current state of search-container
-            const previousSearchContainerContent = document.getElementById('search-container').innerHTML;
+     // Get current location
+     if (navigator.geolocation) {
+         navigator.geolocation.getCurrentPosition(position => {
+             const origin = {
+                 lat: position.coords.latitude,
+                 lng: position.coords.longitude
+             };
 
-            // Show SweetAlert2 dialog
-            Swal.fire({
-                title: 'Ingin menggunakan rute pada aplikasi Gmaps atau website ini?',
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'Website',
-                denyButtonText: 'Google Maps',
-                confirmButtonColor: '#3085d6',
-                denyButtonColor: '#d33',
-                input: 'select',
-                inputOptions: {
-                    'driving': 'Mobil',
-                    'transit': 'Transportasi Umum',
-                    'walking': 'Jalan Kaki',
-                    'bicycling': 'Sepeda'
-                },
-                inputPlaceholder: 'Pilih mode perjalanan',
-                inputValidator: (value) => {
-                    return new Promise((resolve) => {
-                        if (value) {
-                            resolve();
-                        } else {
-                            resolve('Pilih mode perjalanan!');
-                        }
-                    });
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const travelMode = result.value;
-                    const destination = `${latitude},${longitude}`;
-                    const directionsService = new google.maps.DirectionsService();
-                    const directionsRenderer = new google.maps.DirectionsRenderer({
-                        polylineOptions: {
-                            strokeColor: '#ff0000'
-                        }
-                    });
+             // Save the current state of search-container
+             const previousSearchContainerContent = document.getElementById('search-container').innerHTML;
 
-                    directionsRenderer.setMap(map);
+             // Show SweetAlert2 dialog
+             Swal.fire({
+                 title: 'Ingin menggunakan rute pada aplikasi Gmaps atau website ini?',
+                 showDenyButton: true,
+                 showCancelButton: true,
+                 confirmButtonText: 'Website',
+                 denyButtonText: 'Google Maps',
+                 confirmButtonColor: '#3085d6',
+                 denyButtonColor: '#d33',
+                 input: 'select',
+                 inputOptions: {
+                     'driving': 'Mobil',
+                     'transit': 'Transportasi Umum',
+                     'walking': 'Jalan Kaki',
+                     'bicycling': 'Sepeda'
+                 },
+                 inputPlaceholder: 'Pilih mode perjalanan',
+                 inputValidator: (value) => {
+                     return new Promise((resolve) => {
+                         if (value) {
+                             resolve();
+                         } else {
+                             resolve('Pilih mode perjalanan!');
+                         }
+                     });
+                 }
+             }).then((result) => {
+                 if (result.isConfirmed) {
+                     const travelMode = result.value;
+                     const destination = `${latitude},${longitude}`;
+                     const directionsService = new google.maps.DirectionsService();
+                     const directionsRenderer = new google.maps.DirectionsRenderer({
+                         polylineOptions: {
+                             strokeColor: '#ff0000'
+                         }
+                     });
 
-                    directionsService.route({
-                        origin: origin,
-                        destination: destination,
-                        travelMode: google.maps.TravelMode[travelMode.toUpperCase()],
-                    }, (response, status) => {
-                        if (status === 'OK') {
-                             markers.forEach(({ marker }) => {
-                             marker.setMap(null);
+                     directionsRenderer.setMap(map);
+
+                     directionsService.route({
+                         origin: origin,
+                         destination: destination,
+                         travelMode: google.maps.TravelMode[travelMode.toUpperCase()],
+                     }, (response, status) => {
+                         if (status === 'OK') {
+                             markers.forEach(({
+                                 marker
+                             }) => {
+                                 marker.setMap(null);
                              });
-                            directionsRenderer.setDirections(response);
+                             directionsRenderer.setDirections(response);
 
-                               // Create start marker
-                          
-                            // Update the search-container with route information
-                            document.getElementById('search-container').innerHTML = `
+                             // Create start marker
+
+                             // Update the search-container with route information
+                             document.getElementById('search-container').innerHTML = `
                                 <div id="route-container">
                                     <button id="close-route" class="btn-close">
                                         <i class="fas fa-times"></i>
@@ -1203,49 +1217,49 @@ background-color: #886aa0 !important;
                                 </div>
                             `;
 
-                            // Add event listener to close button
-                            document.getElementById('close-route').addEventListener('click', () => {
-                                // Restore the previous state of search-container
-                                document.getElementById('search-container').innerHTML = previousSearchContainerContent;
+                             // Add event listener to close button
+                             document.getElementById('close-route').addEventListener('click', () => {
+                                 // Restore the previous state of search-container
+                                 document.getElementById('search-container').innerHTML = previousSearchContainerContent;
 
-                                // Add all markers back to the map
-                                fetchDataAndAddMarkers()
-                                map.setCenter(defaultLatLng);
-                                map.setZoom(12);
+                                 // Add all markers back to the map
+                                 initMap()
+                                 map.setCenter(defaultLatLng);
+                                 map.setZoom(12);
 
-                                // Remove directions from the map
-                                directionsRenderer.setMap(null);
-                            });
-                        } else {
-                            Swal.fire('Gagal', 'Tidak dapat menampilkan rute', 'error');
-                        }
-                    });
-                } else if (result.isDenied) {
-                    Swal.fire('Pilih Google Maps', 'Akan membuka Google Maps untuk rute', 'info').then(() => {
-                        window.open(`https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`, '_blank');
-                        // Restore the previous state of search-container
-                        document.getElementById('search-container').innerHTML = previousSearchContainerContent;
-
-                       
-                    });
-                }
-            });
-        }, () => {
-            Swal.fire('Gagal', 'Tidak dapat mendapatkan lokasi saat ini', 'error');
-            
-        });
-    } else {
-        Swal.fire('Gagal', 'Geolokasi tidak didukung oleh browser ini', 'error');
-      
-    }
-}
+                                 // Remove directions from the map
+                                 directionsRenderer.setMap(null);
+                             });
+                         } else {
+                             Swal.fire('Gagal', 'Tidak dapat menampilkan rute', 'error');
+                         }
+                     });
+                 } else if (result.isDenied) {
+                     Swal.fire('Pilih Google Maps', 'Akan membuka Google Maps untuk rute', 'info').then(() => {
+                         window.open(`https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`, '_blank');
+                         // Restore the previous state of search-container
+                         document.getElementById('search-container').innerHTML = previousSearchContainerContent;
 
 
-        // Fungsi untuk menampilkan detail fasilitas menggunakan SweetAlert2
-function showDetails(nama_fasilitas, jam_buka, jam_tutup, alamat, foto, fasilitas, latitude, longitude, deskripsi) {
-    Swal.fire({
-        title: 'Detail Fasilitas',
-        html: `
+                     });
+                 }
+             });
+         }, () => {
+             Swal.fire('Gagal', 'Tidak dapat mendapatkan lokasi saat ini', 'error');
+
+         });
+     } else {
+         Swal.fire('Gagal', 'Geolokasi tidak didukung oleh browser ini', 'error');
+
+     }
+ }
+
+
+ // Fungsi untuk menampilkan detail fasilitas menggunakan SweetAlert2
+ function showDetails(nama_fasilitas, jam_buka, jam_tutup, alamat, foto, fasilitas, latitude, longitude, deskripsi) {
+     Swal.fire({
+         title: 'Detail Fasilitas',
+         html: `
             <div style="text-align: left; text-justify: auto;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div>
@@ -1261,36 +1275,36 @@ function showDetails(nama_fasilitas, jam_buka, jam_tutup, alamat, foto, fasilita
                 </div>
             </div>
         `,
-        confirmButtonText: 'Tutup',
-        imageUrl: `/fasilitas/${foto}`, // Ganti dengan path gambar default jika foto kosong
-        imageAlt: 'Image',
-        imageWidth: 640,
-        imageHeight: 340,
-        customClass: {
-            popup: 'swal2-custom-popup',
-            content: 'swal2-custom-content',
-            confirmButton: 'swal2-custom-button',
-        }
-    });
-}
+         confirmButtonText: 'Tutup',
+         imageUrl: `/fasilitas/${foto}`, // Ganti dengan path gambar default jika foto kosong
+         imageAlt: 'Image',
+         imageWidth: 640,
+         imageHeight: 340,
+         customClass: {
+             popup: 'swal2-custom-popup',
+             content: 'swal2-custom-content',
+             confirmButton: 'swal2-custom-button',
+         }
+     });
+ }
 
 
-        // Function to toggle legend visibility and store state in sessionStorage
-        function toggleLegend() {
-            const legend = document.getElementById('legend-toggle');
-            const buttonShow = document.getElementById('legend-info-icon');
+ // Function to toggle legend visibility and store state in sessionStorage
+ function toggleLegend() {
+     const legend = document.getElementById('legend-toggle');
+     const buttonShow = document.getElementById('legend-info-icon');
 
-            // Toggle visibility of legend and info button
-            legend.classList.toggle('hidden');
-            buttonShow.classList.toggle('hidden');
+     // Toggle visibility of legend and info button
+     legend.classList.toggle('hidden');
+     buttonShow.classList.toggle('hidden');
 
-            // Store current visibility state in sessionStorage
-            const legendVisible = !legend.classList.contains('hidden');
-            sessionStorage.setItem('legendVisible', legendVisible.toString());
-        }
+     // Store current visibility state in sessionStorage
+     const legendVisible = !legend.classList.contains('hidden');
+     sessionStorage.setItem('legendVisible', legendVisible.toString());
+ }
 
-        function showKomentar(nama, idFasilitas) {
-       <% if (user && user.id) { %>
+ function showKomentar(nama, idFasilitas) {
+ <% if (user && user.id) { %>
        const idUser = <%= user.id %>;
        let userIds = [];
        <% } else { %>
@@ -1298,49 +1312,49 @@ function showDetails(nama_fasilitas, jam_buka, jam_tutup, alamat, foto, fasilita
        let userIds = [];
        <% } %>
 
-
-        Swal.fire({
-        title: `${nama}`,
-        html: `
-       
-
+  Swal.fire({
+      title: `${nama}`,
+      html: `
         <div id="comments-section">
             <h4>Komentar</h4>
             <div id="comments-list">
                 <!-- Comments will be dynamically added here -->
             </div>
-
+            <% if (user && user.id) { %>
             <div id="comment-form">
                 <textarea id="comment-input" placeholder="Tambahkan komentar..." rows="3"></textarea>
                 <button onclick="addComment('${idUser}', '${idFasilitas}')">Tambah Komentar</button>
             </div>
+            <% } else { %>
+            <p>Untuk menambahkan komentar, Anda harus <a href="/login">login</a>.</p>
+            <% } %>
         </div>
-        `,
-        showCloseButton: true,
-        showConfirmButton: false,
-        customClass: {
-        container: 'swal-wide', // Adjust width if necessary
-        },
-        didOpen: async () => {
-        try {
-        // Fetch comments based on facility ID and tag
-        const response = await fetch(`/reviews/fasilitas/${idFasilitas}`);
-        const comments = await response.json();
+      `,
+      showCloseButton: true,
+      showConfirmButton: false,
+      customClass: {
+          container: 'swal-wide', // Adjust width if necessary
+      },
+      didOpen: async () => {
+            try {
+                 // Fetch comments based on facility ID and tag
+                 const response = await fetch(`/reviews/fasilitas/${idFasilitas}`);
+                 const comments = await response.json();
 
-        const commentsList = document.getElementById('comments-list');
-        commentsList.innerHTML = ''; // Clear existing comments
+                 const commentsList = document.getElementById('comments-list');
+                 commentsList.innerHTML = ''; // Clear existing comments
 
-        // Render fetched comments
-        comments.forEach(comment => {
-        userIds.push(comment.id_user);
-        
-        // Fetch user details based on userId
-        fetch(`/users/${comment.id_user}`)
-        .then(response => response.json())
-        .then(users => {
-        const newComment = document.createElement('div');
-        newComment.classList.add('comment-item');
-    newComment.innerHTML = `
+                 // Render fetched comments
+                 comments.forEach(comment => {
+                     userIds.push(comment.id_user);
+
+                     // Fetch user details based on userId
+                     fetch(`/users/${comment.id_user}`)
+                         .then(response => response.json())
+                         .then(users => {
+                             const newComment = document.createElement('div');
+                             newComment.classList.add('comment-item');
+                             newComment.innerHTML = `
     <div class="comment-header">
         <i class="fas fa-user-circle"></i>
         <p class="comment-author">${users.username || 'Nama Tidak Tersedia'}</p>
@@ -1353,132 +1367,144 @@ function showDetails(nama_fasilitas, jam_buka, jam_tutup, alamat, foto, fasilita
 
 
 
-        commentsList.appendChild(newComment);
-        })
-        .catch(error => {
-        console.error('Failed to fetch user details:', error);
+                             commentsList.appendChild(newComment);
+                         })
+                         .catch(error => {
+                             console.error('Failed to fetch user details:', error);
+                         });
+                 });
+             } catch (error) {
+                 console.error('Failed to fetch comments:', error);
+             }
+      },
+  });
+}
+
+async function addComment(idUser, idFasilitas) {
+    if (idUser === null) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Perhatian',
+            text: 'Anda harus login untuk menambahkan komentar.',
         });
+        return;
+    }
+
+    const commentInput = document.getElementById('comment-input').value;
+    if (commentInput.trim() === '') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Komentar tidak boleh kosong!',
         });
-        } catch (error) {
-        console.error('Failed to fetch comments:', error);
-        }
-        },
+        return;
+    }
+
+    try {
+        // Simulate adding comment to backend
+        const response = await fetch(`/reviews/fasilitas/${idFasilitas}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                komentar: commentInput,
+                id_fasilitas: idFasilitas,
+                id_user: idUser, // Assuming you have a way to identify the user
+            }),
         });
-        }
 
-// Function to delete comment
-async function deleteComment(commentId) {
-const confirmDelete = await Swal.fire({
-title: 'Anda yakin?',
-text: 'Anda tidak akan dapat mengembalikan ini!',
-icon: 'warning',
-showCancelButton: true,
-confirmButtonColor: '#dc3545',
-cancelButtonColor: '#6c757d',
-confirmButtonText: 'Ya, hapus!',
-cancelButtonText: 'Batal'
-});
-
-if (confirmDelete.isConfirmed) {
-try {
-const response = await fetch(`/reviews/${commentId}`, {
-method: 'DELETE'
-
-});
-
-if (response.ok) {
-Swal.fire({
-title: 'Terhapus!',
-text: 'Komentar telah dihapus.',
-icon: 'success'
-});
-
-} else {
-throw new Error('Gagal menghapus komentar');
-}
-} catch (error) {
-console.error('Error:', error);
-Swal.fire({
-title: 'Gagal!',
-text: 'Terjadi kesalahan saat menghapus komentar.',
-icon: 'error'
-});
-}
-}
-}
-
-        async function addComment(idUser, idFasilitas) {
-            const commentInput = document.getElementById('comment-input').value;
-            if (commentInput.trim() === '') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Komentar tidak boleh kosong!',
-                });
-                return;
-            }
-
-            try {
-                // Simulate adding comment to backend
-                const response = await fetch(`/reviews/fasilitas/${idFasilitas}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        komentar: commentInput,
-                        id_fasilitas: idFasilitas,
-                        id_user: idUser, // Assuming you have a way to identify the user
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to add comment');
-                }
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Komentar ditambahkan!',
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-            } catch (error) {
-                console.error('Failed to add comment:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Gagal menambahkan komentar!',
-                });
-            }
+        if (!response.ok) {
+            throw new Error('Failed to add comment');
         }
 
-         document.addEventListener("DOMContentLoaded", function () {
-         fetch('/jenisfasilitas')
+        Swal.fire({
+            icon: 'success',
+            title: 'Komentar ditambahkan!',
+            showConfirmButton: false,
+            timer: 1500,
+        });
+
+        // Optionally, you might want to refresh the comments list here
+        // or trigger another function to update the comments view
+    } catch (error) {
+        console.error('Failed to add comment:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Gagal menambahkan komentar!',
+        });
+    }
+}
+
+ // Function to delete comment
+ async function deleteComment(commentId) {
+     const confirmDelete = await Swal.fire({
+         title: 'Anda yakin?',
+         text: 'Anda tidak akan dapat mengembalikan ini!',
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#dc3545',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'Ya, hapus!',
+         cancelButtonText: 'Batal'
+     });
+
+     if (confirmDelete.isConfirmed) {
+         try {
+             const response = await fetch(`/reviews/${commentId}`, {
+                 method: 'DELETE'
+
+             });
+
+             if (response.ok) {
+                 Swal.fire({
+                     title: 'Terhapus!',
+                     text: 'Komentar telah dihapus.',
+                     icon: 'success'
+                 });
+
+             } else {
+                 throw new Error('Gagal menghapus komentar');
+             }
+         } catch (error) {
+             console.error('Error:', error);
+             Swal.fire({
+                 title: 'Gagal!',
+                 text: 'Terjadi kesalahan saat menghapus komentar.',
+                 icon: 'error'
+             });
+         }
+     }
+ }
+
+ document.addEventListener("DOMContentLoaded", function () {
+     fetch('/jenisfasilitas')
          .then(response => response.json())
          .then(data => {
-         const legendToggle = document.getElementById('legend-toggle');
-         const legendTitle = legendToggle.querySelector('.legend-title'); // Select h4 with class 'legend-title'
-         
+             const legendToggle = document.getElementById('legend-toggle');
+             const legendTitle = legendToggle.querySelector('.legend-title'); // Select h4 with class 'legend-title'
 
-         data.forEach(item => {
-         const div = document.createElement('div');
-         const img = document.createElement('img');
-         img.src = `/markers/${item.marker}`;
-         img.alt = item.nama;
-         const text = document.createTextNode(` ${item.nama}`);
-         div.appendChild(img);
-         div.appendChild(text);
-         legendTitle.appendChild(div);
-         });
 
-         // Insert legendContainer after legendTitle
-         legendToggle.insertBefore(legendTitle, legendToggle.nextSibling);
+             data.forEach(item => {
+                 const div = document.createElement('div');
+                 const img = document.createElement('img');
+                 img.src = `/markers/${item.marker}`;
+                 img.alt = item.nama;
+                 const text = document.createTextNode(` ${item.nama}`);
+                 div.appendChild(img);
+                 div.appendChild(text);
+                 legendTitle.appendChild(div);
+             });
+
+             // Insert legendContainer after legendTitle
+             legendToggle.insertBefore(legendTitle, legendToggle.nextSibling);
          })
          .catch(error => console.error('Error fetching jenis fasilitas:', error));
-         });
+ });
 
 
-        window.initMap = initMap;
+ window.initMap = initMap;
     </script>
 </body>
 
