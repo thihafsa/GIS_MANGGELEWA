@@ -13,8 +13,11 @@ const reviewsRoutes = require('./routes/reviews');
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
 const aiRoutes = require('./routes/Ai');
-const authMiddleware = require('./middleware/authMiddleware');
-const { runtime } = require('./middleware/func');
+const checkOtpSession = require('./middleware/otpMiddleware');
+const checkResetPasswordSession = require('./middleware/passMiddleware');
+const {
+    runtime
+} = require('./middleware/func');
 const app = express();
 
 // Middleware (misalnya, body-parser, cors, dll.)
@@ -57,7 +60,15 @@ app.get('/', (req, res) => {
         user,
     }); // Sesuaikan path jika diperlukan
 });
-
+app.get('/otp', checkOtpSession, (req, res) => {
+    res.render('otp');
+});
+app.get('/forgot-password', (req, res) => {
+    res.render('forgotpw');
+});
+app.get('/reset-password', checkResetPasswordSession, (req, res) => {
+    res.render('resetpw');
+});
 app.get('/login', (req, res) => {
     res.render('login');
 });
