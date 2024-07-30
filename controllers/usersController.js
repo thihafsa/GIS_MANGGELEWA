@@ -215,6 +215,17 @@ exports.updateUser = async (req, res) => {
             role: role || existingUser.role, // Update role jika ada, atau pertahankan role lama
         });
 
+        if (req.session && req.session.user && req.session.user.id === existingUser.id) {
+            req.session.user = {
+                id: existingUser.id,
+                username: existingUser.username,
+                email: existingUser.email,
+                role: existingUser.role,
+                foto: existingUser.foto,
+            };
+            await req.session.save();
+        }
+
         res.json(existingUser);
     } catch (error) {
         console.error(error);

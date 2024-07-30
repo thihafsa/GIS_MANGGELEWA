@@ -32,6 +32,21 @@ router.get('/', authMiddleware, isAdmin, async (req, res) => {
     }
 });
 
+router.get('/profile', authMiddleware, isAdmin, async (req, res) => {
+    const user = req.session.user;
+    try {
+        const jenisFasilitasData = await getJenisFasilitasData(req);
+        res.render('admin/profile', {
+            title: 'Profile',
+            user,
+            jenisFasilitasList: jenisFasilitasData,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Terjadi kesalahan saat mengambil data fasilitas pendidikan');
+    }
+});
+
 router.get('/jenisfasilitas', authMiddleware, isAdmin, async (req, res) => {
     const user = req.session.user;
     try {

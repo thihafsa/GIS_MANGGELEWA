@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="gis, sig">
+    <meta name="author" content="DeniSetiawan">
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Sistem Informasi Geografis Pemetaan Fasilitas dan Layanan Publik Berbasis Web Pada Kecamatan Manggelewa">
+    <meta property="og:title"
+        content="Sistem Informasi Geografis Pemetaan Fasilitas dan Layanan Publik Berbasis Web Pada Kecamatan Manggelewa">
+    <meta property="og:description"
+        content="Sistem Informasi Geografis Pemetaan Fasilitas dan Layanan Publik Berbasis Web Pada Kecamatan Manggelewa">
+    <meta property="og:image" content="https://telegra.ph/file/2915544bd6ef1b93d0662.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="format-detection" content="telephone=no">
+    <base href="/">
+
+    <!-- PAGE TITLE HERE -->
+    <title>OTP</title>
+
+    <!-- FAVICONS ICON -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href="vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="vh-100">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <div class="text-center mb-3">
+                                        <a href="/login"><img src="logo.svg" alt=""></a>
+                                    </div>
+                                    <h4 class="text-center mb-4">Enter OTP Code</h4>
+                                    <form id="otpForm">
+                                        <div class="mb-3">
+                                            <label class="mb-1"><strong>OTP Code</strong></label>
+                                            <input type="text" class="form-control" id="otp" name="otp"
+                                                placeholder="Enter OTP Code">
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary btn-block">Submit OTP</button>
+                                        </div>
+                                    </form>
+                                    <div class="new-account mt-3">
+                                        <p>Didn't receive the OTP? <a class="text-primary" href="#"
+                                                id="resendOtp">Resend
+                                                OTP</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="vendor/global/global.min.js"></script>
+    <script src="js/custom.min.js"></script>
+    <script src="js/dlabnav-init.js"></script>
+    <script src="js/styleSwitcher.js"></script>
+    <script src="vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Extract email from URL query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+
+            document.getElementById('otpForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const otp = document.getElementById('otp').value;
+
+                try {
+                    const response = await fetch('/auth/verify-otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email,
+                            otp
+                        }) // Use the email from URL
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: data.message,
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then(() => {
+                            window.location.href = data.redirectTo + '?email=' + encodeURIComponent(
+                            email);
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message,
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while verifying OTP.'
+                    });
+                }
+            });
+
+            document.getElementById('resendOtp').addEventListener('click', async function (e) {
+                e.preventDefault();
+
+                try {
+                    const response = await fetch('/auth/resend-otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email
+                        }) // Use the email from URL
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'OTP Resent!',
+                            text: result.message
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while resending OTP.'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
